@@ -622,6 +622,157 @@
       transform: none;
     }
 
+    /* ── CONTACT (rebuild of notify section) ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 3rem;
+      max-width: 920px;
+      margin: 3rem auto 0;
+      text-align: left;
+    }
+
+    .contact-info h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .contact-info p {
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .contact-info a {
+      color: var(--link);
+      text-decoration: none;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .contact-info a:hover { text-decoration: underline; }
+
+    .contact-note {
+      font-size: 0.95rem !important;
+      margin-top: 0.2rem;
+    }
+
+    .contact-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0;
+    }
+
+    .contact-list li {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding-left: 1.3rem;
+      position: relative;
+      margin-bottom: 0.45rem;
+    }
+
+    .contact-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--blue-d);
+      font-weight: 700;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-row label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      padding: 0.78rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      background: var(--bg);
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .form-row input:focus,
+    .form-row select:focus,
+    .form-row textarea:focus {
+      outline: none;
+      border-color: var(--link);
+      box-shadow: 0 0 0 4px rgba(0,102,204,0.15);
+    }
+
+    .form-row textarea {
+      resize: vertical;
+      min-height: 110px;
+      font-family: inherit;
+    }
+
+    .contact-form button {
+      margin-top: 0.5rem;
+      padding: 0.85rem 1.8rem;
+      background: var(--link);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .contact-form button:hover  { background: #0055aa; }
+    .contact-form button:active { transform: scale(0.98); }
+    .contact-form button:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .form-status {
+      font-size: 0.95rem;
+      font-weight: 500;
+      min-height: 1.2rem;
+      margin-top: 0.4rem;
+    }
+
+    .form-status.success { color: var(--green-d); }
+    .form-status.error   { color: var(--red); }
+
+    @media (max-width: 768px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        max-width: 520px;
+      }
+      .contact-form button { align-self: stretch; }
+    }
+
+    @media (max-width: 600px) {
+      .contact-grid { margin-top: 2.2rem; }
+      .form-row input,
+      .form-row select,
+      .form-row textarea { padding: 0.9rem 1rem; }
+    }
+
     /* ── FOOTER ── */
     footer {
       background: var(--bg-alt);
@@ -1491,14 +1642,62 @@
     </div>
   </section>
 
-  <!-- NOTIFY -->
+  <!-- CONTACT -->
   <section class="notify" id="notify">
-    <h2>Stay in the <span class="accent">loop.</span></h2>
-    <p>We'll let you know when our first products are ready.</p>
-    <form class="notify-form" onsubmit="handleSubmit(event)">
-      <input type="email" placeholder="your@email.com" required aria-label="Email address" />
-      <button type="submit">Sign up</button>
-    </form>
+    <h2>Get in <span class="accent">touch.</span></h2>
+    <p>Questions, partnership inquiries, or early-access requests — we'd love to hear from you.</p>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Reach us directly</h3>
+        <p>
+          <a href="mailto:petersclassroom.business@gmail.com">petersclassroom.business@gmail.com</a>
+        </p>
+        <p class="contact-note">We typically respond within 2 business days.</p>
+
+        <h3 style="margin-top: 2rem;">Who we hear from</h3>
+        <ul class="contact-list">
+          <li>Parents &amp; families exploring assistive tools</li>
+          <li>Educators &amp; paraprofessionals</li>
+          <li>Accessibility &amp; AT professionals</li>
+          <li>Schools, districts, and partners</li>
+        </ul>
+      </div>
+
+      <form class="contact-form" onsubmit="handleContactSubmit(event)" novalidate>
+
+        <div class="form-row">
+          <label for="cf-name">Name</label>
+          <input type="text" id="cf-name" name="name" required autocomplete="name" />
+        </div>
+
+        <div class="form-row">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" name="email" required autocomplete="email" />
+        </div>
+
+        <div class="form-row">
+          <label for="cf-role">I am a...</label>
+          <select id="cf-role" name="role" required>
+            <option value="">Select an option</option>
+            <option value="Parent / Family member">Parent / Family member</option>
+            <option value="Educator / Paraprofessional">Educator / Paraprofessional</option>
+            <option value="Student">Student</option>
+            <option value="Accessibility / AT professional">Accessibility / AT professional</option>
+            <option value="School / District representative">School / District representative</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" rows="4" required placeholder="Tell us a bit about your interest or question."></textarea>
+        </div>
+
+        <button type="submit">Send message</button>
+        <p class="form-status" id="formStatus" aria-live="polite" role="status"></p>
+      </form>
+    </div>
   </section>
 
   <!-- FOOTER -->
@@ -1621,15 +1820,38 @@
   </aside>
 
   <script>
-    function handleSubmit(e) {
+    function handleContactSubmit(e) {
       e.preventDefault();
-      const input = e.target.querySelector('input');
-      const btn = e.target.querySelector('button');
-      btn.textContent = "You're on the list!";
-      btn.style.background = 'var(--green)';
-      input.value = '';
-      input.disabled = true;
-      btn.disabled = true;
+      const form = e.target;
+      const status = form.querySelector('#formStatus');
+
+      status.textContent = '';
+      status.className = 'form-status';
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const data = Object.fromEntries(new FormData(form));
+      const subject = encodeURIComponent("Inquiry from Peter's Classroom site — " + data.name);
+      const body = encodeURIComponent(
+        "Name: "  + data.name  + "\n" +
+        "Email: " + data.email + "\n" +
+        "Role: "  + data.role  + "\n\n" +
+        "Message:\n" + data.message + "\n\n" +
+        "— Sent via petersclassroom.com contact form"
+      );
+
+      const mailtoUrl =
+        "mailto:petersclassroom.business@gmail.com" +
+        "?subject=" + subject +
+        "&body="    + body;
+
+      window.location.href = mailtoUrl;
+
+      status.textContent = "Opening your email app — review and tap Send to deliver your message.";
+      status.classList.add('success');
     }
 
     // Reveal-on-scroll
@@ -1647,7 +1869,7 @@
       '.audiences h2, .audiences > p, .audience-card, ' +
       '.principles h2, .principle, ' +
       '.products h2, .products > p, .product-card, ' +
-      '.notify h2, .notify p, .notify-form'
+      '.notify h2, .notify p, .contact-info, .contact-form'
     );
 
     revealTargets.forEach(el => {
