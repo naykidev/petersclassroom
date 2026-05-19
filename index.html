@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Peter's Classroom — Built for every learner.</title>
+  <title>Peter's Classroom · Built for every learner.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
       --border:      #d2d2d7;
       --link:        #0066cc;
 
-      /* Legacy aliases — preserved for accessibility-mode rules below */
+      /* Legacy aliases: preserved for accessibility-mode rules below */
       --dark:   #1d1d1f;
       --light:  #f5f5f7;
       --white:  #ffffff;
@@ -843,7 +843,7 @@
       }
       .nav-logo { font-size: 1.05rem; }
       .nav-links { gap: 0; }
-      /* Hide secondary text links on mobile — keep just the CTA */
+      /* Hide secondary text links on mobile; keep just the CTA */
       .nav-links li:nth-child(1),
       .nav-links li:nth-child(2) { display: none; }
       .nav-cta {
@@ -928,7 +928,7 @@
 
       /* ── Enhanced mobile animations ── */
 
-      /* Hero entrance — slower, more deliberate on small screens */
+      /* Hero entrance: slower, more deliberate on small screens */
       .hero-logo     { animation: fadeUp 1.1s ease-out 0.2s both, floatSoft 6s ease-in-out 1.5s infinite; }
       .hero-headline { animation: fadeUp 1s ease-out 0.55s both; }
       .hero-tagline  { animation: fadeUp 1s ease-out 0.8s both; }
@@ -1026,7 +1026,7 @@
       100% { background-position: 200% 50%; }
     }
 
-    /* Hero entrance — staggered fade-up + ongoing logo float */
+    /* Hero entrance: staggered fade-up + ongoing logo float */
     .hero-logo     { animation: fadeUp 0.9s ease-out 0.15s both, floatSoft 6s ease-in-out 1.2s infinite; }
     .hero-headline { animation: fadeUp 0.8s ease-out 0.4s both; }
     .hero-tagline  { animation: fadeUp 0.8s ease-out 0.6s both; }
@@ -1112,7 +1112,7 @@
       transform: scale(1);
     }
 
-    /* Accessibility toggle — gentle attention pulse on first load (2x) */
+    /* Accessibility toggle: gentle attention pulse on first load (2x) */
     .a11y-toggle {
       animation: gentlePulse 2.2s ease-in-out 1.8s 2;
     }
@@ -1499,7 +1499,7 @@
       border-radius: 4px;
     }
 
-    /* Pause animations (stronger than reduce-motion — fully stops) */
+    /* Pause animations (stronger than reduce-motion; fully stops) */
     html[data-pause-animations="on"] *,
     html[data-pause-animations="on"] *::before,
     html[data-pause-animations="on"] *::after {
@@ -1539,7 +1539,7 @@
   <!-- MISSION -->
   <div class="mission">
     <h2>Every learner deserves the tools to be <span class="accent">heard.</span></h2>
-    <p>Every product is <strong>co-developed with parents, students, and accessibility professionals</strong> — grounded in classroom practice and lived experience, so students of every ability can express themselves, build skills, and reach their goals.</p>
+    <p>Every product is <strong>co-developed with parents, students, and accessibility professionals</strong>, grounded in classroom practice and lived experience, so students of every ability can express themselves, build skills, and reach their goals.</p>
   </div>
 
   <!-- AUDIENCES -->
@@ -1573,12 +1573,12 @@
       <div class="principle">
         <div class="principle-num">1</div>
         <h3>Accessibility first</h3>
-        <p>WCAG-aligned interfaces, screen reader support, and switch access — not added later, built from the start.</p>
+        <p>WCAG-aligned interfaces, screen reader support, and switch access. Not added later, built from the start.</p>
       </div>
       <div class="principle">
         <div class="principle-num">2</div>
         <h3>Co-developed</h3>
-        <p>Built hand-in-hand with parents, students, and accessibility professionals — the people who live this work every day.</p>
+        <p>Built hand-in-hand with parents, students, and accessibility professionals: the people who live this work every day.</p>
       </div>
       <div class="principle">
         <div class="principle-num">3</div>
@@ -1618,7 +1618,7 @@
         </span>
         <span class="card-badge">Adaptive Software</span>
         <h3>Web Tools &amp; Communication Boards</h3>
-        <p>Browser-based AAC boards, switch-accessible learning activities, and visual supports that work on any device — keyboard navigable and screen reader ready.</p>
+        <p>Browser-based AAC boards, switch-accessible learning activities, and visual supports that work on any device. Keyboard navigable and screen reader ready.</p>
         <span class="coming-soon-pill">Coming soon</span>
       </div>
 
@@ -1635,7 +1635,7 @@
         </span>
         <span class="card-badge">Classroom Hardware</span>
         <h3>Adaptive Switches &amp; Devices</h3>
-        <p>Durable, easy-to-mount hardware — accessible switches, communication aids, and tactile tools designed for daily classroom use and individual access needs.</p>
+        <p>Durable, easy-to-mount hardware: accessible switches, communication aids, and tactile tools designed for daily classroom use and individual access needs.</p>
         <span class="coming-soon-pill">Coming soon</span>
       </div>
 
@@ -1645,7 +1645,7 @@
   <!-- CONTACT -->
   <section class="notify" id="notify">
     <h2>Get in <span class="accent">touch.</span></h2>
-    <p>Questions, partnership inquiries, or early-access requests — we'd love to hear from you.</p>
+    <p>Questions, partnership inquiries, or early-access requests. We'd love to hear from you.</p>
 
     <div class="contact-grid">
       <div class="contact-info">
@@ -1834,13 +1834,13 @@
       }
 
       const data = Object.fromEntries(new FormData(form));
-      const subject = encodeURIComponent("Inquiry from Peter's Classroom site — " + data.name);
+      const subject = encodeURIComponent("Inquiry from Peter's Classroom site: " + data.name);
       const body = encodeURIComponent(
         "Name: "  + data.name  + "\n" +
         "Email: " + data.email + "\n" +
         "Role: "  + data.role  + "\n\n" +
         "Message:\n" + data.message + "\n\n" +
-        "— Sent via petersclassroom.com contact form"
+        "-- Sent via petersclassroom.com contact form"
       );
 
       const mailtoUrl =
@@ -1850,7 +1850,7 @@
 
       window.location.href = mailtoUrl;
 
-      status.textContent = "Opening your email app — review and tap Send to deliver your message.";
+      status.textContent = "Opening your email app. Review and tap Send to deliver your message.";
       status.classList.add('success');
     }
 
