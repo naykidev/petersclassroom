@@ -113,6 +113,14 @@
     { fallback: true, type: 'video', minSize: { w: 100, h: 60 } }
   ];
 
+  // ═══════════════ SITE GATE ═══════════════
+  // The dwell-clicking feature is YouTube-only. The text-accessibility
+  // panel runs on every site. content.js used to be scoped to YouTube
+  // via the manifest; now it runs on <all_urls> so we gate each dwell-
+  // click event handler with this flag instead of restructuring the
+  // whole IIFE.
+  const IS_YOUTUBE = /(^|\.)youtube\.com$/i.test(location.hostname);
+
   const RESUME_WINDOW_MS = 1000; // resume-on-return grace period
   const COMPLETE_FLASH_MS = 380; // green flash + ripple duration before click
   const FADE_OUT_MS = 180;       // ring fade-out on cursor leave
@@ -186,7 +194,7 @@
           enabled = data.enabled !== false;
           videoDwellTime = Number(data.videoDwellTime) || 5000;
           buttonDwellTime = Number(data.buttonDwellTime) || 3000;
-          if (enabled) showStatus();
+          if (enabled && IS_YOUTUBE) showStatus();
         } catch (_) {}
       }
     );
@@ -202,9 +210,9 @@
           enabled = changes.enabled.newValue !== false;
           if (!enabled) {
             cancelDwell();
-            hideStatus();
+            if (IS_YOUTUBE) hideStatus();
           } else {
-            showStatus();
+            if (IS_YOUTUBE) showStatus();
           }
         }
         if (changes.videoDwellTime) {
@@ -419,6 +427,7 @@
     if (e.code !== 'Space') return;
     if (e.repeat) return;
     if (isTypingTarget(e.target)) return;
+    if (!IS_YOUTUBE) return; // dwell-click toggle is YouTube-only
 
     e.preventDefault();
     e.stopPropagation();
@@ -441,6 +450,7 @@
   // Mouseover: cursor entered a new element. Updates the status pill
   // and, if it's a SwitchFlow target, starts (or resumes) a dwell.
   document.addEventListener('mouseover', (e) => {
+    if (!IS_YOUTUBE) return; // dwell-click runs only on YouTube
     if (!enabled) return;
     const raw = deepTarget(e);
     const target = findTarget(raw);
@@ -471,6 +481,7 @@
   // our active target (mouse moved between two children of it) or really
   // left.
   document.addEventListener('mouseout', (e) => {
+    if (!IS_YOUTUBE) return;
     if (!active) return;
     const next = e.relatedTarget;
     // null = cursor left the document entirely
@@ -506,13 +517,16 @@
   }, true);
 
   // MutationObserver — keeps the orphaned-ring case clean if YouTube
-  // removes the target node out from under us mid-dwell.
-  const domObserver = new MutationObserver(() => {
-    if (active && active.el && !document.body.contains(active.el)) {
-      cancelDwell();
-    }
-  });
-  domObserver.observe(document.body, { childList: true, subtree: true });
+  // removes the target node out from under us mid-dwell. Only attach
+  // on YouTube to avoid the cost on every other site.
+  if (IS_YOUTUBE) {
+    const domObserver = new MutationObserver(() => {
+      if (active && active.el && !document.body.contains(active.el)) {
+        cancelDwell();
+      }
+    });
+    domObserver.observe(document.body, { childList: true, subtree: true });
+  }
 
   // ───────── Dwell lifecycle ─────────
 
@@ -838,10 +852,187 @@
   // Hide the pill while a YouTube video is in fullscreen so it doesn't
   // overlap the video itself.
   document.addEventListener('fullscreenchange', () => {
+    if (!IS_YOUTUBE) return; // status pill is YouTube-only
     if (document.fullscreenElement) {
       hideStatus();
     } else if (enabled) {
       showStatus();
     }
   });
+
+  // ══════════════════════════════════════════
+  // TEXT ACCESSIBILITY — runs on every site
+  // Floating "Aa" button, slide-in panel, font/size/spacing/line-height
+  // controls. Independent from the dwell-click system above. Settings
+  // persist via chrome.storage.local under "switchflow-text-settings"
+  // and changes propagate to all open tabs via storage.onChanged.
+  // ══════════════════════════════════════════
+
+  const TEXT_SETTINGS_KEY = 'switchflow-text-settings';
+  const TEXT_STYLE_TAG_ID = 'switchflow-text-styles';
+  const FONT_CDN_FLAG     = 'switchflow-font-cdns-loaded';
+
+  const TEXT_TAGS =
+    'body, p, h1, h2, h3, h4, h5, h6, li, td, th, span, div, a, ' +
+    'button, input, textarea, select, label';
+
+  // Font catalog. `stack` is the CSS font-family to apply. `default`
+  // means restore the page's original font (no override emitted).
+  const FONT_OPTIONS = [
+    { id: 'default',      name: 'Default',
+      stack: '',
+      preview: 'Original page font' },
+    { id: 'opendyslexic', name: 'OpenDyslexic',
+      stack: '"OpenDyslexic", "Comic Sans MS", sans-serif',
+      preview: 'The quick brown fox' },
+    { id: 'lexend',       name: 'Lexend',
+      stack: '"Lexend", sans-serif',
+      preview: 'The quick brown fox' },
+    { id: 'arial',        name: 'Arial',
+      stack: 'Arial, Helvetica, sans-serif',
+      preview: 'The quick brown fox' },
+    { id: 'comic',        name: 'Comic Sans MS',
+      stack: '"Comic Sans MS", "Comic Sans", cursive',
+      preview: 'The quick brown fox' },
+    { id: 'atkinson',     name: 'Atkinson Hyperlegible',
+      stack: '"Atkinson Hyperlegible", sans-serif',
+      preview: 'The quick brown fox' }
+  ];
+
+  // Numeric maps for spacing pills.
+  const LETTER_SPACING_MAP = { normal: null, wide: '0.05em', wider: '0.12em' };
+  const WORD_SPACING_MAP   = { normal: null, wide: '0.1em',  wider: '0.2em' };
+  const LINE_HEIGHT_MAP    = { normal: null, relaxed: '1.8', loose: '2.2' };
+
+  const DEFAULT_TEXT_SETTINGS = {
+    fontFamily:    'default',
+    textSize:      100,        // percent
+    letterSpacing: 'normal',
+    wordSpacing:   'normal',
+    lineHeight:    'normal'
+  };
+
+  let textSettings = { ...DEFAULT_TEXT_SETTINGS };
+
+  // ─── Font CDN loading ───
+  // Inject <link> tags for the three webfonts we offer. Idempotent.
+  function injectFontCDNs() {
+    if (document.getElementById(FONT_CDN_FLAG)) return;
+    const marker = document.createElement('meta');
+    marker.id = FONT_CDN_FLAG;
+    document.head.appendChild(marker);
+
+    const links = [
+      'https://fonts.cdnfonts.com/css/opendyslexic',
+      'https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap',
+      'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap'
+    ];
+    for (const href of links) {
+      const link = document.createElement('link');
+      link.rel  = 'stylesheet';
+      link.href = href;
+      link.dataset.switchflowFont = 'true';
+      try { document.head.appendChild(link); } catch (_) {}
+    }
+  }
+
+  // ─── Generate the CSS to inject ───
+  function generateTextCSS(s) {
+    const lines = [];
+
+    // Text-size scaling lives on <html> so rem-based pages scale
+    // proportionally. Sites using fixed px still inherit the new base.
+    if (s.textSize !== 100) {
+      lines.push(`html { font-size: ${s.textSize}% !important; }`);
+    }
+
+    // Font family — !important is appropriate here because the whole
+    // point is to override the page's font.
+    const font = FONT_OPTIONS.find(f => f.id === s.fontFamily);
+    if (font && font.stack) {
+      lines.push(`${TEXT_TAGS} { font-family: ${font.stack} !important; }`);
+    }
+
+    // Spacing + line-height are NOT !important so sites that need
+    // precise glyph positioning (math notation, code blocks, etc.)
+    // can still override us via more specific rules.
+    const letter = LETTER_SPACING_MAP[s.letterSpacing];
+    if (letter) lines.push(`${TEXT_TAGS} { letter-spacing: ${letter}; }`);
+
+    const word = WORD_SPACING_MAP[s.wordSpacing];
+    if (word) lines.push(`${TEXT_TAGS} { word-spacing: ${word}; }`);
+
+    const line = LINE_HEIGHT_MAP[s.lineHeight];
+    if (line) lines.push(`${TEXT_TAGS} { line-height: ${line}; }`);
+
+    return lines.join('\n');
+  }
+
+  // ─── Apply current settings to the page ───
+  function applyTextSettings() {
+    const css = generateTextCSS(textSettings);
+    const existing = document.getElementById(TEXT_STYLE_TAG_ID);
+    if (!css) {
+      // All defaults — restore page completely by removing the style tag.
+      if (existing) existing.remove();
+      return;
+    }
+    if (existing) {
+      existing.textContent = css;
+    } else {
+      const tag = document.createElement('style');
+      tag.id = TEXT_STYLE_TAG_ID;
+      tag.textContent = css;
+      try { document.head.appendChild(tag); } catch (_) {}
+    }
+  }
+
+  // ─── Storage load/save ───
+  function loadTextSettings() {
+    safeChrome(() => {
+      chrome.storage.local.get([TEXT_SETTINGS_KEY], (data) => {
+        try {
+          if (chrome.runtime && chrome.runtime.lastError) return;
+          const stored = data[TEXT_SETTINGS_KEY];
+          if (stored && typeof stored === 'object') {
+            textSettings = { ...DEFAULT_TEXT_SETTINGS, ...stored };
+          }
+          applyTextSettings();
+        } catch (_) {}
+      });
+    });
+  }
+
+  // ─── Cross-tab sync ───
+  // The popup writes to chrome.storage.local; this listener picks up
+  // those writes (and writes from other tabs) and applies them.
+  if (chrome?.storage?.onChanged) {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      try {
+        if (!isExtensionAlive()) return;
+        if (area !== 'local') return;
+        if (!changes[TEXT_SETTINGS_KEY]) return;
+        const next = changes[TEXT_SETTINGS_KEY].newValue;
+        textSettings = next
+          ? { ...DEFAULT_TEXT_SETTINGS, ...next }
+          : { ...DEFAULT_TEXT_SETTINGS };
+        applyTextSettings();
+      } catch (_) {}
+    });
+  }
+
+  // ─── Boot the text feature ───
+  // Inject font CDNs once so the chosen font has glyphs available, then
+  // load current settings and apply them. No on-page UI — all controls
+  // live in the toolbar popup.
+  function bootText() {
+    if (!document.head || !document.body) {
+      // Defer if DOM isn't ready (rare with run_at: document_idle).
+      setTimeout(bootText, 50);
+      return;
+    }
+    injectFontCDNs();
+    loadTextSettings();
+  }
+  bootText();
 })();

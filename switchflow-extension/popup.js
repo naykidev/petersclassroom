@@ -97,6 +97,124 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
+// ───────── Text accessibility (all inline in this popup) ─────────
+// All controls write to chrome.storage.local under the same key the
+// content script listens on. When the content script's storage.onChanged
+// handler fires, it re-applies the page-level CSS instantly.
+
+const TA_STORAGE_KEY = 'switchflow-text-settings';
+const TA_DEFAULTS = {
+  fontFamily:    'default',
+  textSize:      100,
+  letterSpacing: 'normal',
+  wordSpacing:   'normal',
+  lineHeight:    'normal'
+};
+
+let taSettings = { ...TA_DEFAULTS };
+
+const taFontBtns       = document.querySelectorAll('.ta-font-btn');
+const taSizeSlider     = document.getElementById('ta-text-size');
+const taSizeValue      = document.getElementById('ta-text-size-value');
+const taSizeResetLink  = document.querySelector('.ta-reset-link[data-reset="textSize"]');
+const taLetterBtns     = document.querySelectorAll('.ta-pill-btn[data-letter]');
+const taWordBtns       = document.querySelectorAll('.ta-pill-btn[data-word]');
+const taLineBtns       = document.querySelectorAll('.ta-pill-btn[data-line]');
+const taResetAllBtn    = document.getElementById('ta-reset-all');
+
+// Load saved text settings into the UI.
+chrome.storage.local.get([TA_STORAGE_KEY], (data) => {
+  if (chrome.runtime.lastError) return;
+  const stored = data[TA_STORAGE_KEY];
+  if (stored && typeof stored === 'object') {
+    taSettings = { ...TA_DEFAULTS, ...stored };
+  }
+  paintTextSettings();
+});
+
+// Persist + repaint after any change.
+function commitTextSettings() {
+  try {
+    chrome.storage.local.set({ [TA_STORAGE_KEY]: taSettings });
+  } catch (_) {}
+  paintTextSettings();
+}
+
+// Reflect taSettings back into every control's pressed/value state.
+function paintTextSettings() {
+  taFontBtns.forEach(b =>
+    b.setAttribute('aria-pressed',
+      b.dataset.font === taSettings.fontFamily ? 'true' : 'false'));
+
+  if (taSizeSlider) taSizeSlider.value = String(taSettings.textSize);
+  if (taSizeValue)  taSizeValue.textContent = String(taSettings.textSize);
+
+  taLetterBtns.forEach(b =>
+    b.setAttribute('aria-pressed',
+      b.dataset.letter === taSettings.letterSpacing ? 'true' : 'false'));
+
+  taWordBtns.forEach(b =>
+    b.setAttribute('aria-pressed',
+      b.dataset.word === taSettings.wordSpacing ? 'true' : 'false'));
+
+  taLineBtns.forEach(b =>
+    b.setAttribute('aria-pressed',
+      b.dataset.line === taSettings.lineHeight ? 'true' : 'false'));
+}
+
+// ── Font picker ──
+taFontBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    taSettings.fontFamily = btn.dataset.font;
+    commitTextSettings();
+  });
+});
+
+// ── Size slider ──
+if (taSizeSlider) {
+  taSizeSlider.addEventListener('input', () => {
+    taSettings.textSize = Number(taSizeSlider.value);
+    commitTextSettings();
+  });
+}
+if (taSizeResetLink) {
+  taSizeResetLink.addEventListener('click', () => {
+    taSettings.textSize = TA_DEFAULTS.textSize;
+    commitTextSettings();
+  });
+}
+
+// ── Letter / word / line pills ──
+taLetterBtns.forEach(b => b.addEventListener('click', () => {
+  taSettings.letterSpacing = b.dataset.letter;
+  commitTextSettings();
+}));
+taWordBtns.forEach(b => b.addEventListener('click', () => {
+  taSettings.wordSpacing = b.dataset.word;
+  commitTextSettings();
+}));
+taLineBtns.forEach(b => b.addEventListener('click', () => {
+  taSettings.lineHeight = b.dataset.line;
+  commitTextSettings();
+}));
+
+// ── Reset all ──
+if (taResetAllBtn) {
+  taResetAllBtn.addEventListener('click', () => {
+    taSettings = { ...TA_DEFAULTS };
+    commitTextSettings();
+  });
+}
+
+// React to external changes (another popup window, another tab).
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== 'local') return;
+  if (!changes[TA_STORAGE_KEY]) return;
+  const next = changes[TA_STORAGE_KEY].newValue;
+  taSettings = next ? { ...TA_DEFAULTS, ...next } : { ...TA_DEFAULTS };
+  paintTextSettings();
+});
+
 // ───────── Paint helpers ─────────
 
 // Set the role="switch" on/off visual.

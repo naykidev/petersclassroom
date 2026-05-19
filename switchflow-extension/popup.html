@@ -14,6 +14,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Webfonts used in the text-accessibility previews -->
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/opendyslexic" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -172,6 +175,203 @@
       justify-content: center;
     }
 
+    /* ─── Text accessibility section ─── */
+    .text-accessibility-section {
+      margin-top: 1.3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .text-accessibility-section h2 {
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.4rem;
+    }
+    .ta-description {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .ta-subhead {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin: 0.85rem 0 0.45rem;
+    }
+    .ta-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin: 0.85rem 0 0.45rem;
+    }
+    .ta-section-header .ta-subhead { margin: 0; }
+    .ta-reset-link {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+    .ta-reset-link:hover { color: var(--blue); }
+
+    /* Font picker */
+    .ta-font-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .ta-font-btn {
+      background: var(--bg-soft);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: 8px 8px;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      color: var(--text);
+      font-family: inherit;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .ta-font-btn:hover { background: #e0ecff; }
+    .ta-font-btn[aria-pressed="true"] {
+      background: #fff;
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+    .ta-font-btn:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 2px;
+    }
+    .ta-font-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .ta-font-preview {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.15;
+    }
+    /* Preview text uses the actual font of that option */
+    .ta-font-preview[data-preview="opendyslexic"] {
+      font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+    }
+    .ta-font-preview[data-preview="lexend"] {
+      font-family: 'Lexend', sans-serif;
+    }
+    .ta-font-preview[data-preview="arial"] {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .ta-font-preview[data-preview="comic"] {
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    }
+    .ta-font-preview[data-preview="atkinson"] {
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+    }
+
+    /* Size slider */
+    .ta-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ta-slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--blue);
+      height: 24px;
+    }
+    .ta-slider-row input[type="range"]:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+    .ta-slider-value {
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 0.85rem;
+      min-width: 42px;
+      text-align: right;
+    }
+
+    /* Pill rows */
+    .ta-pill-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .ta-pill-row:last-child { margin-bottom: 0; }
+    .ta-pill-row-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      min-width: 46px;
+    }
+    .ta-pill-group {
+      display: flex;
+      gap: 4px;
+      flex: 1;
+    }
+    .ta-pill-btn {
+      flex: 1;
+      background: var(--bg-soft);
+      color: var(--text);
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 5px 6px;
+      font-family: inherit;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .ta-pill-btn:hover { background: #e0ecff; }
+    .ta-pill-btn[aria-pressed="true"] {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+    .ta-pill-btn:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 2px;
+    }
+
+    /* Reset all */
+    .ta-reset-all {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.15s, transform 0.12s;
+    }
+    .ta-reset-all:hover  { background: #2a2f36; }
+    .ta-reset-all:active { transform: scale(0.98); }
+    .ta-reset-all:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+
     /* ─── Footer ─── */
     .footer {
       margin-top: 1.3rem;
@@ -238,6 +438,81 @@
       <li>It clicks automatically.</li>
       <li>Tap <strong>Space</strong> any time to toggle on or off.</li>
     </ol>
+  </div>
+
+  <!-- Text accessibility — applies to every site -->
+  <div class="text-accessibility-section">
+    <h2>Text Accessibility</h2>
+    <p class="ta-description">Change fonts, size, and spacing on any website.</p>
+
+    <!-- Font picker -->
+    <h3 class="ta-subhead">Font</h3>
+    <div class="ta-font-grid" id="ta-font-grid">
+      <button class="ta-font-btn" data-font="default" type="button" aria-pressed="true">
+        <span class="ta-font-name">Default</span>
+        <span class="ta-font-preview" data-preview="default">Original page font</span>
+      </button>
+      <button class="ta-font-btn" data-font="opendyslexic" type="button" aria-pressed="false">
+        <span class="ta-font-name">OpenDyslexic</span>
+        <span class="ta-font-preview" data-preview="opendyslexic">The quick brown fox</span>
+      </button>
+      <button class="ta-font-btn" data-font="lexend" type="button" aria-pressed="false">
+        <span class="ta-font-name">Lexend</span>
+        <span class="ta-font-preview" data-preview="lexend">The quick brown fox</span>
+      </button>
+      <button class="ta-font-btn" data-font="arial" type="button" aria-pressed="false">
+        <span class="ta-font-name">Arial</span>
+        <span class="ta-font-preview" data-preview="arial">The quick brown fox</span>
+      </button>
+      <button class="ta-font-btn" data-font="comic" type="button" aria-pressed="false">
+        <span class="ta-font-name">Comic Sans MS</span>
+        <span class="ta-font-preview" data-preview="comic">The quick brown fox</span>
+      </button>
+      <button class="ta-font-btn" data-font="atkinson" type="button" aria-pressed="false">
+        <span class="ta-font-name">Atkinson</span>
+        <span class="ta-font-preview" data-preview="atkinson">The quick brown fox</span>
+      </button>
+    </div>
+
+    <!-- Text size -->
+    <div class="ta-section-header">
+      <h3 class="ta-subhead">Text Size</h3>
+      <button class="ta-reset-link" type="button" data-reset="textSize">Reset</button>
+    </div>
+    <div class="ta-slider-row">
+      <input type="range" id="ta-text-size" min="80" max="200" step="10" value="100"
+             aria-label="Text size percentage" />
+      <span class="ta-slider-value"><span id="ta-text-size-value">100</span>%</span>
+    </div>
+
+    <!-- Spacing -->
+    <h3 class="ta-subhead">Spacing</h3>
+    <div class="ta-pill-row">
+      <span class="ta-pill-row-label">Letter</span>
+      <div class="ta-pill-group" role="group" aria-label="Letter spacing">
+        <button class="ta-pill-btn" data-letter="normal" type="button" aria-pressed="true">Normal</button>
+        <button class="ta-pill-btn" data-letter="wide"   type="button" aria-pressed="false">Wide</button>
+        <button class="ta-pill-btn" data-letter="wider"  type="button" aria-pressed="false">Wider</button>
+      </div>
+    </div>
+    <div class="ta-pill-row">
+      <span class="ta-pill-row-label">Word</span>
+      <div class="ta-pill-group" role="group" aria-label="Word spacing">
+        <button class="ta-pill-btn" data-word="normal" type="button" aria-pressed="true">Normal</button>
+        <button class="ta-pill-btn" data-word="wide"   type="button" aria-pressed="false">Wide</button>
+        <button class="ta-pill-btn" data-word="wider"  type="button" aria-pressed="false">Wider</button>
+      </div>
+    </div>
+
+    <!-- Line height -->
+    <h3 class="ta-subhead">Line Height</h3>
+    <div class="ta-pill-group" role="group" aria-label="Line height">
+      <button class="ta-pill-btn" data-line="normal"  type="button" aria-pressed="true">Normal</button>
+      <button class="ta-pill-btn" data-line="relaxed" type="button" aria-pressed="false">Relaxed</button>
+      <button class="ta-pill-btn" data-line="loose"   type="button" aria-pressed="false">Loose</button>
+    </div>
+
+    <button id="ta-reset-all" class="ta-reset-all" type="button">Reset all text settings</button>
   </div>
 
   <div class="footer">

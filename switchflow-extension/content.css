@@ -312,3 +312,340 @@
     transform: scale(1) !important;
   }
 }
+
+/* ══════════════════════════════════════════
+   TEXT ACCESSIBILITY — floating "Aa" button + slide-in panel
+   Runs on every site (not just YouTube). All identifiers use the
+   `switchflow-` prefix so they never collide with host page CSS,
+   and every rule is !important + scoped to our own IDs so user-
+   applied font/size overrides don't disfigure the panel itself.
+   ══════════════════════════════════════════ */
+
+/* ───────── Floating "Aa" button (bottom-left) ───────── */
+#switchflow-aa-btn {
+  position: fixed !important;
+  bottom: 1.5rem !important;
+  left: 1.5rem !important;
+  z-index: 2147483629 !important;
+
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 50% !important;
+  border: 3px solid #ffffff !important;
+  background: #0066FF !important;
+  color: #ffffff !important;
+
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  letter-spacing: -0.01em !important;
+
+  cursor: pointer !important;
+  box-shadow: 0 6px 22px rgba(0, 102, 255, 0.45),
+              0 0 0 1px rgba(0, 102, 255, 0.3) !important;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-transform: none !important;
+}
+
+#switchflow-aa-btn:hover  { transform: scale(1.06) !important; background: #0050cc !important; }
+#switchflow-aa-btn:active { transform: scale(0.96) !important; }
+#switchflow-aa-btn:focus-visible {
+  outline: 3px solid #ffd400 !important;
+  outline-offset: 3px !important;
+}
+
+/* ───────── Backdrop overlay behind panel ───────── */
+#switchflow-text-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483627 !important;
+  background: rgba(0, 0, 0, 0.32) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.22s ease !important;
+}
+#switchflow-text-backdrop.switchflow-open {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* ───────── Slide-in panel from the left ───────── */
+#switchflow-text-panel {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 320px !important;
+  max-width: 92vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  z-index: 2147483628 !important;
+
+  background: #ffffff !important;
+  color: #0f1419 !important;
+  box-shadow: 6px 0 28px rgba(0, 0, 0, 0.22) !important;
+
+  transform: translateX(-105%) !important;
+  transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.2, 1) !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+  padding: 18px 18px 24px !important;
+  box-sizing: border-box !important;
+
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif !important;
+}
+#switchflow-text-panel.switchflow-open { transform: translateX(0) !important; }
+
+/* Always neutralize ALL font/spacing inheritance inside our own UI
+ * so the user's chosen page font doesn't disfigure the panel. */
+#switchflow-text-panel,
+#switchflow-text-panel * {
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+}
+
+/* ───────── Panel header ───────── */
+.sw-text-panel-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 14px !important;
+  border-bottom: 1px solid #e2e8ef !important;
+}
+.sw-text-panel-header h2 {
+  font-size: 1.2rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  color: #0f1419 !important;
+  margin: 0 !important;
+}
+.sw-text-panel-close {
+  background: #f1f6ff !important;
+  color: #0066FF !important;
+  border: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+.sw-text-panel-close:hover { background: #e0ecff !important; }
+.sw-text-panel-close:focus-visible {
+  outline: 3px solid #0066FF !important;
+  outline-offset: 3px !important;
+}
+
+/* ───────── Panel section block ───────── */
+.sw-text-section { margin-bottom: 18px !important; }
+
+.sw-text-section-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  margin-bottom: 10px !important;
+}
+.sw-text-section h3 {
+  font-size: 0.74rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: #0066FF !important;
+  margin: 0 0 10px 0 !important;
+}
+.sw-text-section-header h3 { margin: 0 !important; }
+.sw-reset-link {
+  background: none !important;
+  border: none !important;
+  color: #5a6470 !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  text-decoration: underline !important;
+}
+.sw-reset-link:hover { color: #0066FF !important; }
+
+/* ───────── Font picker grid ───────── */
+.sw-font-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+}
+.sw-font-btn {
+  background: #f1f6ff !important;
+  border: 2px solid transparent !important;
+  border-radius: 10px !important;
+  padding: 10px 10px !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  color: #0f1419 !important;
+  transition: border-color 0.15s, background 0.15s !important;
+}
+.sw-font-btn:hover { background: #e0ecff !important; }
+.sw-font-btn[aria-pressed="true"] {
+  background: #ffffff !important;
+  border-color: #0066FF !important;
+  color: #0066FF !important;
+}
+.sw-font-btn:focus-visible {
+  outline: 3px solid #0066FF !important;
+  outline-offset: 2px !important;
+}
+.sw-font-name {
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+}
+/* The preview line USES the actual font of the option so users can
+ * see it. We override the panel-wide Lexend !important via an even
+ * more specific data-attribute selector applied per font option. */
+.sw-font-preview {
+  font-size: 0.78rem !important;
+  color: #5a6470 !important;
+  line-height: 1.2 !important;
+}
+.sw-font-btn[data-font="opendyslexic"] .sw-font-preview {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+}
+.sw-font-btn[data-font="lexend"] .sw-font-preview {
+  font-family: 'Lexend', sans-serif !important;
+}
+.sw-font-btn[data-font="arial"] .sw-font-preview {
+  font-family: Arial, sans-serif !important;
+}
+.sw-font-btn[data-font="comic"] .sw-font-preview {
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive !important;
+}
+.sw-font-btn[data-font="atkinson"] .sw-font-preview {
+  font-family: 'Atkinson Hyperlegible', sans-serif !important;
+}
+
+/* ───────── Slider ───────── */
+.sw-slider-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+.sw-slider-row input[type="range"] {
+  flex: 1 !important;
+  accent-color: #0066FF !important;
+  height: 24px !important;
+}
+.sw-slider-row input[type="range"]:focus-visible {
+  outline: 3px solid #0066FF !important;
+  outline-offset: 4px !important;
+  border-radius: 4px !important;
+}
+.sw-slider-value {
+  color: #0066FF !important;
+  font-weight: 800 !important;
+  font-size: 0.92rem !important;
+  min-width: 44px !important;
+  text-align: right !important;
+}
+
+/* ───────── Pill button rows ───────── */
+.sw-pill-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  margin-bottom: 8px !important;
+}
+.sw-pill-row:last-child { margin-bottom: 0 !important; }
+.sw-pill-row-label {
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  color: #0f1419 !important;
+  min-width: 50px !important;
+}
+.sw-pill-group {
+  display: flex !important;
+  gap: 4px !important;
+  flex: 1 !important;
+}
+.sw-pill-btn {
+  flex: 1 !important;
+  background: #f1f6ff !important;
+  color: #0f1419 !important;
+  border: 1px solid transparent !important;
+  border-radius: 999px !important;
+  padding: 6px 8px !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: background 0.15s, color 0.15s, border-color 0.15s !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+.sw-pill-btn:hover { background: #e0ecff !important; }
+.sw-pill-btn[aria-pressed="true"] {
+  background: #0066FF !important;
+  color: #ffffff !important;
+  border-color: #0066FF !important;
+}
+.sw-pill-btn:focus-visible {
+  outline: 3px solid #0066FF !important;
+  outline-offset: 2px !important;
+}
+
+/* ───────── Reset all + footer ───────── */
+.sw-reset-all {
+  width: 100% !important;
+  padding: 12px !important;
+  background: #0f1419 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  margin-top: 8px !important;
+  transition: background 0.15s !important;
+}
+.sw-reset-all:hover  { background: #2a2f36 !important; }
+.sw-reset-all:focus-visible {
+  outline: 3px solid #ffd400 !important;
+  outline-offset: 3px !important;
+}
+
+.sw-text-panel-footer {
+  margin-top: 18px !important;
+  padding-top: 14px !important;
+  border-top: 1px solid #e2e8ef !important;
+  text-align: center !important;
+  font-size: 0.74rem !important;
+  color: #5a6470 !important;
+}
+.sw-text-panel-footer a {
+  color: #0066FF !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+}
+.sw-text-panel-footer a:hover { text-decoration: underline !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  #switchflow-aa-btn,
+  #switchflow-text-panel,
+  #switchflow-text-backdrop {
+    transition: none !important;
+  }
+}
+

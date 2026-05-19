@@ -1,22 +1,22 @@
 {
   "manifest_version": 3,
   "name": "SwitchFlow",
-  "version": "0.2.0",
-  "description": "Dwell clicking for YouTube. Hover to click — no button needed.",
+  "version": "0.3.0",
+  "description": "Dwell clicking for YouTube and universal text-accessibility controls (fonts, sizing, spacing) on every site.",
   "permissions": [
     "activeTab",
     "storage",
     "scripting"
   ],
   "host_permissions": [
-    "*://*.youtube.com/*"
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["*://*.youtube.com/*"],
+      "matches": ["<all_urls>"],
       "js": ["content.js"],
       "css": ["content.css"],
       "run_at": "document_idle",
@@ -25,7 +25,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "SwitchFlow — dwell clicking",
+    "default_title": "SwitchFlow",
     "default_icon": {
       "16": "icons/icon-16.png",
       "48": "icons/icon-48.png",
