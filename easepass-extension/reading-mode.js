@@ -1,7 +1,7 @@
 /*
  * Accessibility Surfer — Reading Mode.
  *
- * A self-contained IIFE exposing window.EasePassReadingMode. Reading mode
+ * A self-contained IIFE exposing window.AccessibilitySurferReadingMode. Reading mode
  * lifts the main article out of an arbitrary page and presents it in a clean,
  * fully-typographically-controlled overlay, with optional focus mode, fatigue
  * compensation, vocabulary simplification, a reading-progress bar, per-domain
@@ -21,7 +21,7 @@
  *
  * Dwell integration: reading-mode elements are made focusable/interactive, so
  * the existing universal dwell-click system (content.js) rings + clicks them
- * with no changes to dwell logic. window.EasePassDwell (if present) is read
+ * with no changes to dwell logic. window.AccessibilitySurferDwell (if present) is read
  * only to know the dwell time / enabled state.
  */
 
@@ -98,6 +98,7 @@
     charsLabel: 'Max line length',
     paraLabel: 'Paragraph spacing',
     bgLabel: 'Background',
+    advanceHint: '↓ / Space to advance',
     para: function (n, total) { return '¶ ' + n + ' of ' + total; },
     readTime: function (n) { return n + ' ' + STRINGS.min; },
     progress: function (pct) { return pct + '%'; }
@@ -285,20 +286,30 @@
   ];
   const BLOCK_SELECTOR = 'p, h1, h2, h3, h4, h5, h6, blockquote, ul, ol, figure, img, pre';
 
+  function wordCount(node) {
+    return (node.textContent || '').trim().split(/\s+/).filter(Boolean).length;
+  }
+
   function findRoot() {
     for (let i = 0; i < ROOT_SELECTORS.length; i++) {
       let node = null;
       try { node = document.querySelector(ROOT_SELECTORS[i]); } catch (_) {}
-      if (node && node.textContent && node.textContent.trim().length > 200) return node;
+      // Require several real words, so a single long token (e.g. a URL)
+      // can't satisfy the gate the way a raw character count could — but stay
+      // lenient enough to accept genuinely short articles.
+      if (node && wordCount(node) > 10) return node;
     }
     return largestParagraphBlock();
   }
 
   // Fallback: the element whose direct paragraph children hold the most text.
+  // Returns null (never document.body) when no real content cluster is found,
+  // so we show the friendly "no article" message instead of extracting nav,
+  // sidebars, and footer as garbage.
   function largestParagraphBlock() {
     let best = null, bestLen = 0;
     let ps = [];
-    try { ps = document.querySelectorAll('p'); } catch (_) { return document.body; }
+    try { ps = document.querySelectorAll('p'); } catch (_) { return null; }
     const scores = new Map();
     for (let i = 0; i < ps.length; i++) {
       const p = ps[i];
@@ -310,7 +321,7 @@
       scores.set(parent, cur);
       if (cur > bestLen) { bestLen = cur; best = parent; }
     }
-    return best || document.body;
+    return bestLen > 120 ? best : null;
   }
 
   function findAuthor(root) {
@@ -342,25 +353,42 @@
     return '';
   }
 
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+    'August', 'September', 'October', 'November', 'December'];
+
   function formatDate(raw) {
     const d = new Date(raw);
     if (isNaN(d.getTime())) return String(raw).trim().slice(0, 40);
     try {
       return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-    } catch (_) { return String(raw).slice(0, 40); }
+    } catch (_) {
+      // Manual fallback so a valid date never renders as a raw ISO string.
+      return MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    }
   }
 
-  function findTitle(root) {
-    let h1 = null;
-    try { h1 = (root && root.querySelector('h1')) || document.querySelector('h1'); } catch (_) {}
-    const t = h1 && h1.textContent ? h1.textContent.trim() : '';
-    return t || (document.title || '').trim();
+  // document.title minus a trailing " - Site" / " | Site" / " — Site" suffix.
+  function cleanDocTitle() {
+    const full = (document.title || '').trim();
+    const trimmed = full.replace(/\s*[|–—-]\s*[^|–—-]{1,40}$/, '').trim();
+    return trimmed || full;
+  }
+
+  // The headline element: first h1, else the first h2 (many articles use an
+  // h2 as their effective title with no h1 at all).
+  function findTitleElement(root) {
+    let node = null;
+    try {
+      node = (root && (root.querySelector('h1') || root.querySelector('h2'))) ||
+        document.querySelector('h1');
+    } catch (_) {}
+    return node || null;
   }
 
   // Collect ordered, cleaned block descriptors from the root. Nested blocks
   // (e.g. <p> inside <blockquote>, <li> inside <ul>) are skipped so each chunk
   // appears once. Text is copied verbatim via textContent — never truncated.
-  function extractBlocks(root) {
+  function extractBlocks(root, titleEl) {
     let nodes = [];
     try { nodes = root.querySelectorAll(BLOCK_SELECTOR); } catch (_) { return []; }
     const blocks = [];
@@ -371,9 +399,10 @@
       if (tag === 'p') {
         const text = (node.textContent || '').trim();
         if (text) blocks.push({ type: 'p', text: text });
-      } else if (/^h[2-6]$/.test(tag)) {
-        // h1 is treated as the article title (rendered separately), so it is
-        // intentionally excluded here to avoid duplicating the headline.
+      } else if (/^h[1-6]$/.test(tag)) {
+        // Skip exactly the headline element (rendered separately as the
+        // title) so it isn't duplicated; all other headings stay as content.
+        if (node === titleEl) continue;
         const text = (node.textContent || '').trim();
         if (text) blocks.push({ type: 'h', level: tag, text: text });
       } else if (tag === 'blockquote') {
@@ -398,7 +427,10 @@
             caption: cap ? (cap.textContent || '').trim() : '' });
         }
       } else if (tag === 'img') {
-        if (node.src && node.naturalWidth !== 1) {
+        // Keep the image unless it's a confirmed tiny tracking pixel.
+        // naturalWidth is 0 for not-yet-loaded images, so those are kept.
+        const w = node.naturalWidth;
+        if (node.src && (w === 0 || w > 2)) {
           blocks.push({ type: 'img', src: node.src, alt: node.alt || '', caption: '' });
         }
       }
@@ -430,11 +462,13 @@
   function extractArticle() {
     const root = findRoot();
     if (!root) return null;
-    const blocks = extractBlocks(root);
+    const titleEl = findTitleElement(root);
+    const blocks = extractBlocks(root, titleEl);
     if (!blocks.length) return null;
     const words = countWords(blocks);
+    const title = (titleEl && titleEl.textContent && titleEl.textContent.trim()) || cleanDocTitle();
     return {
-      title: findTitle(root),
+      title: title,
       author: findAuthor(root),
       date: findDate(),
       readTime: Math.max(1, Math.round(words / WORDS_PER_MINUTE)),
@@ -688,7 +722,16 @@
       if (isFocus) p.setAttribute('tabindex', '0');
       else p.removeAttribute('tabindex');
     }
-    paraIndicatorEl.textContent = STRINGS.para(focusIndex + 1, paragraphEls.length);
+    // When dwell clicking isn't available to auto-advance, surface the
+    // keyboard fallback so the user isn't left with a silent dead end.
+    let dwellActive = false;
+    try {
+      dwellActive = !!(window.AccessibilitySurferDwell &&
+        window.AccessibilitySurferDwell.isEnabled &&
+        window.AccessibilitySurferDwell.isEnabled());
+    } catch (_) {}
+    paraIndicatorEl.textContent = STRINGS.para(focusIndex + 1, paragraphEls.length) +
+      (dwellActive ? '' : '  ·  ' + STRINGS.advanceHint);
     if (!fromHover) centerParagraph(paragraphEls[focusIndex]);
   }
 
@@ -829,13 +872,13 @@
     if (article.author) meta.push(STRINGS.by + ' ' + article.author);
     if (article.date) meta.push(article.date);
     if (meta.length) parts.push(meta.join('  ·  '));
-    parts.push('');
     for (let i = 0; i < article.blocks.length; i++) {
       const b = article.blocks[i];
       if (b.type === 'list') parts.push(b.items.map(function (t) { return '• ' + t; }).join('\n'));
       else if (b.type === 'img') { if (b.caption) parts.push('[' + b.caption + ']'); }
       else if (b.text) parts.push(b.text);
     }
+    // Uniform blank line between every block (no stray extra gaps).
     return parts.join('\n\n');
   }
 
@@ -933,7 +976,8 @@
         const picker = el('input', 'easepass-rm-swatch easepass-rm-swatch-custom');
         picker.type = 'color';
         picker.value = (settings.backgroundColor[0] === '#') ? settings.backgroundColor : '#FFFFFF';
-        picker.title = BG_SWATCHES[i][0];
+        picker.title = 'Custom background color';
+        picker.setAttribute('aria-label', 'Custom background color');
         picker.addEventListener('input', function () {
           settings.backgroundColor = picker.value; applyTypography();
         });
@@ -1122,10 +1166,12 @@
   function disable() {
     if (!active && !overlayEl) return;
 
+    // Detach listeners immediately so nothing lingers during the slide-out.
+    if (onColumnScroll && columnEl) columnEl.removeEventListener('scroll', onColumnScroll);
+    if (onKeyDown) document.removeEventListener('keydown', onKeyDown, true);
+    onColumnScroll = null; onKeyDown = null;
+
     const finish = function () {
-      if (onColumnScroll && columnEl) columnEl.removeEventListener('scroll', onColumnScroll);
-      if (onKeyDown) document.removeEventListener('keydown', onKeyDown, true);
-      onColumnScroll = null; onKeyDown = null;
       if (overlayEl && overlayEl.parentNode) overlayEl.parentNode.removeChild(overlayEl);
       if (styleEl && styleEl.parentNode) styleEl.parentNode.removeChild(styleEl);
       try { document.documentElement.style.overflow = prevHtmlOverflow; } catch (_) {}
@@ -1173,7 +1219,7 @@
 
   // ───────── Public API ─────────
 
-  window.EasePassReadingMode = {
+  window.AccessibilitySurferReadingMode = {
     enable: enable,
     disable: disable,
     isActive: function () { return active; },

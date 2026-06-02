@@ -1426,7 +1426,7 @@
     if (rmOpenBtn) {
       rmOpenBtn.addEventListener('click', () => {
         closeDwellPanel(); // reading mode sits below this panel, so close it first
-        if (window.EasePassReadingMode) window.EasePassReadingMode.enable(rmSettings || {});
+        if (window.AccessibilitySurferReadingMode) window.AccessibilitySurferReadingMode.enable(rmSettings || {});
       });
     }
     const rmClearBtn = dwellPanelEl.querySelector('#sw-rm-clear');
@@ -1604,7 +1604,7 @@
   bootToggle();
 
   // ══════════════════════════════════════════
-  // READING MODE integration — coordinates window.EasePassReadingMode
+  // READING MODE integration — coordinates window.AccessibilitySurferReadingMode
   // (reading-mode.js). Independent of dwell clicking: the dwell-click logic
   // above is untouched. Reading-mode elements become dwell targets simply by
   // being focusable, so the existing universal dwell-click rings + clicks
@@ -1612,7 +1612,7 @@
   // ══════════════════════════════════════════
 
   // Read-only handle the reading-mode module reads for dwell timing/state.
-  window.EasePassDwell = {
+  window.AccessibilitySurferDwell = {
     isEnabled: function () { return isDwellEnabledHere(); },
     get universalDwellTime() { return universalDwellTime; }
   };
@@ -1620,7 +1620,7 @@
   let rmSettings = null;
 
   function toggleReadingMode() {
-    if (window.EasePassReadingMode) window.EasePassReadingMode.toggle(rmSettings || {});
+    if (window.AccessibilitySurferReadingMode) window.AccessibilitySurferReadingMode.toggle(rmSettings || {});
   }
 
   // Trigger script (same frame) asks us to toggle via a CustomEvent.
@@ -1641,8 +1641,8 @@
         if (area !== 'local') return;
         if (changes['easepass-reading-mode-settings']) {
           rmSettings = changes['easepass-reading-mode-settings'].newValue || null;
-          if (window.EasePassReadingMode && window.EasePassReadingMode.isActive()) {
-            window.EasePassReadingMode.updateSettings(rmSettings || {});
+          if (window.AccessibilitySurferReadingMode && window.AccessibilitySurferReadingMode.isActive()) {
+            window.AccessibilitySurferReadingMode.updateSettings(rmSettings || {});
           }
         }
       } catch (_) {}

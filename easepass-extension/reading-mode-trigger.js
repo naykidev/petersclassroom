@@ -35,7 +35,7 @@
     }
   }, true);
 
-  if (!looksLikeArticle() || !isAlive() || !window.EasePassReadingMode) return;
+  if (!looksLikeArticle() || !isAlive() || !window.AccessibilitySurferReadingMode) return;
 
   // Offer the pill on remembered domains, unless site memory is turned off.
   try {
@@ -43,7 +43,7 @@
       try {
         if (chrome.runtime && chrome.runtime.lastError) return;
         if (data && data['easepass-reading-mode-memory'] === false) return;
-        window.EasePassReadingMode.maybeShowPill();
+        window.AccessibilitySurferReadingMode.maybeShowPill();
       } catch (_) {}
     });
   } catch (_) {}
