@@ -18,10 +18,25 @@
   <meta name="twitter:description" content="Affordable, co-developed assistive technology for the classroom." />
   <meta name="twitter:image" content="https://axol-assist.vercel.app/logo.png" />
 
+  <link rel="preload" as="image" href="logo.png">
+  <link rel="icon" type="image/png" href="easepasslogo.png">
+  <link rel="canonical" href="https://axol-assist.vercel.app/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Axolo Assist",
+    "url": "https://axol-assist.vercel.app",
+    "logo": "https://axol-assist.vercel.app/logo.png",
+    "description": "Affordable co-developed assistive technology for the classroom",
+    "email": "axolassist.business@gmail.com",
+    "sameAs": []
+  }
+  </script>
 </head>
 <body>
 
@@ -35,16 +50,19 @@
     <ul class="nav-links">
       <li><a href="#audiences">Who We Serve</a></li>
       <li><a href="#products">Solutions</a></li>
-      <li><a href="#notify" class="nav-cta">Get Notified</a></li>
+      <li><a href="#contact" class="nav-cta">Get in touch</a></li>
     </ul>
   </nav>
 
   <!-- HERO -->
-  <section class="hero" id="main" tabindex="-1">
-    <img src="logo.png" alt="Axolo Assist" class="hero-logo" />
+  <section class="hero" id="main" tabindex="-1" aria-label="Main content">
+    <img src="logo.png" alt="Axolo Assist" class="hero-logo" width="1106" height="373" loading="eager" fetchpriority="high" />
+    <h1 class="hero-headline">Assistive technology built <span class="accent">for real classrooms.</span></h1>
+    <p class="hero-tagline">Free tools for students with motor, communication, and learning differences. Co-developed with the people who use them.</p>
     <div class="hero-links">
+      <a href="easepass.html" class="hero-link hero-cta-link">Install Accessibility Surfer free →</a>
       <a href="#audiences" class="hero-link">Learn more</a>
-      <a href="#notify" class="hero-link">Get notified</a>
+      <a href="#contact" class="hero-link">Get in touch</a>
     </div>
   </section>
 
@@ -62,15 +80,15 @@
 
     <div class="audience-grid">
       <div class="audience-card">
-        <h3>Students with communication needs</h3>
+        <h3><span class="card-emoji" aria-hidden="true">💬</span> Students with communication needs</h3>
         <p>AAC-friendly tools and visual supports for emerging and established communicators.</p>
       </div>
       <div class="audience-card">
-        <h3>Students with motor differences</h3>
+        <h3><span class="card-emoji" aria-hidden="true">🖱️</span> Students with motor differences</h3>
         <p>Switch-accessible interfaces, large targets, and adaptive input from day one.</p>
       </div>
       <div class="audience-card">
-        <h3>Educators &amp; paraprofessionals</h3>
+        <h3><span class="card-emoji" aria-hidden="true">📚</span> Educators &amp; paraprofessionals</h3>
         <p>Classroom-ready software and hardware that fits IEP goals and daily routines.</p>
       </div>
     </div>
@@ -105,6 +123,12 @@
     </div>
   </section>
 
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+    <h2>Who we <span class="accent">are.</span></h2>
+    <p>Axolo Assist was founded by a classroom educator frustrated by how expensive and hard to access assistive technology is for the students who need it most. Every product is built in close collaboration with parents, students, SLPs, and AT specialists — the people who live this work every day. We believe great accessibility tools should be affordable enough for any family and any school.</p>
+  </section>
+
   <!-- PRODUCTS -->
   <section class="products" id="products">
     <span class="section-label">Solutions</span>
@@ -116,18 +140,19 @@
       <div class="product-card websites software-card">
         <div class="card-glow"></div>
         <span class="card-icon" aria-hidden="true">
-          <img src="software.png" alt="" class="card-icon-img" width="96" height="96" />
+          <img src="software.png" alt="" class="card-icon-img" width="96" height="96" loading="lazy" />
         </span>
         <span class="card-badge">Adaptive Software</span>
         <h3>Web Tools &amp; Communication Boards</h3>
         <p>Browser-based AAC boards, switch-accessible learning activities, and visual supports that work on any device. Keyboard navigable and screen reader ready.</p>
         <a href="easepass.html" class="coming-soon-pill">Meet Accessibility Surfer</a>
+        <a href="easepass.html#contact" class="coming-soon-pill" style="margin-top:0.4rem;">Request early access →</a>
       </div>
 
       <div class="product-card hardware">
         <div class="card-glow"></div>
         <span class="card-icon" aria-hidden="true">
-          <img src="hardware.png" alt="" class="card-icon-img" width="96" height="96" />
+          <img src="hardware.png" alt="" class="card-icon-img" width="96" height="96" loading="lazy" />
         </span>
         <span class="card-badge">Classroom Hardware</span>
         <h3>Adaptive Switches &amp; Devices</h3>
@@ -139,7 +164,7 @@
   </section>
 
   <!-- CONTACT -->
-  <section class="notify" id="notify">
+  <section class="notify" id="contact">
     <h2>Get in <span class="accent">touch.</span></h2>
     <p>Questions, partnership inquiries, or early-access requests. We'd love to hear from you.</p>
 
@@ -188,6 +213,11 @@
         <div class="form-row">
           <label for="cf-message">Message</label>
           <textarea id="cf-message" name="message" rows="4" required placeholder="Tell us a bit about your interest or question."></textarea>
+        </div>
+
+        <div style="display:none" aria-hidden="true">
+          <label for="cf-website">Website (leave blank)</label>
+          <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
         </div>
 
         <button type="submit">Send message</button>

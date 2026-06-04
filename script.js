@@ -12,6 +12,13 @@ function handleContactSubmit(e) {
   }
 
   const data = Object.fromEntries(new FormData(form));
+
+  if (data.website && data.website.trim()) {
+    status.textContent = 'Opening your email app...';
+    status.classList.add('success');
+    return;
+  }
+
   const subject = encodeURIComponent("Inquiry from Axolo Assist site: " + data.name);
   const body = encodeURIComponent(
     "Name: "  + data.name  + "\n" +
@@ -28,7 +35,7 @@ function handleContactSubmit(e) {
 
   window.location.href = mailtoUrl;
 
-  status.textContent = "Opening your email app. Review and tap Send to deliver your message.";
+  status.innerHTML = 'Opening your email app — review the message and tap Send. If no app opens, email us directly at <a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a>.';
   status.classList.add('success');
 }
 
@@ -46,6 +53,7 @@ const revealTargets = document.querySelectorAll(
   '.mission h2, .mission p, ' +
   '.audiences h2, .audiences > p, .audience-card, ' +
   '.principles h2, .principle, ' +
+  '.about-section h2, .about-section p, ' +
   '.products h2, .products > p, .product-card, ' +
   '.notify h2, .notify p, .contact-info, .contact-form'
 );
@@ -233,6 +241,20 @@ revealTargets.forEach(el => {
   overlay.addEventListener('click', closePanel);
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+    if (e.key !== 'Tab' || !panel.classList.contains('open')) return;
+    const focusable = Array.from(panel.querySelectorAll(
+      'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )).filter(el => !el.disabled);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
   });
 
   // Reading guide bar follows cursor
@@ -393,6 +415,36 @@ revealTargets.forEach(el => {
   bindSlider('epd-video', 'epd-video-val');
   bindSlider('epd-button', 'epd-button-val');
   bindSlider('epd-universal', 'epd-universal-val');
+
+  function showEpdActionToast(message) {
+    let toast = panel.querySelector('.epd-action-toast');
+    if (!toast) {
+      toast = document.createElement('p');
+      toast.className = 'epd-action-toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      panel.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('epd-action-toast-visible');
+    clearTimeout(showEpdActionToast._timer);
+    showEpdActionToast._timer = setTimeout(() => {
+      toast.classList.remove('epd-action-toast-visible');
+    }, 3200);
+  }
+
+  const rmOpenBtn = panel.querySelector('#epd-rm-open');
+  const rmClearBtn = panel.querySelector('#epd-rm-clear');
+  if (rmOpenBtn) {
+    rmOpenBtn.addEventListener('click', () => {
+      showEpdActionToast('Install the extension to use reading mode on real pages.');
+    });
+  }
+  if (rmClearBtn) {
+    rmClearBtn.addEventListener('click', () => {
+      showEpdActionToast('Site memory cleared (preview only).');
+    });
+  }
 
   document.body.appendChild(toggle);
   document.body.appendChild(overlay);

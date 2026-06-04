@@ -17,7 +17,7 @@
 
   /* UI palette */
   --text:        #1d1d1f;
-  --text-muted:  #6e6e73;
+  --text-muted:  #636366;
   --bg:          #ffffff;
   --bg-alt:      #f2f2f4;
   --border:      #d2d2d7;
@@ -266,6 +266,25 @@ footer       .accent     { color: var(--pink); }
 }
 .hero-link::after { content: " ›"; }
 
+.hero-cta-link {
+  display: inline-block;
+  background: var(--link);
+  color: #fff !important;
+  padding: 0.75rem 1.8rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none !important;
+  transition: background 0.2s, transform 0.15s;
+  font-size: 1.1rem;
+}
+.hero-cta-link:hover {
+  background: #0055aa;
+  transform: translateY(-2px);
+}
+.hero-cta-link::after { content: none; }
+
+.card-emoji { margin-right: 0.35em; }
+
 /* ── MISSION STRIP ── */
 .mission {
   background: var(--bg-alt);
@@ -296,6 +315,33 @@ footer       .accent     { color: var(--pink); }
 .mission p strong {
   color: var(--text);
   font-weight: 600;
+}
+
+/* ── ABOUT ── */
+.about-section {
+  background: var(--bg-alt);
+  color: var(--text);
+  text-align: center;
+  padding: 7rem 1.5rem;
+}
+
+.about-section h2 {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 1.2rem;
+  max-width: 16ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.about-section p {
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  line-height: 1.45;
+  color: var(--text-muted);
 }
 
 /* ── AUDIENCES ── */
@@ -765,6 +811,7 @@ footer       .accent     { color: var(--pink); }
 }
 
 .form-status.success { color: var(--green-d); }
+.form-status.success a { color: var(--link); font-weight: 600; }
 .form-status.error   { color: var(--red); }
 
 @media (max-width: 768px) {
@@ -1454,14 +1501,14 @@ html[data-letter-spacing="wider"] body { letter-spacing: 0.1em; word-spacing: 0.
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('https://fonts.cdnfonts.com/s/19808/OpenDyslexic-Regular.woff') format('woff');
+  src: url('fonts/opendyslexic-7.woff') format('woff');
 }
 @font-face {
   font-family: 'OpenDyslexic';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('https://fonts.cdnfonts.com/s/19808/OpenDyslexic-Bold.woff') format('woff');
+  src: url('fonts/opendyslexic-8.woff') format('woff');
 }
 
 html[data-font="dyslexia"] body,
@@ -1475,6 +1522,9 @@ html[data-contrast="dark"] nav { background: rgba(20,20,20,0.94); border-bottom-
 html[data-contrast="dark"] .nav-links a { color: #f0f0f0; }
 html[data-contrast="dark"] .hero { background: linear-gradient(160deg, #1a1a1a 0%, #0f0f1a 100%); }
 html[data-contrast="dark"] .mission { background: #0a0a0a; }
+html[data-contrast="dark"] .about-section { background: #0a0a0a; }
+html[data-contrast="dark"] .about-section h2 { color: #f0f0f0; }
+html[data-contrast="dark"] .about-section p { color: #bbb; }
 html[data-contrast="dark"] .audiences { background: #121212; }
 html[data-contrast="dark"] .audience-card { background: #1f1f1f; }
 html[data-contrast="dark"] .audience-card h3 { color: #f0f0f0; }
@@ -1810,6 +1860,23 @@ html.a11y-locked, html.a11y-locked body { overflow: hidden; }
 }
 .epd-footer a { color: #0066FF; text-decoration: none; font-weight: 600; }
 .epd-footer a:hover { text-decoration: underline; }
+
+.epd-action-toast {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: #f1f6ff;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: #0f1419;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.epd-action-toast.epd-action-toast-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 /* Dark mode parity with the site's contrast toggle */
 html[data-contrast="dark"] #epd-panel { background: #1f1f1f; color: #f0f0f0; }
