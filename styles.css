@@ -1050,8 +1050,8 @@ footer .dot {
 
   .a11y-toggle {
     width: 50px; height: 50px;
-    bottom: calc(0.9rem + env(safe-area-inset-bottom));
-    right:  calc(0.9rem + env(safe-area-inset-right));
+    top: calc(4.75rem + env(safe-area-inset-top));
+    right: calc(0.9rem + env(safe-area-inset-right));
   }
 
   #epd-toggle {
@@ -1262,8 +1262,10 @@ footer {
   padding-bottom: calc(2.4rem + env(safe-area-inset-bottom));
 }
 .a11y-toggle {
-  bottom: calc(1.5rem + env(safe-area-inset-bottom));
-  right:  calc(1.5rem + env(safe-area-inset-right));
+  top: calc(5.25rem + env(safe-area-inset-top));
+  right: calc(1.1rem + env(safe-area-inset-right));
+  bottom: auto;
+  left: auto;
 }
 .a11y-panel {
   padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
@@ -1275,8 +1277,8 @@ footer {
 
 .a11y-toggle {
   position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
+  top: calc(5.25rem + env(safe-area-inset-top));
+  right: calc(1.1rem + env(safe-area-inset-right));
   width: 60px;
   height: 60px;
   padding: 0;
@@ -1475,8 +1477,9 @@ footer {
   .a11y-panel { width: 100vw; }
   .a11y-toggle {
     width: 52px; height: 52px;
-    bottom: calc(1rem + env(safe-area-inset-bottom));
-    right:  calc(1rem + env(safe-area-inset-right));
+    top: calc(4.5rem + env(safe-area-inset-top));
+    right: calc(1rem + env(safe-area-inset-right));
+    bottom: auto;
   }
 }
 
