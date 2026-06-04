@@ -1050,14 +1050,14 @@ footer .dot {
 
   .a11y-toggle {
     width: 50px; height: 50px;
-    top: calc(4.75rem + env(safe-area-inset-top));
-    right: calc(0.9rem + env(safe-area-inset-right));
+    bottom: calc(0.9rem + env(safe-area-inset-bottom));
+    left: calc(0.9rem + env(safe-area-inset-left));
   }
 
   #epd-toggle {
     width: 52px; height: 52px;
-    bottom: calc(0.9rem + env(safe-area-inset-bottom));
-    left: calc(0.9rem + env(safe-area-inset-left));
+    top: calc(4.75rem + env(safe-area-inset-top));
+    right: calc(0.9rem + env(safe-area-inset-right));
   }
 }
 
@@ -1262,10 +1262,10 @@ footer {
   padding-bottom: calc(2.4rem + env(safe-area-inset-bottom));
 }
 .a11y-toggle {
-  top: calc(5.25rem + env(safe-area-inset-top));
-  right: calc(1.1rem + env(safe-area-inset-right));
-  bottom: auto;
-  left: auto;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  left: calc(1.5rem + env(safe-area-inset-left));
+  top: auto;
+  right: auto;
 }
 .a11y-panel {
   padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
@@ -1277,8 +1277,8 @@ footer {
 
 .a11y-toggle {
   position: fixed;
-  top: calc(5.25rem + env(safe-area-inset-top));
-  right: calc(1.1rem + env(safe-area-inset-right));
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  left: calc(1.5rem + env(safe-area-inset-left));
   width: 60px;
   height: 60px;
   padding: 0;
@@ -1477,9 +1477,14 @@ footer {
   .a11y-panel { width: 100vw; }
   .a11y-toggle {
     width: 52px; height: 52px;
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+    left: calc(1rem + env(safe-area-inset-left));
+  }
+
+  #epd-toggle {
+    width: 52px; height: 52px;
     top: calc(4.5rem + env(safe-area-inset-top));
     right: calc(1rem + env(safe-area-inset-right));
-    bottom: auto;
   }
 }
 
@@ -1652,7 +1657,7 @@ html[data-pause-animations="on"] *::after {
 html.a11y-locked, html.a11y-locked body { overflow: hidden; }
 
 /* ══════════════════════════════════════════
-   EASEPASS POPUP PREVIEW — bottom-left floating widget
+   EASEPASS POPUP PREVIEW — top-right floating widget
    A faithful, interactive replica of the extension's popup.html so site
    visitors can see every control the extension offers. Injected by
    script.js (injectPopupPreview). Scoped under #epd- ids so it can't
@@ -1661,8 +1666,8 @@ html.a11y-locked, html.a11y-locked body { overflow: hidden; }
    ══════════════════════════════════════════ */
 #epd-toggle {
   position: fixed;
-  bottom: calc(1.5rem + env(safe-area-inset-bottom));
-  left: calc(1.5rem + env(safe-area-inset-left));
+  top: calc(5.25rem + env(safe-area-inset-top));
+  right: calc(1.1rem + env(safe-area-inset-right));
   width: 60px; height: 60px;
   padding: 0; border: none; border-radius: 22px;
   background: transparent; cursor: pointer;
@@ -1675,10 +1680,10 @@ html.a11y-locked, html.a11y-locked body { overflow: hidden; }
   border-radius: 22px; object-fit: cover;
 }
 #epd-toggle::after {
-  content: 'Try the popup';
+  content: 'try accessibility surfer';
   position: absolute;
-  top: 50%; left: calc(100% + 10px);
-  right: auto;
+  top: 50%; right: calc(100% + 10px);
+  left: auto;
   transform: translateY(-50%);
   white-space: nowrap;
   background: #1d1d1f; color: #fff;
