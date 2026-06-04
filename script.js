@@ -284,7 +284,7 @@ revealTargets.forEach(el => {
 })();
 
 /* ───────── EASEPASS POPUP PREVIEW ─────────
-   A top-right floating button (accessibility logo) that opens a preview of
+   A bottom-left floating button (Accessibility Surfer logo) that opens a preview of
    the extension's dwell-clicking controls, so visitors can see what the
    extension offers. Injected here (one source, appears on every page that
    loads script.js). The toggles and sliders are a visual demo — they update
@@ -306,7 +306,7 @@ revealTargets.forEach(el => {
   toggle.setAttribute('aria-label', 'Preview the Accessibility Surfer extension popup');
   toggle.setAttribute('aria-expanded', 'false');
   toggle.setAttribute('aria-controls', 'epd-panel');
-  toggle.innerHTML = '<img src="accessibility.png" alt="" aria-hidden="true" width="56" height="56" />';
+  toggle.innerHTML = '<img src="easepasslogo.png" alt="" aria-hidden="true" width="60" height="60" />';
 
   const overlay = document.createElement('div');
   overlay.id = 'epd-overlay';
