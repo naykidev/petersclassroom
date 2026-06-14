@@ -421,7 +421,36 @@ nav.is-scrolled { border-bottom-color: var(--line); }
 .card-icon svg [stroke]:not([stroke="none"]) { stroke: currentColor; }
 .card-icon svg .icon-accent { fill: var(--coral); }
 .card-icon svg circle[fill="currentColor"] { fill: currentColor; }
-.product-grid:has(> :only-child) { grid-template-columns: 1fr; max-width: 34rem; }
+.product-spotlight {
+  margin-top: 3rem; max-width: 920px;
+  padding: clamp(2rem, 4vw, 2.8rem);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--coral-tint) 100%);
+  border: 1px solid var(--line); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .3s var(--ease);
+}
+.product-spotlight:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--line-strong); }
+.product-spotlight-head {
+  display: flex; align-items: center; gap: clamp(1rem, 3vw, 1.4rem);
+  margin-bottom: 1.15rem;
+}
+.product-spotlight-logo {
+  width: clamp(64px, 10vw, 80px); height: auto; flex-shrink: 0;
+  border-radius: 18px; box-shadow: 0 14px 32px -18px rgba(48, 16, 112, .32);
+}
+.product-spotlight-title { min-width: 0; }
+.product-spotlight-title h3 {
+  font-family: var(--font-display); font-size: clamp(1.75rem, 4vw, 2.35rem);
+  font-weight: 600; color: var(--ink); letter-spacing: -0.03em; line-height: 1.05; margin: 0;
+}
+.product-spotlight > p {
+  color: var(--muted); font-size: 1.05rem; line-height: 1.65;
+  max-width: 58ch; margin: 0 0 1.6rem;
+}
+.product-spotlight-actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .85rem 1.4rem;
+}
+.product-spotlight-actions .hero-link { margin: 0; }
 .card-badge {
   font-family: var(--font-display); font-size: .74rem; font-weight: 600; letter-spacing: .12em;
   text-transform: uppercase; color: var(--coral-deep) !important; background: transparent !important;
@@ -656,6 +685,9 @@ html[data-contrast="dark"] .mission p, html[data-contrast="dark"] .about-section
 html[data-contrast="dark"] .mission p strong { color: #f4f1ec; }
 html[data-contrast="dark"] .audience-card, html[data-contrast="dark"] .product-card, html[data-contrast="dark"] .contact-form { background: #16101e; border-color: #2a2438; }
 html[data-contrast="dark"] .product-card.websites { background: linear-gradient(180deg, #16101e, #1e1528); }
+html[data-contrast="dark"] .product-spotlight { background: linear-gradient(135deg, #16101e 0%, #1e1528 100%); border-color: #2a2438; }
+html[data-contrast="dark"] .product-spotlight > p { color: #b7b0a7; }
+html[data-contrast="dark"] .product-spotlight-title h3 { color: #f4f1ec; }
 html[data-contrast="dark"] .audience-card .icon { background: rgba(176,48,96,.18); color: var(--coral-tint2); }
 html[data-contrast="dark"] .principle { border-top-color: #2a2438; }
 html[data-contrast="dark"] .form-row input, html[data-contrast="dark"] .form-row select, html[data-contrast="dark"] .form-row textarea { background: #0e0a12; border-color: #2a2438; color: #ece8e2; }

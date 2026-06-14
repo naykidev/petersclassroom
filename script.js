@@ -54,7 +54,7 @@ const revealTargets = document.querySelectorAll(
   '.audiences h2, .audiences > p, .audience-card, ' +
   '.principles h2, .principle, ' +
   '.about-section h2, .about-section p, ' +
-  '.products h2, .products > p, .product-card, ' +
+  '.products h2, .products > p, .product-card, .product-spotlight, ' +
   '.notify h2, .notify p, .contact-info, .contact-form'
 );
 
