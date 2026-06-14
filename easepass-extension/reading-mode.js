@@ -63,7 +63,7 @@
     columnWidth: 680,
     maxCharsPerLine: 'off',  // 'off' | 60 | 70 | 80
     paragraphSpacing: 1.2,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FAF9F6',
     textColor: 'auto',       // 'auto' | #hex
     focusMode: false,
     fatigueMode: false,
@@ -290,7 +290,7 @@
     '#epd-panel', '#epd-overlay', '#epd-toggle',
     '#a11yPanel', '#a11yToggle', '.a11y-overlay',
     '#easepass-rm-overlay', '.easepass-ring-container',
-    '.easepass-status', '.easepass-toast', '.easepass-rm-pill'
+    '.easepass-status', '.easepass-toast', '.easepass-rm-availpill'
   ].join(', ');
 
   function isExcludedNode(node) {
@@ -1120,7 +1120,7 @@
 
   function showPill() {
     if (pillEl) return;
-    pillEl = el('div', 'easepass-rm-pill');
+    pillEl = el('div', 'easepass-rm-availpill');
     pillEl.setAttribute('role', 'region');
     pillEl.appendChild(el('span', 'easepass-rm-pill-text', STRINGS.pill));
     const enableBtn = el('button', 'easepass-rm-pill-btn easepass-rm-pill-enable', STRINGS.enable);
