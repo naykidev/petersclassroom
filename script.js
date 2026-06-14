@@ -35,7 +35,7 @@ function handleContactSubmit(e) {
 
   window.location.href = mailtoUrl;
 
-  status.innerHTML = 'Opening your email app — review the message and tap Send. If no app opens, email us directly at <a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a>.';
+  status.innerHTML = 'Opening your email app. Review the message and tap Send. If no app opens, email us directly at <a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a>.';
   status.classList.add('success');
 }
 

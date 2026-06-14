@@ -836,7 +836,7 @@
         span.tabIndex = 0;
         span.setAttribute('data-rm-simple', simple);
         span.setAttribute('role', 'button');
-        span.setAttribute('aria-label', tok + ' — ' + simple);
+        span.setAttribute('aria-label', tok + ': ' + simple);
         span.addEventListener('keydown', function (e) {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.classList.toggle('easepass-rm-vocab-open'); }
         });
