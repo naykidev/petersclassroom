@@ -1,6 +1,6 @@
-# Axolo Assist
+# Axol Assist
 
-Axolo Assist is a static website plus a Chrome extension (`easepass-extension`) focused on accessibility and assistive interaction.
+Axol Assist is a static website plus a Chrome extension (`easepass-extension`) focused on accessibility and assistive interaction.
 
 ## Website
 

@@ -19,7 +19,7 @@ function handleContactSubmit(e) {
     return;
   }
 
-  const subject = encodeURIComponent("Inquiry from Axolo Assist site: " + data.name);
+  const subject = encodeURIComponent("Inquiry from Axol Assist site: " + data.name);
   const body = encodeURIComponent(
     "Name: "  + data.name  + "\n" +
     "Email: " + data.email + "\n" +
@@ -368,7 +368,7 @@ revealTargets.forEach(el => {
     `<button class="epd-reset-all" type="button" id="epd-rm-open">Open in reading mode</button>` +
     `<button class="epd-reset-link" type="button" id="epd-rm-clear" style="display:block;margin-top:0.6rem;">Clear site memory</button>` +
 
-    `<div class="epd-footer">From <a href="https://axol-assist.vercel.app" target="_blank" rel="noopener noreferrer">Axolo Assist</a> · ` +
+    `<div class="epd-footer">From <a href="https://axol-assist.vercel.app" target="_blank" rel="noopener noreferrer">Axol Assist</a> · ` +
       `<a href="privacy.html">Privacy Policy</a></div>`;
 
   // ── Open / close ──

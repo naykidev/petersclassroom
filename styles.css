@@ -11,7 +11,7 @@
   --pink:   #EC4899;
   --orange: #FF8A3D;
 
-  /* Axolo Assist wordmark (from logo.png) */
+  /* Axol Assist wordmark (from logo.png) */
   --brand-axolo:  #301070;
   --brand-assist: #B03060;
 
@@ -174,7 +174,7 @@ nav {
 
 .hero-logo {
   display: block;
-  width: min(960px, 94vw);
+  width: min(600px, 92vw);
   height: auto;
   margin: 0 auto;
 }
