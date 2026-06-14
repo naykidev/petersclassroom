@@ -342,7 +342,7 @@ revealTargets.forEach(el => {
     `<div class="epd-toggle-row">` +
       `<div class="epd-toggle-info"><span class="epd-label">Dwell clicking</span>` +
       `<span class="epd-status on" data-on="Active everywhere" data-off="Disabled">Active everywhere</span></div>` +
-      `<button class="epd-switch" type="button" role="switch" aria-checked="true" aria-label="Toggle universal dwell clicking"></button>` +
+      `<button class="epd-switch" id="epd-universal-toggle" type="button" role="switch" aria-checked="true" aria-label="Toggle universal dwell clicking"></button>` +
     `</div>` +
     slider('epd-universal', 'Dwell time', 1000, 6000, 250, 3000, 'ms') +
 
@@ -358,7 +358,7 @@ revealTargets.forEach(el => {
     `<div class="epd-toggle-row">` +
       `<div class="epd-toggle-info"><span class="epd-label">Reading mode</span>` +
       `<span class="epd-status" id="epd-rm-status" data-on="Active" data-off="Off">Off</span></div>` +
-      `<button class="epd-switch" type="button" role="switch" aria-checked="false" aria-label="Toggle reading mode"></button>` +
+      `<button class="epd-switch" id="epd-rm-toggle" type="button" role="switch" aria-checked="false" aria-label="Toggle reading mode"></button>` +
     `</div>` +
     `<div class="epd-toggle-row">` +
       `<div class="epd-toggle-info"><span class="epd-label">Remember sites</span></div>` +
@@ -377,6 +377,14 @@ revealTargets.forEach(el => {
     panel.classList.add('epd-open');
     toggle.setAttribute('aria-expanded', 'true');
     panel.focus();
+    // Activate the live dwell demo in sync with the toggle so visitors can
+    // hover the panel's own controls (or the page) and watch real rings.
+    if (window.SurferDemo) {
+      const univ = panel.querySelector('#epd-universal-toggle');
+      const slider = panel.querySelector('#epd-universal');
+      if (slider) window.SurferDemo.setDwellTime(slider.value);
+      window.SurferDemo.setDwellEnabled(univ && univ.getAttribute('aria-checked') === 'true');
+    }
   }
   function close() {
     overlay.classList.remove('epd-open');
@@ -403,7 +411,28 @@ revealTargets.forEach(el => {
         status.textContent = on ? status.dataset.on : status.dataset.off;
         status.classList.toggle('on', on);
       }
+      // Live-demo wiring: drive the real engine for the two functional toggles.
+      if (sw.id === 'epd-universal-toggle' && window.SurferDemo) {
+        window.SurferDemo.setDwellEnabled(on);
+      } else if (sw.id === 'epd-rm-toggle' && window.SurferDemo) {
+        if (on) { close(); window.SurferDemo.launchReadingMode(); }
+        else { window.SurferDemo.closeReadingMode(); }
+      }
     });
+  });
+
+  // Keep the dwell toggle's visual state in sync when Space toggles the
+  // live demo from outside the panel.
+  window.addEventListener('surfer-demo-dwell-changed', (e) => {
+    const univ = panel.querySelector('#epd-universal-toggle');
+    if (!univ) return;
+    const on = !!(e.detail && e.detail.enabled);
+    univ.setAttribute('aria-checked', on ? 'true' : 'false');
+    const status = univ.closest('.epd-toggle-row').querySelector('.epd-status');
+    if (status) {
+      status.textContent = on ? status.dataset.on : status.dataset.off;
+      status.classList.toggle('on', on);
+    }
   });
 
   // Dwell-time + size sliders: live-update their value label.
@@ -415,6 +444,14 @@ revealTargets.forEach(el => {
   bindSlider('epd-video', 'epd-video-val');
   bindSlider('epd-button', 'epd-button-val');
   bindSlider('epd-universal', 'epd-universal-val');
+
+  // The "Every other site" dwell-time slider drives the live demo timing.
+  const universalSlider = panel.querySelector('#epd-universal');
+  if (universalSlider) {
+    universalSlider.addEventListener('input', () => {
+      if (window.SurferDemo) window.SurferDemo.setDwellTime(universalSlider.value);
+    });
+  }
 
   function showEpdActionToast(message) {
     let toast = panel.querySelector('.epd-action-toast');
@@ -437,7 +474,14 @@ revealTargets.forEach(el => {
   const rmClearBtn = panel.querySelector('#epd-rm-clear');
   if (rmOpenBtn) {
     rmOpenBtn.addEventListener('click', () => {
-      showEpdActionToast('Install the extension to use reading mode on real pages.');
+      if (window.SurferDemo) {
+        close();
+        window.SurferDemo.launchReadingMode();
+        const rmSwitch = panel.querySelector('#epd-rm-toggle');
+        if (rmSwitch) rmSwitch.setAttribute('aria-checked', 'true');
+      } else {
+        showEpdActionToast('Install the extension to use reading mode on real pages.');
+      }
     });
   }
   if (rmClearBtn) {
