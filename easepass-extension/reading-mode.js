@@ -182,6 +182,7 @@
   // DOM handles (all null until enable()).
   let overlayEl = null;
   let columnEl = null;
+  let scrollEl = null;
   let contentEl = null;
   let styleEl = null;
   let progressFillEl = null;
@@ -503,24 +504,26 @@
     columnEl.setAttribute('role', 'document');
     columnEl.tabIndex = -1;
 
-    // Progress bar.
-    const progressWrap = el('div', 'easepass-rm-progress');
-    progressFillEl = el('div', 'easepass-rm-progress-fill');
-    progressLabelEl = el('span', 'easepass-rm-progress-label', '0%');
-    progressWrap.appendChild(progressFillEl);
-    progressWrap.appendChild(progressLabelEl);
-    columnEl.appendChild(progressWrap);
-
-    // Close (also a dwell target).
+    // Close (also a dwell target). Floats over the card's top-right corner.
     const closeBtn = el('button', 'easepass-rm-close', '✕');
     closeBtn.type = 'button';
     closeBtn.setAttribute('aria-label', STRINGS.close);
     closeBtn.addEventListener('click', disable);
     columnEl.appendChild(closeBtn);
 
+    // Scrollable reading region. Everything except the pinned bottom toolbar
+    // lives here so the toolbar always sits flush at the card's bottom edge.
+    scrollEl = el('div', 'easepass-rm-scroll');
+
+    const progressWrap = el('div', 'easepass-rm-progress');
+    progressFillEl = el('div', 'easepass-rm-progress-fill');
+    progressLabelEl = el('span', 'easepass-rm-progress-label', '0%');
+    progressWrap.appendChild(progressFillEl);
+    progressWrap.appendChild(progressLabelEl);
+    scrollEl.appendChild(progressWrap);
+
     if (article.title) {
-      const h = el('h1', 'easepass-rm-title', article.title);
-      columnEl.appendChild(h);
+      scrollEl.appendChild(el('h1', 'easepass-rm-title', article.title));
     }
 
     // Metadata row.
@@ -528,23 +531,25 @@
     if (article.author) metaBits.push(STRINGS.by + ' ' + article.author);
     if (article.date) metaBits.push(article.date);
     metaBits.push(STRINGS.readTime(article.readTime));
-    const meta = el('div', 'easepass-rm-meta', metaBits.join('  ·  '));
-    columnEl.appendChild(meta);
+    scrollEl.appendChild(el('div', 'easepass-rm-meta', metaBits.join('  ·  ')));
 
     // Content.
     contentEl = el('div', 'easepass-rm-content');
     renderBlocks(contentEl);
-    columnEl.appendChild(contentEl);
+    scrollEl.appendChild(contentEl);
 
-    // Paragraph indicator (focus mode).
+    columnEl.appendChild(scrollEl);
+
+    // Paragraph indicator (focus mode) — floats just above the toolbar.
     paraIndicatorEl = el('div', 'easepass-rm-progress-indicator');
     paraIndicatorEl.style.display = 'none';
     columnEl.appendChild(paraIndicatorEl);
 
-    // Toolbar + settings panel.
-    columnEl.appendChild(buildToolbar());
+    // Settings panel sits above the pinned toolbar; both are flex children
+    // of the column so the toolbar stays anchored to the bottom.
     settingsPanelEl = buildSettingsPanel();
     columnEl.appendChild(settingsPanelEl);
+    columnEl.appendChild(buildToolbar());
 
     overlayEl.appendChild(columnEl);
     try { document.documentElement.appendChild(overlayEl); } catch (_) {}
@@ -591,12 +596,8 @@
   function buildToolbar() {
     const bar = el('div', 'easepass-rm-toolbar');
 
-    const left = el('div', 'easepass-rm-toolbar-left');
-    const exit = el('button', 'easepass-rm-tool easepass-rm-exit', STRINGS.exit);
-    exit.type = 'button';
-    exit.addEventListener('click', disable);
-    left.appendChild(exit);
-
+    // Exit lives in the top-right ✕; the toolbar is just feature toggles +
+    // utilities, all on a single row.
     const center = el('div', 'easepass-rm-toolbar-center');
     const focusBtn = toolbarToggle('focus', STRINGS.focus, settings.focusMode);
     const fatigueBtn = toolbarToggle('fatigue', STRINGS.fatigue, settings.fatigueMode);
@@ -623,7 +624,6 @@
     right.appendChild(copyBtn);
     right.appendChild(settingsBtn);
 
-    bar.appendChild(left);
     bar.appendChild(center);
     bar.appendChild(right);
     return bar;
@@ -870,10 +870,10 @@
   // ───────── Progress + scroll ─────────
 
   function scrollRatio() {
-    if (!columnEl) return 0;
-    const max = columnEl.scrollHeight - columnEl.clientHeight;
+    if (!scrollEl) return 0;
+    const max = scrollEl.scrollHeight - scrollEl.clientHeight;
     if (max <= 0) return 0;
-    return Math.max(0, Math.min(1, columnEl.scrollTop / max));
+    return Math.max(0, Math.min(1, scrollEl.scrollTop / max));
   }
 
   function updateProgress() {
@@ -1169,7 +1169,7 @@
 
     // Scroll-driven features.
     onColumnScroll = function () { updateProgress(); updateFatigue(); };
-    columnEl.addEventListener('scroll', onColumnScroll, { passive: true });
+    scrollEl.addEventListener('scroll', onColumnScroll, { passive: true });
 
     // Keyboard: down/space advance in focus mode; Escape exits.
     onKeyDown = function (e) {
@@ -1198,7 +1198,7 @@
     if (!active && !overlayEl) return;
 
     // Detach listeners immediately so nothing lingers during the slide-out.
-    if (onColumnScroll && columnEl) columnEl.removeEventListener('scroll', onColumnScroll);
+    if (onColumnScroll && scrollEl) scrollEl.removeEventListener('scroll', onColumnScroll);
     if (onKeyDown) document.removeEventListener('keydown', onKeyDown, true);
     onColumnScroll = null; onKeyDown = null;
 
@@ -1206,7 +1206,7 @@
       if (overlayEl && overlayEl.parentNode) overlayEl.parentNode.removeChild(overlayEl);
       if (styleEl && styleEl.parentNode) styleEl.parentNode.removeChild(styleEl);
       try { document.documentElement.style.overflow = prevHtmlOverflow; } catch (_) {}
-      overlayEl = columnEl = contentEl = styleEl = null;
+      overlayEl = columnEl = scrollEl = contentEl = styleEl = null;
       progressFillEl = progressLabelEl = paraIndicatorEl = settingsPanelEl = null;
       paragraphEls = [];
       focusIndex = 0;

@@ -41,27 +41,35 @@
   box-shadow:
     0 32px 80px -24px rgba(8, 12, 24, 0.6),
     0 12px 32px -12px rgba(8, 12, 24, 0.4) !important;
-  padding: 3rem !important;
-  padding-bottom: 8.5rem !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
   box-sizing: border-box !important;
   font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif !important;
   transform: translateY(24px) scale(0.985) !important;
   transition: transform 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) !important;
   will-change: transform !important;
+}
+#easepass-rm-overlay.easepass-rm-open .easepass-rm-column { transform: translateY(0) scale(1) !important; }
+
+/* Scrollable reading region — fills the card above the pinned toolbar. */
+.easepass-rm-scroll {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 3rem 3rem 1.5rem !important;
   scrollbar-width: thin !important;
   scrollbar-color: rgba(0, 0, 0, 0.22) transparent !important;
 }
-#easepass-rm-overlay.easepass-rm-open .easepass-rm-column { transform: translateY(0) scale(1) !important; }
-.easepass-rm-column::-webkit-scrollbar { width: 12px !important; }
-.easepass-rm-column::-webkit-scrollbar-thumb {
+.easepass-rm-scroll::-webkit-scrollbar { width: 12px !important; }
+.easepass-rm-scroll::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.2) !important;
   border-radius: 999px !important;
   border: 3px solid transparent !important;
   background-clip: padding-box !important;
 }
-.easepass-rm-column::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.32) !important; background-clip: padding-box !important; }
+.easepass-rm-scroll::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.32) !important; background-clip: padding-box !important; }
 
 /* ───────── Progress bar ───────── */
 .easepass-rm-progress {
@@ -204,8 +212,8 @@
   box-shadow: inset 4px 0 0 0 #0066FF, 0 10px 28px -16px rgba(0, 102, 255, 0.55) !important;
 }
 .easepass-rm-progress-indicator {
-  position: fixed !important;
-  bottom: 9rem !important;
+  position: absolute !important;
+  bottom: 4.8rem !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   background: rgba(15, 20, 28, 0.9) !important;
@@ -253,33 +261,23 @@
 .easepass-rm-vocab:focus { outline: 3px solid rgba(0, 102, 255, 0.4) !important; outline-offset: 2px !important; }
 
 /* ───────── Bottom toolbar ───────── */
+/* Pinned to the bottom edge of the card (a flex child of the column, not
+   sticky), all controls on a single centered row. */
 .easepass-rm-toolbar {
-  position: sticky !important;
-  bottom: 0 !important;
-  margin: 1.5rem -3rem -3rem !important;
-  padding: 0.85rem 1.5rem 1rem !important;
+  flex: 0 0 auto !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: space-between !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
   gap: 0.5rem !important;
-  row-gap: 0.7rem !important;
+  row-gap: 0.6rem !important;
+  padding: 0.85rem 1.25rem !important;
   background: #ffffff !important;
   border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
-  flex-wrap: wrap !important;
 }
-.easepass-rm-toolbar-left,
 .easepass-rm-toolbar-center,
 .easepass-rm-toolbar-right { display: flex !important; align-items: center !important; gap: 0.5rem !important; }
-/* Reading features get their own centered top row; Exit + utilities share
-   the bottom row (Exit left, utilities right). Reads as an intentional
-   two-row bar instead of awkwardly wrapped single row. */
-.easepass-rm-toolbar-center {
-  order: -1 !important;
-  flex-basis: 100% !important;
-  justify-content: center !important;
-  padding-bottom: 0.7rem !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
-}
+.easepass-rm-toolbar-right { margin-left: 0.3rem !important; }
 .easepass-rm-tool {
   min-height: 44px !important;
   min-width: 44px !important;
@@ -304,13 +302,6 @@
   border-color: transparent !important;
   box-shadow: 0 6px 16px -6px rgba(0, 102, 255, 0.7) !important;
 }
-.easepass-rm-exit {
-  background: linear-gradient(180deg, #2a313d 0%, #161b23 100%) !important;
-  color: #fff !important;
-  border-color: transparent !important;
-  box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.5) !important;
-}
-.easepass-rm-exit:hover { background: linear-gradient(180deg, #333b48 0%, #1c222b 100%) !important; color: #fff !important; }
 .easepass-rm-fatigue-reset {
   background: none !important; border: none !important; color: #0066FF !important;
   font-family: inherit !important; font-size: 0.76rem !important; font-weight: 600 !important;
@@ -325,15 +316,12 @@
 
 /* ───────── Settings panel ───────── */
 .easepass-rm-settings-panel {
-  position: sticky !important;
-  bottom: 7.5rem !important;
-  margin: 0 -3rem !important;
+  flex: 0 0 auto !important;
   padding: 1.3rem 1.5rem !important;
   background: #ffffff !important;
   border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
-  border-radius: 0 !important;
-  box-shadow: 0 -16px 40px -16px rgba(0, 0, 0, 0.18) !important;
-  max-height: 50vh !important;
+  box-shadow: 0 -16px 40px -16px rgba(0, 0, 0, 0.12) !important;
+  max-height: 45vh !important;
   overflow-y: auto !important;
   animation: easepass-rm-slide-up 0.24s cubic-bezier(0.2, 0.7, 0.2, 1) !important;
 }
@@ -438,10 +426,9 @@
 
 /* ───────── Mobile ───────── */
 @media (max-width: 640px) {
-  .easepass-rm-column { width: 100% !important; height: 100vh !important; margin-top: 0 !important; border-radius: 0 !important; padding: 1.5rem !important; padding-bottom: 6rem !important; }
+  .easepass-rm-column { width: 100% !important; height: 100vh !important; margin-top: 0 !important; border-radius: 0 !important; }
+  .easepass-rm-scroll { padding: 1.5rem 1.5rem 1rem !important; }
   .easepass-rm-progress { margin: -1.5rem -1.5rem 1.2rem !important; top: -1.5rem !important; }
-  .easepass-rm-toolbar { margin: 1.5rem -1.5rem -3rem !important; border-radius: 0 !important; }
-  .easepass-rm-settings-panel { margin-left: -1.5rem !important; margin-right: -1.5rem !important; border-radius: 0 !important; }
   .easepass-rm-title { font-size: 1.5rem !important; }
 }
 
