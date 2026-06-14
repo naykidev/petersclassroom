@@ -385,6 +385,11 @@
     if (e.code !== 'Space' || e.repeat) return;
     if (isTypingTarget(e.target)) return;
     if (extensionActive()) return;
+    // While reading mode is open, Space belongs to reading mode (advance in
+    // focus mode). Don't also toggle dwell — reading-mode's own keydown
+    // handler runs on the same node, so stopPropagation here wouldn't reach
+    // it anyway. Bailing keeps Space doing exactly one thing.
+    if (readingModeActive()) return;
     e.preventDefault();
     e.stopPropagation();
     setDwellEnabled(!enabled);

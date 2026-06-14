@@ -719,10 +719,15 @@
     if (i >= 0) setFocus(i, true);
   }
 
-  // A click (manual or a completed dwell) on a paragraph advances reading.
+  // A click (manual or a completed dwell) on a paragraph drives reading.
+  // Clicking the paragraph you're already on advances to the next one;
+  // clicking a different paragraph simply focuses it. Either way that's a
+  // single move (one scroll), so a click never overshoots or double-scrolls.
   function onParaClick(e) {
     const i = paragraphEls.indexOf(e.currentTarget);
-    if (i >= 0) { setFocus(i); advance(); }
+    if (i < 0) return;
+    if (i === focusIndex) advance();
+    else setFocus(i);
   }
 
   function setFocus(i, fromHover) {
