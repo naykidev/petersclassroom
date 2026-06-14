@@ -346,8 +346,8 @@ revealTargets.forEach(el => {
     `<h3 class="epd-section-heading">Every other site</h3>` +
     `<div class="epd-toggle-row">` +
       `<div class="epd-toggle-info"><span class="epd-label">Dwell clicking</span>` +
-      `<span class="epd-status on" data-on="Active everywhere" data-off="Disabled">Active everywhere</span></div>` +
-      `<button class="epd-switch" id="epd-universal-toggle" type="button" role="switch" aria-checked="true" aria-label="Toggle universal dwell clicking"></button>` +
+      `<span class="epd-status" data-on="Active everywhere" data-off="Disabled">Disabled</span></div>` +
+      `<button class="epd-switch" id="epd-universal-toggle" type="button" role="switch" aria-checked="false" aria-label="Toggle universal dwell clicking"></button>` +
     `</div>` +
     slider('epd-universal', 'Dwell time', 1000, 6000, 250, 3000) +
 
@@ -382,13 +382,12 @@ revealTargets.forEach(el => {
     panel.classList.add('epd-open');
     toggle.setAttribute('aria-expanded', 'true');
     panel.focus();
-    // Activate the live dwell demo in sync with the toggle so visitors can
-    // hover the panel's own controls (or the page) and watch real rings.
+    // Don't auto-enable dwell clicking just from opening the panel — the
+    // visitor turns it on themselves via the toggle (or Space). We only
+    // sync the dwell-time value so it's ready when they do.
     if (window.SurferDemo) {
-      const univ = panel.querySelector('#epd-universal-toggle');
       const slider = panel.querySelector('#epd-universal');
       if (slider) window.SurferDemo.setDwellTime(slider.value);
-      window.SurferDemo.setDwellEnabled(univ && univ.getAttribute('aria-checked') === 'true');
     }
   }
   function close() {
