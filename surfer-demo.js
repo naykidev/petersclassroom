@@ -223,8 +223,14 @@
     return { el: hit, clickTarget: hit, type: 'universal' };
   }
 
+  function formatDwellSeconds(ms) {
+    var sec = Math.round(Number(ms) / 1000);
+    return sec + (sec === 1 ? ' second' : ' seconds');
+  }
+
   function formatSecondsLabel(secs) {
-    return secs + (secs === 1 ? ' second' : ' seconds');
+    var n = Math.max(0, Math.round(secs));
+    return n + (n === 1 ? ' second' : ' seconds');
   }
 
   function formatCountdown(msRemaining) {
@@ -348,7 +354,7 @@
     if (target) {
       if (active && active.el === target.el) return;
       if (active) cancelDwell();
-      setStatus('engaged', formatCountdown(dwellTime));
+      setStatus('engaged', 'Click in ' + formatDwellSeconds(dwellTime));
       startDwell(target);
       return;
     }

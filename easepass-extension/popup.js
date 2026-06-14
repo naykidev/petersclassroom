@@ -33,9 +33,8 @@
 const DWELL_FLOOR_MS = 1000;
 
 function formatDwellSeconds(ms) {
-  const sec = Math.round((Number(ms) / 1000) * 100) / 100;
-  const text = Number.isInteger(sec) ? String(sec) : String(sec);
-  return text + (sec === 1 ? ' second' : ' seconds');
+  const sec = Math.round(Number(ms) / 1000);
+  return sec + (sec === 1 ? ' second' : ' seconds');
 }
 
 // Write to local storage and flash the "Saved ✓" confirmation. Centralizes
