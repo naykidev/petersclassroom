@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Axolo Assist Toolbar
  * Description: Floating accessibility toolbar with text size, spacing, contrast, color filters, reading aids, and motion controls for any WordPress theme.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Axolo Assist
  * Author URI: https://axoloassist.com
  * License: GPL v2 or later
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AAT_VERSION', '1.0.0' );
+define( 'AAT_VERSION', '1.1.0' );
 define( 'AAT_PLUGIN_FILE', __FILE__ );
 define( 'AAT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AAT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -27,17 +27,23 @@ define( 'AAT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 function aat_default_settings() {
 	return array(
 		'accent_color' => '#B03060',
+		'position'     => 'bottom-right',
 		'features'     => array(
 			'text_size'          => true,
 			'line_spacing'       => true,
 			'letter_spacing'     => true,
+			'word_spacing'       => true,
 			'font'               => true,
+			'text_align'         => true,
+			'readable_width'     => true,
 			'contrast'           => true,
 			'color_filter'       => true,
+			'link_highlight'     => true,
 			'underline_links'    => true,
 			'enhanced_focus'     => true,
 			'highlight_headings' => true,
 			'reading_guide'      => true,
+			'keyboard_nav'       => true,
 			'reduce_motion'      => true,
 			'pause_animations'   => true,
 			'big_cursor'         => true,
@@ -65,8 +71,15 @@ function aat_get_settings() {
 		$accent = $defaults['accent_color'];
 	}
 
+	$allowed_positions = array( 'bottom-right', 'bottom-left', 'top-right', 'top-left' );
+	$position          = isset( $saved['position'] ) ? sanitize_text_field( $saved['position'] ) : $defaults['position'];
+	if ( ! in_array( $position, $allowed_positions, true ) ) {
+		$position = $defaults['position'];
+	}
+
 	return array(
 		'accent_color' => $accent,
+		'position'     => $position,
 		'features'     => $features,
 	);
 }
@@ -127,6 +140,10 @@ function aat_sanitize_settings( $input ) {
 		$output['accent_color'] = $accent;
 	}
 
+	$allowed_positions = array( 'bottom-right', 'bottom-left', 'top-right', 'top-left' );
+	$position          = isset( $input['position'] ) ? sanitize_text_field( $input['position'] ) : $defaults['position'];
+	$output['position']  = in_array( $position, $allowed_positions, true ) ? $position : $defaults['position'];
+
 	if ( isset( $input['features'] ) && is_array( $input['features'] ) ) {
 		foreach ( $defaults['features'] as $key => $default_on ) {
 			$output['features'][ $key ] = ! empty( $input['features'][ $key ] );
@@ -157,49 +174,142 @@ function aat_render_settings_page() {
 		'text_size'          => __( 'Text size', 'axolo-assist-toolbar' ),
 		'line_spacing'       => __( 'Line spacing', 'axolo-assist-toolbar' ),
 		'letter_spacing'     => __( 'Letter spacing', 'axolo-assist-toolbar' ),
+		'word_spacing'       => __( 'Word spacing', 'axolo-assist-toolbar' ),
 		'font'               => __( 'Font picker', 'axolo-assist-toolbar' ),
+		'text_align'         => __( 'Text align', 'axolo-assist-toolbar' ),
+		'readable_width'     => __( 'Content width', 'axolo-assist-toolbar' ),
 		'contrast'           => __( 'Contrast modes', 'axolo-assist-toolbar' ),
 		'color_filter'       => __( 'Color filter', 'axolo-assist-toolbar' ),
+		'link_highlight'     => __( 'Link highlight', 'axolo-assist-toolbar' ),
 		'underline_links'    => __( 'Underline links', 'axolo-assist-toolbar' ),
 		'enhanced_focus'     => __( 'Enhanced focus', 'axolo-assist-toolbar' ),
 		'highlight_headings' => __( 'Highlight headings', 'axolo-assist-toolbar' ),
 		'reading_guide'      => __( 'Reading guide', 'axolo-assist-toolbar' ),
+		'keyboard_nav'       => __( 'Keyboard nav helper', 'axolo-assist-toolbar' ),
 		'reduce_motion'      => __( 'Reduce motion', 'axolo-assist-toolbar' ),
 		'pause_animations'   => __( 'Pause animations', 'axolo-assist-toolbar' ),
 		'big_cursor'         => __( 'Large cursor', 'axolo-assist-toolbar' ),
 	);
+
+	$groups = array(
+		'text_font' => array(
+			'title'    => __( 'Text & Font', 'axolo-assist-toolbar' ),
+			'features' => array( 'text_size', 'line_spacing', 'letter_spacing', 'word_spacing', 'font', 'text_align', 'readable_width' ),
+		),
+		'visual'    => array(
+			'title'    => __( 'Visual & Contrast', 'axolo-assist-toolbar' ),
+			'features' => array( 'contrast', 'color_filter', 'link_highlight' ),
+		),
+		'reading'   => array(
+			'title'    => __( 'Reading Aids', 'axolo-assist-toolbar' ),
+			'features' => array( 'underline_links', 'enhanced_focus', 'highlight_headings', 'reading_guide', 'keyboard_nav' ),
+		),
+		'motion'    => array(
+			'title'    => __( 'Motion & Cursor', 'axolo-assist-toolbar' ),
+			'features' => array( 'reduce_motion', 'pause_animations', 'big_cursor' ),
+		),
+	);
+
+	$positions = array(
+		'bottom-right' => __( 'Bottom Right', 'axolo-assist-toolbar' ),
+		'bottom-left'  => __( 'Bottom Left', 'axolo-assist-toolbar' ),
+		'top-right'    => __( 'Top Right', 'axolo-assist-toolbar' ),
+		'top-left'     => __( 'Top Left', 'axolo-assist-toolbar' ),
+	);
 	?>
-	<div class="wrap">
-		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+	<div class="wrap aat-settings-wrap">
+		<style>
+			.aat-settings-wrap { max-width: 860px; }
+			.aat-settings-header { margin: 1rem 0 1.5rem; }
+			.aat-settings-header p { font-size: 14px; color: #646970; max-width: 640px; }
+			.aat-settings-card {
+				background: #fff;
+				border: 1px solid #dcdcde;
+				border-radius: 12px;
+				padding: 1.25rem 1.5rem 1.5rem;
+				margin-bottom: 1.25rem;
+				box-shadow: 0 1px 2px rgba(0,0,0,.04);
+			}
+			.aat-settings-card h2 {
+				margin: 0 0 1rem;
+				padding-bottom: .75rem;
+				border-bottom: 1px solid #f0f0f1;
+				font-size: 1.05rem;
+			}
+			.aat-field-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-bottom: .5rem; }
+			.aat-field-row label { font-weight: 600; min-width: 120px; }
+			.aat-color-field { display: flex; align-items: center; gap: .75rem; }
+			#aat-color-preview {
+				width: 40px; height: 40px; border-radius: 8px;
+				border: 1px solid #dcdcde;
+				background: <?php echo esc_attr( $settings['accent_color'] ); ?>;
+			}
+			.aat-feature-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+				gap: .35rem 1rem;
+			}
+			.aat-feature-grid label {
+				display: flex; align-items: center; gap: .45rem;
+				font-size: 13px; padding: .35rem 0;
+			}
+			.aat-settings-card select { min-width: 200px; }
+			.aat-settings-card .description { margin-top: .35rem; color: #646970; font-size: 13px; }
+		</style>
+
+		<div class="aat-settings-header">
+			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+			<p><?php esc_html_e( 'Configure AccessFlow — the floating accessibility toolbar on your site. Choose which controls visitors see, the accent color, and where the button appears.', 'axolo-assist-toolbar' ); ?></p>
+		</div>
+
 		<form action="options.php" method="post">
 			<?php settings_fields( 'axolo_assist_toolbar' ); ?>
-			<table class="form-table" role="presentation">
-				<tr>
-					<th scope="row">
-						<label for="aat-accent-color"><?php esc_html_e( 'Accent color', 'axolo-assist-toolbar' ); ?></label>
-					</th>
-					<td>
+
+			<div class="aat-settings-card">
+				<h2><?php esc_html_e( 'Appearance', 'axolo-assist-toolbar' ); ?></h2>
+				<div class="aat-field-row">
+					<label for="aat-accent-color"><?php esc_html_e( 'Accent color', 'axolo-assist-toolbar' ); ?></label>
+					<div class="aat-color-field">
 						<input type="color" id="aat-accent-color" name="axolo_assist_toolbar_settings[accent_color]" value="<?php echo esc_attr( $settings['accent_color'] ); ?>" />
-						<p class="description"><?php esc_html_e( 'Used for active buttons, switches, and focus rings in the toolbar.', 'axolo-assist-toolbar' ); ?></p>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Toolbar features', 'axolo-assist-toolbar' ); ?></th>
-					<td>
-						<fieldset>
-							<legend class="screen-reader-text"><?php esc_html_e( 'Toolbar features', 'axolo-assist-toolbar' ); ?></legend>
-							<?php foreach ( $labels as $key => $label ) : ?>
-								<label style="display:block;margin-bottom:.45rem;">
-									<input type="checkbox" name="axolo_assist_toolbar_settings[features][<?php echo esc_attr( $key ); ?>]" value="1" <?php checked( ! empty( $settings['features'][ $key ] ) ); ?> />
-									<?php echo esc_html( $label ); ?>
-								</label>
-							<?php endforeach; ?>
-						</fieldset>
-					</td>
-				</tr>
-			</table>
+						<div id="aat-color-preview" aria-hidden="true"></div>
+					</div>
+				</div>
+				<p class="description"><?php esc_html_e( 'Used for active buttons, switches, and focus rings in the toolbar.', 'axolo-assist-toolbar' ); ?></p>
+
+				<div class="aat-field-row" style="margin-top:1.25rem;">
+					<label for="aat-position"><?php esc_html_e( 'Position', 'axolo-assist-toolbar' ); ?></label>
+					<select id="aat-position" name="axolo_assist_toolbar_settings[position]">
+						<?php foreach ( $positions as $value => $label ) : ?>
+							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $settings['position'], $value ); ?>><?php echo esc_html( $label ); ?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<p class="description"><?php esc_html_e( 'Where the floating accessibility button appears on your pages.', 'axolo-assist-toolbar' ); ?></p>
+			</div>
+
+			<?php foreach ( $groups as $group ) : ?>
+			<div class="aat-settings-card">
+				<h2><?php echo esc_html( $group['title'] ); ?></h2>
+				<fieldset class="aat-feature-grid">
+					<legend class="screen-reader-text"><?php echo esc_html( $group['title'] ); ?></legend>
+					<?php foreach ( $group['features'] as $key ) : ?>
+						<label>
+							<input type="checkbox" name="axolo_assist_toolbar_settings[features][<?php echo esc_attr( $key ); ?>]" value="1" <?php checked( ! empty( $settings['features'][ $key ] ) ); ?> />
+							<?php echo esc_html( $labels[ $key ] ); ?>
+						</label>
+					<?php endforeach; ?>
+				</fieldset>
+			</div>
+			<?php endforeach; ?>
+
 			<?php submit_button(); ?>
 		</form>
+
+		<script>
+		document.getElementById('aat-accent-color').addEventListener('input', function () {
+			document.getElementById('aat-color-preview').style.background = this.value;
+		});
+		</script>
 	</div>
 	<?php
 }
@@ -243,6 +353,7 @@ function aat_enqueue_assets() {
 			'fontBaseUrl' => AAT_PLUGIN_URL . 'assets/fonts/',
 			'storageKey'  => 'pc-a11y-settings-v1',
 			'features'    => $settings['features'],
+			'position'    => $settings['position'],
 		)
 	);
 }
@@ -253,9 +364,10 @@ function aat_render_toolbar() {
 		return;
 	}
 
+	$settings = aat_get_settings();
 	$icon_url = esc_url( AAT_PLUGIN_URL . 'assets/accessibility.png' );
 	?>
-	<div class="axolo-toolbar-root" id="axoloAssistToolbarRoot">
+	<div class="axolo-toolbar-root" id="axoloAssistToolbarRoot" data-position="<?php echo esc_attr( $settings['position'] ); ?>">
 		<button class="a11y-toggle" id="a11yToggle" type="button" aria-label="<?php esc_attr_e( 'Open accessibility settings', 'axolo-assist-toolbar' ); ?>" aria-expanded="false" aria-controls="a11yPanel">
 			<img src="<?php echo $icon_url; ?>" alt="" width="60" height="60" aria-hidden="true" />
 		</button>
@@ -300,6 +412,17 @@ function aat_render_toolbar() {
 			</div>
 			<?php endif; ?>
 
+			<?php if ( aat_feature_enabled( 'word_spacing' ) ) : ?>
+			<div class="a11y-group" data-feature="word_spacing">
+				<h3><?php esc_html_e( 'Word Spacing', 'axolo-assist-toolbar' ); ?></h3>
+				<div class="a11y-options" role="group" aria-label="<?php esc_attr_e( 'Word spacing', 'axolo-assist-toolbar' ); ?>">
+					<button class="a11y-btn" type="button" data-setting="word-spacing" data-value="default" aria-pressed="true"><?php esc_html_e( 'Normal', 'axolo-assist-toolbar' ); ?></button>
+					<button class="a11y-btn" type="button" data-setting="word-spacing" data-value="wide" aria-pressed="false"><?php esc_html_e( 'Wide', 'axolo-assist-toolbar' ); ?></button>
+					<button class="a11y-btn" type="button" data-setting="word-spacing" data-value="wider" aria-pressed="false"><?php esc_html_e( 'Wider', 'axolo-assist-toolbar' ); ?></button>
+				</div>
+			</div>
+			<?php endif; ?>
+
 			<?php if ( aat_feature_enabled( 'font' ) ) : ?>
 			<div class="a11y-group" data-feature="font">
 				<h3><?php esc_html_e( 'Font', 'axolo-assist-toolbar' ); ?></h3>
@@ -307,6 +430,29 @@ function aat_render_toolbar() {
 					<button class="a11y-btn" type="button" data-setting="font" data-value="default" aria-pressed="true"><?php esc_html_e( 'Default', 'axolo-assist-toolbar' ); ?></button>
 					<button class="a11y-btn" type="button" data-setting="font" data-value="dyslexia" aria-pressed="false"><?php esc_html_e( 'Dyslexia-friendly', 'axolo-assist-toolbar' ); ?></button>
 				</div>
+			</div>
+			<?php endif; ?>
+
+			<?php if ( aat_feature_enabled( 'text_align' ) ) : ?>
+			<div class="a11y-group" data-feature="text_align">
+				<h3><?php esc_html_e( 'Text Align', 'axolo-assist-toolbar' ); ?></h3>
+				<div class="a11y-options" role="group" aria-label="<?php esc_attr_e( 'Text alignment', 'axolo-assist-toolbar' ); ?>">
+					<button class="a11y-btn" type="button" data-setting="text-align" data-value="default" aria-pressed="true"><?php esc_html_e( 'Left', 'axolo-assist-toolbar' ); ?></button>
+					<button class="a11y-btn" type="button" data-setting="text-align" data-value="center" aria-pressed="false"><?php esc_html_e( 'Center', 'axolo-assist-toolbar' ); ?></button>
+					<button class="a11y-btn" type="button" data-setting="text-align" data-value="justify" aria-pressed="false"><?php esc_html_e( 'Justify', 'axolo-assist-toolbar' ); ?></button>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<?php if ( aat_feature_enabled( 'readable_width' ) ) : ?>
+			<div class="a11y-group" data-feature="readable_width">
+				<h3><?php esc_html_e( 'Content Width', 'axolo-assist-toolbar' ); ?></h3>
+				<div class="a11y-options" role="group" aria-label="<?php esc_attr_e( 'Content width', 'axolo-assist-toolbar' ); ?>">
+					<button class="a11y-btn" type="button" data-setting="readable-width" data-value="default" aria-pressed="true"><?php esc_html_e( 'Full', 'axolo-assist-toolbar' ); ?></button>
+					<button class="a11y-btn" type="button" data-setting="readable-width" data-value="narrow" aria-pressed="false"><?php esc_html_e( 'Narrow', 'axolo-assist-toolbar' ); ?></button>
+					<button class="a11y-btn" type="button" data-setting="readable-width" data-value="wide" aria-pressed="false"><?php esc_html_e( 'Wide', 'axolo-assist-toolbar' ); ?></button>
+				</div>
+				<p class="aat-group-hint"><?php esc_html_e( 'Narrows content columns for easier reading', 'axolo-assist-toolbar' ); ?></p>
 			</div>
 			<?php endif; ?>
 
@@ -339,6 +485,8 @@ function aat_render_toolbar() {
 				'enhanced_focus'     => array( 'enhanced-focus', __( 'Enhanced focus', 'axolo-assist-toolbar' ), __( 'Enhanced focus indicators', 'axolo-assist-toolbar' ) ),
 				'highlight_headings' => array( 'highlight-headings', __( 'Highlight headings', 'axolo-assist-toolbar' ), __( 'Highlight headings', 'axolo-assist-toolbar' ) ),
 				'reading_guide'      => array( 'reading-guide', __( 'Reading guide', 'axolo-assist-toolbar' ), __( 'Reading guide bar that follows the cursor', 'axolo-assist-toolbar' ) ),
+				'link_highlight'     => array( 'link-highlight', __( 'Highlight links', 'axolo-assist-toolbar' ), __( 'Highlight all links with a yellow background', 'axolo-assist-toolbar' ) ),
+				'keyboard_nav'       => array( 'keyboard-nav', __( 'Keyboard nav helper', 'axolo-assist-toolbar' ), __( 'Highlight the focused element clearly for keyboard users', 'axolo-assist-toolbar' ) ),
 				'reduce_motion'      => array( 'reduce-motion', __( 'Reduce motion', 'axolo-assist-toolbar' ), __( 'Reduce motion and animations', 'axolo-assist-toolbar' ) ),
 				'pause_animations'   => array( 'pause-animations', __( 'Pause animations', 'axolo-assist-toolbar' ), __( 'Pause all animations', 'axolo-assist-toolbar' ) ),
 				'big_cursor'         => array( 'big-cursor', __( 'Large cursor', 'axolo-assist-toolbar' ), __( 'Enlarge cursor', 'axolo-assist-toolbar' ) ),

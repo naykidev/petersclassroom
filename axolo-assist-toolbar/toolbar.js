@@ -42,13 +42,18 @@
     'text-size': 'default',
     'line-spacing': 'default',
     'letter-spacing': 'default',
+    'word-spacing': 'default',
     font: 'default',
+    'text-align': 'default',
+    'readable-width': 'default',
     contrast: 'default',
     saturation: 'default',
     'underline-links': 'off',
     'enhanced-focus': 'off',
     'highlight-headings': 'off',
     'reading-guide': 'off',
+    'link-highlight': 'off',
+    'keyboard-nav': 'off',
     'reduce-motion': 'off',
     'pause-animations': 'off',
     'big-cursor': 'off'
@@ -91,12 +96,31 @@
     });
   }
 
+  function checkBadge() {
+    var count = 0;
+    Object.keys(defaults).forEach(function (key) {
+      if (settings[key] !== defaults[key]) {
+        count += 1;
+      }
+    });
+    if (count > 0) {
+      toggleBtn.classList.add('aat-has-settings');
+    } else {
+      toggleBtn.classList.remove('aat-has-settings');
+    }
+  }
+
+  function afterChange() {
+    save();
+    apply();
+    syncUI();
+    checkBadge();
+  }
+
   document.querySelectorAll('.a11y-btn[data-setting]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       settings[btn.dataset.setting] = btn.dataset.value;
-      save();
-      apply();
-      syncUI();
+      afterChange();
     });
   });
 
@@ -104,17 +128,20 @@
     sw.addEventListener('click', function () {
       var key = sw.dataset.toggle;
       settings[key] = settings[key] === 'on' ? 'off' : 'on';
-      save();
-      apply();
-      syncUI();
+      afterChange();
     });
   });
 
   resetBtn.addEventListener('click', function () {
     settings = Object.assign({}, defaults);
-    save();
-    apply();
-    syncUI();
+    afterChange();
+    var orig = resetBtn.textContent;
+    resetBtn.textContent = '✓ All reset';
+    resetBtn.disabled = true;
+    setTimeout(function () {
+      resetBtn.textContent = orig;
+      resetBtn.disabled = false;
+    }, 1500);
   });
 
   function openPanel() {
@@ -204,4 +231,9 @@
 
   apply();
   syncUI();
+  checkBadge();
+
+  setTimeout(function () {
+    toggleBtn.classList.add('aat-loaded');
+  }, 600);
 })();

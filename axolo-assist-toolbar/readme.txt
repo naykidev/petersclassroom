@@ -3,7 +3,7 @@ Contributors: axoloassist
 Tags: accessibility, toolbar, contrast, dyslexia, font size, reading
 Requires at least: 5.0
 Tested up to: 6.5
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,27 +12,33 @@ Floating accessibility toolbar for WordPress with text, contrast, motion, and re
 
 == Description ==
 
-Axolo Assist Toolbar adds a fixed accessibility button to every public page on your WordPress site. Visitors can open a side panel and adjust how the page looks and behaves without leaving the site.
+Axolo Assist Toolbar (AccessFlow) adds a fixed accessibility button to every public page on your WordPress site. Visitors can open a side panel and adjust how the page looks and behaves without leaving the site.
 
 **Features**
 
 * Text size: A, A+, A++, A+++
 * Line spacing: Normal, Wide, Wider
 * Letter spacing: Normal, Wide, Wider
+* Word spacing: Normal, Wide, Wider
 * Font picker: Default and dyslexia-friendly OpenDyslexic
+* Text alignment: Left, Center, Justify
+* Content width: Full, Narrow, Wide
 * Contrast modes: Normal, Dark, High
 * Color filters: None, Gray, Muted, Invert
+* Link highlight with yellow background
 * Underline all links
 * Enhanced focus indicators
+* Keyboard navigation helper
 * Highlight headings
 * Reading guide bar that follows the cursor
 * Reduce motion and animations
 * Pause all animations
 * Large cursor
+* Toolbar position: bottom-right, bottom-left, top-right, top-left
 * Reset all settings
 * Settings persist in the browser via localStorage
 
-Site owners can customize the accent color and show or hide individual controls under Settings, Axolo Assist Toolbar.
+Site owners can customize the accent color, toolbar position, and show or hide individual controls under Settings, Axolo Assist Toolbar.
 
 == Installation ==
 
@@ -40,7 +46,7 @@ Site owners can customize the accent color and show or hide individual controls 
 2. Activate the plugin through the Plugins menu in WordPress.
 3. Done. The toolbar appears on the front end automatically. No configuration is required.
 
-Optional: open Settings, Axolo Assist Toolbar to change the accent color or hide features you do not need.
+Optional: open Settings, Axolo Assist Toolbar to change the accent color, position, or hide features you do not need.
 
 == Frequently Asked Questions ==
 
@@ -57,6 +63,17 @@ In the browser localStorage under the key pc-a11y-settings-v1. Nothing is sent t
 Yes. Use the settings page checkboxes to toggle each feature group on or off.
 
 == Changelog ==
+
+= 1.1.0 =
+* Added word spacing control
+* Added text alignment control
+* Added link highlight toggle
+* Added readable width control
+* Added keyboard navigation helper
+* Added toolbar position setting (bottom-right, bottom-left, top-right, top-left)
+* Improved admin settings page with grouped controls and live color preview
+* Toolbar button now animates in on page load
+* Active-settings badge dot on toolbar button
 
 = 1.0.0 =
 * Initial release.
