@@ -41,6 +41,17 @@ Before publishing, install buttons point to a placeholder URL. When the listing 
 
 The site also hydrates any `[data-chrome-install]` link from `site-config.js` on load.
 
+## Chrome Web Store submission
+
+Ready-to-upload assets and listing copy live in `store/`:
+
+- `store/accessibility-surfer-v0.5.0.zip`
+- `store/promo-icon-128.png`
+- `store/screenshots/01-extension-in-action-1280x800.png`
+- `store/SUBMISSION.md` and `store/STORE_LISTING.md`
+
+See `store/SUBMISSION.md` for the Dev Console steps.
+
 ## Contact
 
 - Email: `axolassist.business@gmail.com`

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AccessFlow · Free WordPress Accessibility Plugin</title>
+  <meta name="description" content="AccessFlow is a free WordPress plugin that adds a full accessibility toolbar to every page. One upload, no code, no configuration." />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Axol Assist" />
+  <meta property="og:title" content="AccessFlow · Free WordPress Accessibility Plugin" />
+  <meta property="og:description" content="One upload. Every visitor gets a full accessibility toolbar. No code, no configuration, no developer needed." />
+  <meta property="og:url" content="https://axolassist.com/toolbar.html" />
+  <meta property="og:image" content="https://axolassist.com/accessibility.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="theme-color" content="#FBFAF8" />
+
+  <link rel="icon" type="image/png" href="accessibility.png">
+  <link rel="canonical" href="https://axolassist.com/toolbar.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add('js');</script>
+  <style>
+    /* ── AccessFlow product page ── */
+    body.af-page { --blue-d: #0288D1; }
+
+    .af-hero {
+      background: radial-gradient(120% 80% at 85% -10%, var(--coral-tint) 0%, transparent 55%), var(--paper);
+      text-align: center;
+    }
+    .af-hero .wrap { max-width: 880px; }
+    .page-label {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: var(--font-display); font-size: .78rem; font-weight: 600; letter-spacing: .04em;
+      color: var(--coral-deep); background: var(--coral-tint); padding: .45rem 1rem; border-radius: 999px;
+      margin-bottom: 1.6rem;
+    }
+    .page-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--coral); }
+
+    .product-hero h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 7.5vw, 5.4rem);
+      line-height: 1;
+    }
+    .product-hero-logo {
+      display: block; width: clamp(80px, 14vw, 128px); height: auto;
+      margin: 0 auto 1.25rem; border-radius: 0.2em; object-fit: contain;
+      box-shadow: 0 0.12em 0.28em -0.12em rgba(48, 16, 112, .35);
+    }
+    .product-hero-wordmark {
+      display: block; font-family: var(--font-display); font-weight: 600;
+      font-size: 1em; letter-spacing: -0.035em; line-height: 1; color: var(--ink);
+      white-space: nowrap;
+    }
+    .product-hero-wordmark .accent { color: var(--coral-deep); }
+    .af-hero .hero-tagline { margin-left: auto; margin-right: auto; max-width: 640px; }
+    .af-hero .hero-links { justify-content: center; }
+
+    .demo-section { padding: 0 0 clamp(3rem,6vw,5rem); background: var(--paper); }
+    .demo-box {
+      max-width: 820px; margin: 0 auto; padding: clamp(2.5rem,5vw,4rem) 2rem;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--paper-2) 100%);
+      border: 1px solid var(--line); border-radius: var(--r-lg);
+      text-align: center; box-shadow: var(--shadow-sm);
+    }
+    .demo-caption {
+      margin: 1.5rem 0 0;
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    .toolbar-preview {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      max-width: 320px;
+      margin: 0 auto;
+      text-align: left;
+      font-family: inherit;
+    }
+    .tp-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 0.25rem;
+    }
+    .tp-close {
+      border: 0;
+      background: transparent;
+      font-size: 1.1rem;
+      color: var(--muted);
+      cursor: default;
+      padding: 0.2rem 0.4rem;
+      line-height: 1;
+    }
+    .tp-section-label {
+      color: var(--pink);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+    }
+    .tp-btn-row { display: flex; gap: 0.4rem; }
+    .tp-btn {
+      background: #f5f5f7;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: 0.5rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex: 1;
+      cursor: default;
+      font-family: inherit;
+      color: var(--ink);
+    }
+    .tp-btn.active {
+      background: var(--pink);
+      color: white;
+      border-color: var(--pink);
+    }
+
+    .af-audience-red { border-top: 4px solid #c62828; background: #fff0f0; }
+    .af-audience-blue { border-top: 4px solid #1565c0; background: #f0f6ff; }
+    .af-audience-green { border-top: 4px solid #2e7d32; background: #f0faf0; }
+
+    .af-step-1 { background: #fde8ef; }
+    .af-step-2 { background: #fff8e1; }
+    .af-step-3 { background: #e3f2fd; }
+    .af-step-4 { background: #e8f5e9; }
+
+    .features-section { background: var(--paper) !important; }
+
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; max-width: 900px; margin: 3rem auto 0; text-align: left; }
+    .compare-card { padding: 2.2rem 2rem; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); }
+    .compare-card.new { border: 1.5px solid var(--coral); background: linear-gradient(180deg, #fff, var(--coral-tint)); }
+    .compare-card h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; letter-spacing: -0.01em; }
+    .compare-card.old h3 { color: var(--muted); }
+    .compare-card.new h3 { color: var(--coral-deep); }
+    .compare-card ul { list-style: none; padding: 0; margin: 0; }
+    .compare-card li { font-size: 1rem; line-height: 1.5; padding-left: 1.9rem; position: relative; margin-bottom: .7rem; color: var(--ink); }
+    .compare-card.old li::before { content: '✕'; position: absolute; left: 0; color: var(--muted-2); font-weight: 700; }
+    .compare-card.new li::before { content: '✓'; position: absolute; left: 0; color: var(--coral-deep); font-weight: 700; }
+
+    .af-download-section { background: var(--bg-alt); }
+
+    .download-card {
+      max-width: 560px;
+      margin: 2rem auto 0;
+      padding: clamp(2rem,4vw,3rem) 2rem;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--paper-2) 100%);
+      border-radius: 24px;
+      border: 2px dashed rgba(2,136,209,0.4);
+      text-align: center;
+    }
+    .demo-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      background: rgba(2,136,209,0.12);
+      display: grid;
+      place-items: center;
+    }
+    .download-card h3 {
+      margin: 0 0 0.35rem;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+    }
+    .download-meta {
+      font-size: 0.85rem;
+      color: var(--muted-2);
+      margin: 0;
+    }
+    .download-btn {
+      display: inline-block;
+      background: var(--blue-d);
+      color: #ffffff;
+      padding: 1rem 2.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-decoration: none;
+      margin-top: 1.5rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .download-btn:hover {
+      background: #0270b9;
+      transform: translateY(-2px);
+    }
+    .download-note {
+      font-size: 0.85rem;
+      color: var(--muted-2);
+      margin: 1rem 0 0;
+      text-align: center;
+    }
+    .af-contact-block { margin-top: clamp(3rem, 6vw, 5rem); }
+
+    @media (max-width: 768px) { .compare-grid { grid-template-columns: 1fr; max-width: 520px; } }
+  </style>
+</head>
+<body class="af-page" data-skip-surfer-preview>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- NAV -->
+  <nav id="siteNav">
+    <a href="/" class="nav-logo" aria-label="Axol Assist, back to home">
+      <span class="axol-mark" role="img" aria-label="Axol the axolotl"></span>
+      <span><span class="nav-axolo">Axol</span> <span class="nav-assist">Assist</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#products">All products</a></li>
+      <li><a href="/#audiences">Who We Serve</a></li>
+      <li><a href="#contact" class="nav-cta">Get early access</a></li>
+    </ul>
+  </nav>
+
+  <main id="main" tabindex="-1">
+
+    <!-- HERO -->
+    <header class="hero ep-hero product-hero af-hero">
+      <div class="wrap">
+        <span class="page-label">Free WordPress Plugin · v1.0.0</span>
+        <img src="accessibility.png" alt="" class="product-hero-logo" aria-hidden="true" />
+        <h1>
+          <span class="product-hero-wordmark">Access<span class="accent">Flow.</span></span>
+        </h1>
+        <p class="hero-tagline">One upload. Every visitor gets a full accessibility toolbar. No code, no configuration, no developer needed.</p>
+        <div class="hero-links">
+          <a href="#how" class="hero-link">How it works</a>
+          <a href="#download" class="hero-cta-link">
+            Download free
+            <svg viewBox="0 0 24 24" fill="none" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- DEMO / PREVIEW -->
+    <section class="demo-section" aria-label="Toolbar preview">
+      <div class="wrap">
+        <div class="demo-box reveal">
+          <div class="toolbar-preview" aria-hidden="true">
+            <div class="tp-header">
+              <span>Accessibility</span>
+              <span class="tp-close" aria-hidden="true">✕</span>
+            </div>
+            <div class="tp-section-label">Text Size</div>
+            <div class="tp-btn-row">
+              <span class="tp-btn">A</span>
+              <span class="tp-btn active">A+</span>
+              <span class="tp-btn">A++</span>
+              <span class="tp-btn">A+++</span>
+            </div>
+            <div class="tp-section-label">Contrast</div>
+            <div class="tp-btn-row">
+              <span class="tp-btn">Normal</span>
+              <span class="tp-btn active">Dark</span>
+              <span class="tp-btn">High</span>
+            </div>
+            <div class="tp-section-label">Font</div>
+            <div class="tp-btn-row">
+              <span class="tp-btn active">Default</span>
+              <span class="tp-btn">Dyslexia-friendly</span>
+            </div>
+          </div>
+          <p class="demo-caption">The toolbar your visitors see — installed in under a minute.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MISSION -->
+    <section class="mission">
+      <div class="wrap reveal">
+        <h2>Accessibility shouldn't require a <span class="accent">developer.</span></h2>
+        <p>Most WordPress sites serving schools, nonprofits, and community organizations have no accessibility tools at all. AccessFlow changes that with a single file upload — giving every visitor controls for font, contrast, spacing, motion, and more. Completely free, forever.</p>
+      </div>
+    </section>
+
+    <!-- WHO IT'S FOR -->
+    <section class="audiences" id="for-whom">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Who it's for</span>
+          <h2>Built for <span class="accent">sites that care.</span></h2>
+          <p>If your site serves people, AccessFlow helps you serve all of them.</p>
+        </div>
+        <div class="audience-grid">
+          <article class="audience-card af-audience-red reveal">
+            <h3>Schools &amp; Districts</h3>
+            <p>Any WordPress school site can install AccessFlow in minutes. Helps students with dyslexia, low vision, motor differences, and sensory sensitivities get the reading experience that works for them.</p>
+          </article>
+          <article class="audience-card af-audience-blue reveal">
+            <h3>Nonprofits &amp; Community Orgs</h3>
+            <p>Serve your whole community, not just the majority. AccessFlow gives every visitor the controls they need without requiring any IT support or budget.</p>
+          </article>
+          <article class="audience-card af-audience-green reveal">
+            <h3>Small Businesses &amp; Clinics</h3>
+            <p>Reduce ADA exposure and signal to every visitor that your site is built for everyone — not just people who don't need help.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="principles" id="how">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">How it works</span>
+          <h2>How it <span class="accent">works.</span></h2>
+        </div>
+        <div class="principles-grid">
+          <div class="principle af-step-1 reveal"><span class="principle-num">1</span><h3>Download AccessFlow</h3><p>Click the download button below. You get a zip file. No account, no email required, no strings attached. Just a free plugin.</p></div>
+          <div class="principle af-step-2 reveal"><span class="principle-num">2</span><h3>Upload to WordPress</h3><p>In your WordPress dashboard go to Plugins → Add New → Upload Plugin. Select accessflow.zip and click Install Now. Takes about ten seconds.</p></div>
+          <div class="principle af-step-3 reveal"><span class="principle-num">3</span><h3>Activate</h3><p>Click Activate Plugin. The AccessFlow toolbar appears on every page of your site immediately. Nothing to configure.</p></div>
+          <div class="principle af-step-4 reveal"><span class="principle-num">4</span><h3>Visitors take control</h3><p>A floating accessibility button appears on your site. Each visitor adjusts it to their needs — font, contrast, spacing, motion. Their settings save automatically and persist across visits.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="principles features-section" id="features">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Features</span>
+          <h2>Everything visitors <span class="accent">need.</span></h2>
+        </div>
+        <div class="principles-grid">
+          <div class="principle reveal"><span class="principle-num" aria-hidden="true">✦</span><h3>Font &amp; Text Size</h3><p>Five font options including OpenDyslexic, Lexend, and Atkinson Hyperlegible. Text scaling from 80% to 200%. Helps readers with dyslexia, low vision, or cognitive differences.</p></div>
+          <div class="principle reveal"><span class="principle-num" aria-hidden="true">◑</span><h3>Contrast &amp; Color</h3><p>Dark mode, high contrast black-and-yellow, grayscale, sepia, and inverted colors. One click changes the whole site instantly.</p></div>
+          <div class="principle reveal"><span class="principle-num" aria-hidden="true">↔</span><h3>Spacing Controls</h3><p>Letter spacing, word spacing, and line height — all independently adjustable. Visitors set exactly what helps them read and focus.</p></div>
+          <div class="principle reveal"><span class="principle-num" aria-hidden="true">↺</span><h3>Motion &amp; Reading Aids</h3><p>Reduce or pause animations, enhance focus rings, underline all links, highlight headings, enable a reading guide bar that follows the cursor, and enlarge the cursor itself.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPARISON -->
+    <section class="audiences" id="compare">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">How it compares</span>
+          <h2>Why <span class="accent">AccessFlow.</span></h2>
+          <p>OS-level accessibility tools and expensive plugins require setup, IT knowledge, or monthly fees. AccessFlow is free and takes one minute.</p>
+        </div>
+        <div class="compare-grid reveal">
+          <div class="compare-card old">
+            <h3>Without AccessFlow</h3>
+            <ul>
+              <li>Visitors with dyslexia struggle with your default font</li>
+              <li>No way for low-vision users to adjust contrast</li>
+              <li>Animations affect motion-sensitive visitors with no relief option</li>
+              <li>No signal to visitors that accessibility matters here</li>
+              <li>Expensive third-party tools or none at all</li>
+            </ul>
+          </div>
+          <div class="compare-card new">
+            <h3>With AccessFlow</h3>
+            <ul>
+              <li>Five font options including three dyslexia-friendly faces</li>
+              <li>Full contrast suite: dark, high contrast, grayscale, sepia, inverted</li>
+              <li>Reduce motion, pause animations, reading guide bar</li>
+              <li>Enlarged cursor, enhanced focus, highlighted headings</li>
+              <li>Completely free, forever, no account needed</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOWNLOAD & CONTACT -->
+    <section class="notify af-download-section" id="download">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Download</span>
+          <h2>Download <span class="accent">AccessFlow.</span></h2>
+          <p>Free for any WordPress site. Upload the zip, activate, done. No account. No license key. No expiry.</p>
+        </div>
+
+        <div class="download-card reveal">
+          <div class="demo-icon" aria-hidden="true">
+            <svg viewBox="0 0 80 80" width="80" height="80" fill="none" aria-hidden="true">
+              <path d="M40 12v36" stroke="#0288D1" stroke-width="4" stroke-linecap="round"/>
+              <path d="M28 36l12 12 12-12" stroke="#0288D1" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18 56h44" stroke="#0288D1" stroke-width="4" stroke-linecap="round"/>
+              <path d="M22 64h36" stroke="#0288D1" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>accessflow.zip</h3>
+          <p class="download-meta">v1.0.0 · WordPress 5.0+ · Tested up to 6.5 · GPLv2 · Free forever</p>
+          <a href="accessflow.zip" download class="download-btn">Download AccessFlow — Free</a>
+          <p class="download-note">No account required · No strings attached · Works on any WordPress theme</p>
+        </div>
+
+        <div class="af-contact-block" id="contact">
+          <div class="sec-head reveal">
+            <span class="eyebrow">Contact</span>
+            <h2>Questions or <span class="accent">feedback?</span></h2>
+            <p>Reach out with questions about AccessFlow, installation help, or to share how it's working on your site.</p>
+          </div>
+          <div class="contact-grid">
+            <div class="contact-info reveal">
+              <h3>Reach us directly</h3>
+              <p><a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a></p>
+              <p class="contact-note">We typically respond within 2 business days.</p>
+              <h3 style="margin-top: 2rem;">Who we hear from</h3>
+              <ul class="contact-list">
+                <li>WordPress site owners and admins</li>
+                <li>School and district IT coordinators</li>
+                <li>Nonprofit and community org administrators</li>
+                <li>Accessibility and AT professionals</li>
+              </ul>
+            </div>
+            <form class="contact-form reveal" onsubmit="handleContactSubmit(event)" novalidate>
+              <div class="form-row">
+                <label for="cf-name">Name</label>
+                <input type="text" id="cf-name" name="name" required autocomplete="name" />
+              </div>
+              <div class="form-row">
+                <label for="cf-email">Email</label>
+                <input type="email" id="cf-email" name="email" required autocomplete="email" />
+              </div>
+              <div class="form-row">
+                <label for="cf-role">I am a...</label>
+                <select id="cf-role" name="role" required>
+                  <option value="">Select an option</option>
+                  <option value="WordPress site owner">WordPress site owner</option>
+                  <option value="School / District IT coordinator">School / District IT coordinator</option>
+                  <option value="Nonprofit administrator">Nonprofit administrator</option>
+                  <option value="Accessibility / AT professional">Accessibility / AT professional</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="cf-message">Message</label>
+                <textarea id="cf-message" name="message" rows="4" required placeholder="Tell us about your site or your question about AccessFlow."></textarea>
+              </div>
+              <button type="submit">Send message</button>
+              <p class="form-status" id="formStatus" aria-live="polite" role="status"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-top">
+        <a href="/" class="footer-brand"><span class="axol-mark" aria-hidden="true"></span>Axol Assist</a>
+        <span class="footer-colors" aria-hidden="true">
+          <svg viewBox="0 0 240 24" fill="none" preserveAspectRatio="none"><path d="M0,14 C40,4 80,22 120,12 C160,2 200,20 240,10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="footer-bottom">
+        <p>Copyright &copy; 2026 <strong class="accent">Axol Assist</strong>. All rights reserved.</p>
+        <p><a href="/">Home</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Accessibility toolbar (page visitor controls) -->
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Open accessibility settings" aria-expanded="false" aria-controls="a11yPanel">
+    <img src="accessibility.png" alt="" width="60" height="60" aria-hidden="true" />
+  </button>
+  <div class="a11y-overlay" id="a11yOverlay" aria-hidden="true"></div>
+  <aside class="a11y-panel" id="a11yPanel" role="dialog" aria-labelledby="a11yTitle" aria-modal="true" tabindex="-1">
+    <div class="a11y-panel-header">
+      <h2 id="a11yTitle">Accessibility</h2>
+      <button class="a11y-close" id="a11yClose" aria-label="Close accessibility settings">✕</button>
+    </div>
+    <div class="a11y-group">
+      <h3>Text Size</h3>
+      <div class="a11y-options" role="group" aria-label="Text size">
+        <button class="a11y-btn" data-setting="text-size" data-value="default" aria-pressed="true">A</button>
+        <button class="a11y-btn" data-setting="text-size" data-value="lg" aria-pressed="false" style="font-size:0.95rem;">A+</button>
+        <button class="a11y-btn" data-setting="text-size" data-value="xl" aria-pressed="false" style="font-size:1.05rem;">A++</button>
+        <button class="a11y-btn" data-setting="text-size" data-value="xxl" aria-pressed="false" style="font-size:1.15rem;">A+++</button>
+      </div>
+    </div>
+    <div class="a11y-group">
+      <h3>Line Spacing</h3>
+      <div class="a11y-options" role="group" aria-label="Line spacing">
+        <button class="a11y-btn" data-setting="line-spacing" data-value="default" aria-pressed="true">Normal</button>
+        <button class="a11y-btn" data-setting="line-spacing" data-value="wide" aria-pressed="false">Wide</button>
+        <button class="a11y-btn" data-setting="line-spacing" data-value="wider" aria-pressed="false">Wider</button>
+      </div>
+    </div>
+    <div class="a11y-group">
+      <h3>Letter Spacing</h3>
+      <div class="a11y-options" role="group" aria-label="Letter spacing">
+        <button class="a11y-btn" data-setting="letter-spacing" data-value="default" aria-pressed="true">Normal</button>
+        <button class="a11y-btn" data-setting="letter-spacing" data-value="wide" aria-pressed="false">Wide</button>
+        <button class="a11y-btn" data-setting="letter-spacing" data-value="wider" aria-pressed="false">Wider</button>
+      </div>
+    </div>
+    <div class="a11y-group">
+      <h3>Font</h3>
+      <div class="a11y-options" role="group" aria-label="Font choice">
+        <button class="a11y-btn" data-setting="font" data-value="default" aria-pressed="true">Default</button>
+        <button class="a11y-btn" data-setting="font" data-value="dyslexia" aria-pressed="false">Dyslexia-friendly</button>
+      </div>
+    </div>
+    <div class="a11y-group">
+      <h3>Contrast</h3>
+      <div class="a11y-options" role="group" aria-label="Contrast mode">
+        <button class="a11y-btn" data-setting="contrast" data-value="default" aria-pressed="true">Normal</button>
+        <button class="a11y-btn" data-setting="contrast" data-value="dark" aria-pressed="false">Dark</button>
+        <button class="a11y-btn" data-setting="contrast" data-value="high" aria-pressed="false">High</button>
+      </div>
+    </div>
+    <div class="a11y-group">
+      <h3>Color Filter</h3>
+      <div class="a11y-options" role="group" aria-label="Color filter">
+        <button class="a11y-btn" data-setting="saturation" data-value="default" aria-pressed="true">None</button>
+        <button class="a11y-btn" data-setting="saturation" data-value="grayscale" aria-pressed="false">Gray</button>
+        <button class="a11y-btn" data-setting="saturation" data-value="sepia" aria-pressed="false">Muted</button>
+        <button class="a11y-btn" data-setting="saturation" data-value="inverted" aria-pressed="false">Invert</button>
+      </div>
+    </div>
+    <div class="a11y-group">
+      <h3>Reading &amp; Motion</h3>
+      <div class="a11y-toggle-row">
+        <label for="sw-underline-links">Underline links</label>
+        <button class="a11y-switch" id="sw-underline-links" data-toggle="underline-links" role="switch" aria-checked="false" aria-label="Underline all links"></button>
+      </div>
+      <div class="a11y-toggle-row">
+        <label for="sw-enhanced-focus">Enhanced focus</label>
+        <button class="a11y-switch" id="sw-enhanced-focus" data-toggle="enhanced-focus" role="switch" aria-checked="false" aria-label="Enhanced focus indicators"></button>
+      </div>
+      <div class="a11y-toggle-row">
+        <label for="sw-highlight-headings">Highlight headings</label>
+        <button class="a11y-switch" id="sw-highlight-headings" data-toggle="highlight-headings" role="switch" aria-checked="false" aria-label="Highlight headings"></button>
+      </div>
+      <div class="a11y-toggle-row">
+        <label for="sw-reading-guide">Reading guide</label>
+        <button class="a11y-switch" id="sw-reading-guide" data-toggle="reading-guide" role="switch" aria-checked="false" aria-label="Reading guide bar that follows the cursor"></button>
+      </div>
+      <div class="a11y-toggle-row">
+        <label for="sw-reduce-motion">Reduce motion</label>
+        <button class="a11y-switch" id="sw-reduce-motion" data-toggle="reduce-motion" role="switch" aria-checked="false" aria-label="Reduce motion and animations"></button>
+      </div>
+      <div class="a11y-toggle-row">
+        <label for="sw-pause-animations">Pause animations</label>
+        <button class="a11y-switch" id="sw-pause-animations" data-toggle="pause-animations" role="switch" aria-checked="false" aria-label="Pause all animations"></button>
+      </div>
+      <div class="a11y-toggle-row">
+        <label for="sw-big-cursor">Large cursor</label>
+        <button class="a11y-switch" id="sw-big-cursor" data-toggle="big-cursor" role="switch" aria-checked="false" aria-label="Enlarge cursor"></button>
+      </div>
+    </div>
+    <button class="a11y-reset" id="a11yReset">Reset all settings</button>
+  </aside>
+
+  <script src="script.js"></script>
+  <script>
+  (function () {
+    var nav = document.getElementById('siteNav');
+    var onScroll = function () { if (nav) nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+    onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+    var reveals = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('reveal-in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      reveals.forEach(function (el) { io.observe(el); });
+    } else { reveals.forEach(function (el) { el.classList.add('reveal-in'); }); }
+  })();
+  </script>
+
+</body>
+</html>

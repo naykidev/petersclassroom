@@ -293,6 +293,7 @@ revealTargets.forEach(el => {
    their own UI but don't drive dwell-clicking on this static page. (Text-
    accessibility controls live only in the extension itself, not here.) */
 (function () {
+  if (document.body && document.body.hasAttribute('data-skip-surfer-preview')) return;
   if (document.getElementById('epd-panel')) return;
 
   function formatDwellSeconds(ms) {
