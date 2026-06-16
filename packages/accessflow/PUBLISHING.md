@@ -1,4 +1,4 @@
-# Publishing @axolassist/accessflow
+# Publishing @axol-assist/accessflow
 
 One-time setup, then every release is a git tag.
 
@@ -7,13 +7,13 @@ One-time setup, then every release is a git tag.
 1. Sign in at [npmjs.com](https://www.npmjs.com/) (create an account if needed).
 2. Open **[Create an organization](https://www.npmjs.com/org/create)**.
 3. Choose **Unlimited public packages** (free).
-4. Set the organization name to **`axolassist`** (this creates the `@axolassist` scope).
+4. Set the organization name to **`axol-assist`** (this creates the `@axol-assist` scope).
 
 ## 2. Create an npm automation token
 
 1. Go to **[Access Tokens](https://www.npmjs.com/settings/~your-username~/tokens)** (or your org’s token page).
 2. **Generate New Token** → **Granular Access Token**.
-3. Permissions: **Read and write** for packages under **`@axolassist`**.
+3. Permissions: **Read and write** for packages under **`@axol-assist`**.
 4. Copy the token (starts with `npm_…`) — you won’t see it again.
 
 ## 3. Add `NPM_TOKEN` to GitHub
@@ -48,7 +48,7 @@ The workflow [`.github/workflows/publish-accessflow.yml`](../../.github/workflow
 
 - Install dependencies
 - Typecheck and build
-- Publish `@axolassist/accessflow@1.0.0` to npm with public access
+- Publish `@axol-assist/accessflow@1.0.0` to npm with public access
 
 Watch progress: [Actions tab](https://github.com/slasherthunder/petersclassroom/actions)
 
@@ -79,8 +79,8 @@ Tag format must be `accessflow-v*` (e.g. `accessflow-v1.1.0`).
 ## Verify after publish
 
 ```bash
-npm view @axolassist/accessflow
-npm install @axolassist/accessflow
+npm view @axol-assist/accessflow
+npm install @axol-assist/accessflow
 ```
 
 ## Troubleshooting
@@ -88,6 +88,6 @@ npm install @axolassist/accessflow
 | Issue | Fix |
 |-------|-----|
 | `402 Payment Required` on publish | Org missing or scoped package set private — use `--access public` or create free public org |
-| `403 Forbidden` | Token lacks write access to `@axolassist` |
+| `403 Forbidden` | Token lacks write access to `@axol-assist` |
 | GitHub Action fails on publish | Confirm `NPM_TOKEN` secret exists and matches a valid granular token |
 | Provenance warning | Enable [npm provenance](https://docs.npmjs.com/generating-provenance-statements) — repo must be public and linked in `package.json` `repository` |

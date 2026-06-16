@@ -7,11 +7,11 @@ Visitor-controlled accessibility toolbar by **Axolo Assist**.
 ### npm (recommended)
 
 ```bash
-npm install @axolassist/accessflow
+npm install @axol-assist/accessflow
 ```
 
 ```ts
-import '@axolassist/accessflow';
+import '@axol-assist/accessflow';
 ```
 
 ### CDN
@@ -24,7 +24,7 @@ import '@axolassist/accessflow';
 
 | Path | Purpose |
 |------|---------|
-| `packages/accessflow/` | TypeScript SDK (`@axolassist/accessflow`) |
+| `packages/accessflow/` | TypeScript SDK (`@axol-assist/accessflow`) |
 | `cdn/` | CDN IIFE bundle (synced on `npm run build`) |
 | `accessflow/demo.html` | Local script-tag demo |
 

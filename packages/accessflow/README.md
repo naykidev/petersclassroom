@@ -1,15 +1,15 @@
-# @axolassist/accessflow
+# @axol-assist/accessflow
 
 Production-ready accessibility toolbar SDK by [Axolo Assist](https://axolassist.com). Add visitor-controlled font, contrast, spacing, and motion controls to any site with one import.
 
 ## Quick start
 
 ```bash
-npm install @axolassist/accessflow
+npm install @axol-assist/accessflow
 ```
 
 ```ts
-import '@axolassist/accessflow';
+import '@axol-assist/accessflow';
 ```
 
 The toolbar appears automatically. No CSS imports. No configuration required.
@@ -17,7 +17,7 @@ The toolbar appears automatically. No CSS imports. No configuration required.
 ## React
 
 ```tsx
-import { AccessFlow } from '@axolassist/accessflow/react';
+import { AccessFlow } from '@axol-assist/accessflow/react';
 
 export default function App() {
   return (
@@ -37,7 +37,7 @@ The component mounts once, prevents duplicates, and cleans up on unmount.
 // app/providers.tsx
 'use client';
 
-import { AccessFlow } from '@axolassist/accessflow/react';
+import { AccessFlow } from '@axol-assist/accessflow/react';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -69,7 +69,7 @@ Optional configuration before the script:
 ## Manual control
 
 ```ts
-import { init, destroy } from '@axolassist/accessflow';
+import { init, destroy } from '@axol-assist/accessflow';
 
 init({ position: 'top-right' });
 // later
@@ -87,7 +87,7 @@ destroy();
 | `features` | all enabled | Toggle toolbar sections |
 
 ```ts
-import { init } from '@axolassist/accessflow';
+import { init } from '@axol-assist/accessflow';
 
 init({
   position: 'bottom-left',
