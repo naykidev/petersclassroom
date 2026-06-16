@@ -17,7 +17,7 @@ import '@axol-assist/accessflow';
 ### CDN
 
 ```html
-<script src="https://cdn.axolassist.com/accessflow.js"></script>
+<script src="https://axolassist.com/cdn/accessflow.js"></script>
 ```
 
 ## Source layout

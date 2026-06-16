@@ -2,15 +2,21 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig([
   {
-    entry: ['src/index.ts'],
+    entry: ['src/index.ts', 'src/auto.ts'],
     format: ['esm', 'cjs'],
     dts: true,
     treeshake: true,
+    splitting: false,
     clean: true,
     sourcemap: true,
     minify: false,
     external: ['react'],
     outDir: 'dist',
+    loader: {
+      '.css': 'text',
+      '.woff': 'dataurl',
+      '.woff2': 'dataurl',
+    },
     esbuildOptions(options) {
       options.loader = {
         ...options.loader,

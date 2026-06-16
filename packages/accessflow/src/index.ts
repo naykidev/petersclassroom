@@ -7,7 +7,3 @@ export type {
   AccessFlowFeatures,
   Settings,
 } from './core/types';
-
-import { boot } from './core/init';
-
-boot();

@@ -44,8 +44,17 @@ function injectStyles(): void {
   const style = document.createElement('style');
   style.id = 'accessflow-styles';
   style.setAttribute('data-accessflow-css', 'true');
-  style.textContent = stylesheet;
+  style.textContent = typeof stylesheet === 'string' ? stylesheet : '';
   document.head.appendChild(style);
+}
+
+function injectStylesheetLink(href: string): void {
+  if (document.getElementById('accessflow-styles-link')) return;
+  const link = document.createElement('link');
+  link.id = 'accessflow-styles-link';
+  link.rel = 'stylesheet';
+  link.href = href;
+  document.head.appendChild(link);
 }
 
 function injectFonts(): void {
@@ -299,7 +308,9 @@ export function init(config: AccessFlowConfig = {}): void {
   const accentColor = mergedConfig.accentColor || DEFAULT_ACCENT;
   storageKey = mergedConfig.storageKey || STORAGE_KEY;
 
-  if (!mergedConfig.skipCssInject) {
+  if (mergedConfig.cssUrl) {
+    injectStylesheetLink(mergedConfig.cssUrl);
+  } else if (!mergedConfig.skipCssInject) {
     injectStyles();
   }
   injectFonts();

@@ -1,10 +1,10 @@
 import type { Settings } from './types';
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.0.1';
 export const STORAGE_KEY = 'accessflow-settings-v1';
 export const DEFAULT_ACCENT = '#B03060';
 export const DEFAULT_POSITION = 'bottom-right';
-export const DEFAULT_CDN = 'https://cdn.axolassist.com/';
+export const DEFAULT_CDN = 'https://axolassist.com/cdn/';
 
 export const DEFAULTS: Settings = {
   'text-size': 'default',

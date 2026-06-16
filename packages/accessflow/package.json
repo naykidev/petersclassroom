@@ -1,11 +1,13 @@
 {
   "name": "@axol-assist/accessflow",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Production-ready accessibility toolbar SDK for any modern web app",
   "author": "Axolo Assist",
   "license": "MIT",
   "type": "module",
   "sideEffects": [
+    "./dist/auto.js",
+    "./dist/auto.cjs",
     "./dist/index.js",
     "./dist/index.cjs"
   ],
@@ -23,6 +25,12 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./auto": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/auto.js",
+      "require": "./dist/auto.cjs"
+    },
+    "./styles.css": "./dist/accessflow.css",
     "./package.json": "./package.json"
   },
   "files": [
@@ -32,6 +40,13 @@
     "dist/index.d.cts",
     "dist/index.js.map",
     "dist/index.cjs.map",
+    "dist/auto.js",
+    "dist/auto.cjs",
+    "dist/auto.d.ts",
+    "dist/auto.d.cts",
+    "dist/auto.js.map",
+    "dist/auto.cjs.map",
+    "dist/accessflow.css",
     "README.md",
     "CHANGELOG.md"
   ],

@@ -8,11 +8,31 @@ Production-ready accessibility toolbar SDK by [Axolo Assist](https://axolassist.
 npm install @axol-assist/accessflow
 ```
 
+**Zero-config** (auto-initializes on load):
+
 ```ts
-import '@axol-assist/accessflow';
+import '@axol-assist/accessflow/auto';
 ```
 
-The toolbar appears automatically. No CSS imports. No configuration required.
+CSS and fonts are bundled in the JS — no separate stylesheet import required for Vite, Astro, Next.js, etc.
+
+**Manual control** (no auto-init):
+
+```ts
+import { boot } from '@axol-assist/accessflow';
+
+boot({ position: 'bottom-left' });
+```
+
+```ts
+import { init, destroy } from '@axol-assist/accessflow';
+
+init({ position: 'top-right' });
+// later
+destroy();
+```
+
+> Do not combine `import '@axol-assist/accessflow/auto'` with `init()` or `<AccessFlow />` — pick one initialization path.
 
 ## React
 
@@ -49,10 +69,21 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
+### Astro
+
+```astro
+---
+// src/layouts/Layout.astro
+---
+<script>
+  import '@axol-assist/accessflow/auto';
+</script>
+```
+
 ## CDN (no bundler)
 
 ```html
-<script src="https://cdn.axolassist.com/accessflow.js"></script>
+<script src="https://axolassist.com/cdn/accessflow.js"></script>
 ```
 
 Optional configuration before the script:
@@ -66,15 +97,7 @@ Optional configuration before the script:
 </script>
 ```
 
-## Manual control
-
-```ts
-import { init, destroy } from '@axol-assist/accessflow';
-
-init({ position: 'top-right' });
-// later
-destroy();
-```
+Styles and fonts are inlined in the CDN bundle. The toggle icon loads from `https://axolassist.com/cdn/accessibility.png` by default.
 
 ## Configuration
 
@@ -82,9 +105,34 @@ destroy();
 |--------|---------|-------------|
 | `position` | `bottom-right` | Toolbar button placement |
 | `accentColor` | `#B03060` | Active control color |
+| `iconUrl` | `https://axolassist.com/cdn/accessibility.png` | Toggle button image |
+| `cssUrl` | — | Load stylesheet via `<link>` instead of bundled CSS |
+| `skipCssInject` | `false` | Skip bundled CSS inject (use with `cssUrl`) |
+| `skipAutoInit` | `false` | CDN/auto entry only — disable auto boot |
 | `storageKey` | `accessflow-settings-v1` | localStorage key |
-| `skipAutoInit` | `false` | CDN only — disable auto boot |
 | `features` | all enabled | Toggle toolbar sections |
+
+### External stylesheet (optional)
+
+Bundled CSS is the default. To host the stylesheet yourself:
+
+```ts
+import { boot } from '@axol-assist/accessflow';
+
+boot({
+  skipCssInject: true,
+  cssUrl: '/accessflow.css',
+});
+```
+
+Or copy from the package:
+
+```ts
+// Vite / Astro — serve from public/
+import cssUrl from '@axol-assist/accessflow/styles.css?url';
+
+boot({ skipCssInject: true, cssUrl });
+```
 
 ```ts
 import { init } from '@axol-assist/accessflow';
@@ -123,17 +171,11 @@ npm install
 npm run build
 ```
 
-Build outputs ESM + CJS to `dist/` and syncs the CDN IIFE to `/cdn/accessflow.js`.
+Build outputs ESM + CJS to `dist/`, ships `dist/accessflow.css`, and syncs the CDN IIFE to `/cdn/accessflow.js`.
 
 ## Publishing
 
-See [PUBLISHING.md](./PUBLISHING.md). Quick path:
-
-```bash
-./scripts/setup-accessflow-publish.sh
-```
-
-Or tag `accessflow-v1.0.0` after adding `NPM_TOKEN` to GitHub Actions secrets.
+See [PUBLISHING.md](./PUBLISHING.md). Tag `accessflow` after adding `NPM_TOKEN` to GitHub Actions secrets.
 
 ## Privacy
 

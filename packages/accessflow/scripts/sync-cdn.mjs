@@ -1,19 +1,26 @@
-import { copyFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkgRoot = join(__dirname, '..');
+const repoRoot = join(pkgRoot, '../..');
 const distDir = join(pkgRoot, 'dist');
-const repoCdn = join(pkgRoot, '../../cdn');
+const repoCdn = join(repoRoot, 'cdn');
+const cssSource = join(pkgRoot, 'src/assets/accessflow.css');
+const iconSource = join(repoRoot, 'accessibility.png');
 const candidates = ['accessflow.js', 'accessflow.global.js'];
 
 mkdirSync(repoCdn, { recursive: true });
+mkdirSync(distDir, { recursive: true });
 
-for (const file of readdirSync(distDir)) {
-  if (file.endsWith('.css') || file.endsWith('.css.map')) {
-    unlinkSync(join(distDir, file));
-  }
+copyFileSync(cssSource, join(distDir, 'accessflow.css'));
+copyFileSync(cssSource, join(repoCdn, 'accessflow.css'));
+copyFileSync(cssSource, join(repoRoot, 'accessflow/accessflow.css'));
+
+if (existsSync(iconSource)) {
+  copyFileSync(iconSource, join(repoCdn, 'accessibility.png'));
+  copyFileSync(iconSource, join(repoRoot, 'accessflow/accessibility.png'));
 }
 
 const source = candidates
@@ -30,7 +37,6 @@ if (existsSync(`${source}.map`)) {
   copyFileSync(`${source}.map`, join(repoCdn, 'accessflow.js.map'));
 }
 
-const legacyDir = join(pkgRoot, '../../accessflow');
-copyFileSync(source, join(legacyDir, 'accessflow.js'));
+copyFileSync(source, join(repoRoot, 'accessflow/accessflow.js'));
 
-console.log('Synced CDN bundle to /cdn/accessflow.js and /accessflow/accessflow.js');
+console.log('Synced CDN assets to /cdn/ and /accessflow/');
