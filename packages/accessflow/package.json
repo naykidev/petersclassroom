@@ -1,0 +1,73 @@
+{
+  "name": "@axolassist/accessflow",
+  "version": "1.0.0",
+  "description": "Production-ready accessibility toolbar SDK for any modern web app",
+  "author": "Axolo Assist",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "./dist/index.js",
+    "./dist/index.cjs"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./react": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup && node scripts/sync-cdn.mjs",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "toolbar",
+    "wcag",
+    "dyslexia",
+    "accessflow",
+    "axolo-assist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slasherthunder/petersclassroom.git",
+    "directory": "packages/accessflow"
+  },
+  "homepage": "https://axolassist.com/toolbar.html",
+  "bugs": {
+    "url": "https://github.com/slasherthunder/petersclassroom/issues"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "react": "^18.3.1",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
