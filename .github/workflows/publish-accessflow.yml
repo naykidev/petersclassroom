@@ -3,6 +3,7 @@ name: Publish AccessFlow
 on:
   push:
     tags:
+      - 'accessflow'
       - 'accessflow-v*'
   workflow_dispatch:
 
