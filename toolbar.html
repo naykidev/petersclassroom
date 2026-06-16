@@ -147,6 +147,152 @@
     }
     .af-hero-meta span:first-child::before { display: none; }
 
+    .af-hero-proof {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      margin-top: 1.35rem;
+      padding: .4rem .75rem .4rem .55rem;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .85);
+      font-family: var(--font-display);
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+      color: var(--ink-soft);
+      box-shadow: var(--shadow-sm);
+    }
+    .af-hero-proof-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #1f9d63;
+      box-shadow: 0 0 0 3px rgba(31, 157, 99, .18);
+      flex-shrink: 0;
+    }
+
+    /* ── Trust / real-world usage ── */
+    .af-trust-section {
+      padding: clamp(2.5rem, 5vw, 3.5rem) 0;
+      background:
+        radial-gradient(90% 80% at 100% 0%, rgba(176, 48, 96, .07) 0%, transparent 55%),
+        var(--paper);
+      border-bottom: 1px solid var(--border);
+    }
+    .af-trust-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+      gap: clamp(1.5rem, 4vw, 2.5rem);
+      align-items: stretch;
+    }
+    .af-trust-copy { min-width: 0; }
+    .af-trust-copy .eyebrow { margin-bottom: .9rem; }
+    .af-trust-copy h2 {
+      font-size: clamp(1.65rem, 3.2vw, 2.35rem);
+      letter-spacing: -0.03em;
+      line-height: 1.06;
+      margin: 0;
+      max-width: 18ch;
+    }
+    .af-trust-copy h2 .accent { color: var(--coral-deep); }
+    .af-trust-lead {
+      margin: 1rem 0 0;
+      max-width: 42em;
+      font-size: 1.02rem;
+      line-height: 1.62;
+      color: var(--text-muted);
+    }
+    .af-trust-badges {
+      list-style: none;
+      margin: 1.35rem 0 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .af-trust-badges li {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+      padding: .45rem .8rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .af-trust-badges svg {
+      width: 14px;
+      height: 14px;
+      color: var(--coral-deep);
+      flex-shrink: 0;
+    }
+
+    .af-trust-card {
+      background: linear-gradient(155deg, var(--white) 0%, var(--coral-tint) 120%);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 1.5rem 1.45rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .af-trust-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple), var(--coral));
+    }
+    .af-trust-card-label {
+      font-family: var(--font-display);
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--coral-deep);
+      margin: 0 0 .65rem;
+    }
+    .af-trust-card h3 {
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+      margin: 0 0 .65rem;
+      color: var(--ink);
+    }
+    .af-trust-card p {
+      margin: 0;
+      font-size: .96rem;
+      line-height: 1.58;
+      color: var(--text-muted);
+      flex: 1;
+    }
+    .af-trust-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      margin-top: 1.15rem;
+      font-family: var(--font-display);
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--coral-deep);
+      text-decoration: none;
+      width: fit-content;
+    }
+    .af-trust-card-link svg {
+      width: 1em;
+      height: 1em;
+      transition: transform .2s var(--ease);
+    }
+    .af-trust-card-link:hover { color: var(--coral-press); }
+    .af-trust-card-link:hover svg { transform: translateX(3px); }
+
     /* ── Install (centerpiece) ── */
     .af-install-section {
       padding: clamp(4rem, 9vw, 6.5rem) 0;
@@ -426,6 +572,7 @@
     .af-contact-block { margin-top: 0; }
 
     @media (max-width: 768px) {
+      .af-trust-grid { grid-template-columns: 1fr; }
       .af-install-grid,
       .af-steps-row,
       .af-feature-grid,
@@ -458,6 +605,10 @@
         <span class="page-label">Accessibility toolbar · Free</span>
         <h1>Access<span class="accent">Flow</span></h1>
         <p class="af-hero-lead">Add a visitor-controlled accessibility toolbar in under a minute. One script tag or one npm import. The toolbar appears automatically on every page.</p>
+        <p class="af-hero-proof reveal">
+          <span class="af-hero-proof-dot" aria-hidden="true"></span>
+          Used on real websites
+        </p>
         <div class="af-hero-actions">
           <a href="#install-script" class="af-install-pill is-primary">
             <strong>Script</strong> tag install
@@ -473,6 +624,46 @@
         </div>
       </div>
     </header>
+
+    <section class="af-trust-section" id="trust" aria-labelledby="af-trust-heading">
+      <div class="wrap">
+        <div class="af-trust-grid reveal">
+          <div class="af-trust-copy">
+            <span class="eyebrow">In the wild</span>
+            <h2 id="af-trust-heading">Already powering <span class="accent">real websites</span></h2>
+            <p class="af-trust-lead">AccessFlow is already being used by organizations that want a simple way to provide visitor-controlled accessibility features.</p>
+            <ul class="af-trust-badges" aria-label="AccessFlow highlights">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Live on production websites
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Installs in under a minute
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                No account required
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                WCAG-aligned approach
+              </li>
+            </ul>
+          </div>
+
+          <article class="af-trust-card">
+            <p class="af-trust-card-label">Live example</p>
+            <h3>Surf Del Mar Festival</h3>
+            <p>AccessFlow powers the accessibility toolbar on the Surf Del Mar Festival website, helping visitors customize text, contrast, spacing, motion, and more.</p>
+            <a class="af-trust-card-link" href="https://surfdelmarfestival.com/" target="_blank" rel="noopener noreferrer">
+              Visit surfdelmarfestival.com
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
 
     <section class="af-install-section" id="install">
       <div class="wrap">
