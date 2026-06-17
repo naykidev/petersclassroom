@@ -202,84 +202,96 @@
     /* Workflow timeline */
     .af-workflow {
       position: relative;
-      max-width: 920px;
-      margin: 0 auto 1.75rem;
+      max-width: 980px;
+      margin: 0 auto 2.2rem;
+      padding: .5rem 0 0;
     }
     .af-workflow-track {
-      display: none;
+      position: absolute;
+      top: 74px;
+      left: 16%;
+      right: 16%;
+      height: 1px;
+      background: var(--line-strong);
+      border-radius: 999px;
+      z-index: 0;
+      overflow: hidden;
     }
-    @media (min-width: 769px) {
-      .af-workflow-track {
-        display: block;
-        position: absolute;
-        top: 22px;
-        left: 12%;
-        right: 12%;
-        height: 2px;
-        background: linear-gradient(90deg, var(--coral-tint2), var(--coral), var(--purple));
-        border-radius: 2px;
-        z-index: 0;
-      }
+    .af-workflow-track::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--coral-tint2), var(--coral), #be4a88);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .4s var(--ease);
     }
+    .af-workflow.reveal-in .af-workflow-track::after { transform: scaleX(1); }
     .af-workflow-steps {
       list-style: none;
       margin: 0;
       padding: 0;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: .85rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.6rem;
       position: relative;
       z-index: 1;
     }
     .af-workflow-step {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 1rem 1rem 1.1rem;
-      box-shadow: var(--shadow-sm);
-      position: relative;
+      text-align: center;
+      padding: 0 .6rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .4s ease, transform .4s ease;
     }
-    .af-workflow-step::after {
-      content: "→";
-      position: absolute;
-      right: -0.55rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--coral);
-      z-index: 2;
-      display: none;
+    .af-workflow.reveal-in .af-workflow-step {
+      opacity: 1;
+      transform: translateY(0);
     }
-    @media (min-width: 769px) {
-      .af-workflow-step:not(:last-child)::after { display: block; }
-    }
+    .af-workflow.reveal-in .af-workflow-step:nth-child(2) { transition-delay: .11s; }
+    .af-workflow.reveal-in .af-workflow-step:nth-child(3) { transition-delay: .22s; }
     .af-workflow-num {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      background: var(--coral);
-      color: #fff;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink-soft);
       font-family: var(--font-display);
-      font-size: .78rem;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: .95rem;
+    }
+    .af-workflow-step:first-child .af-workflow-num {
+      background: var(--coral);
+      border-color: var(--coral);
+      color: #fff;
+      box-shadow: 0 10px 24px -14px rgba(176, 48, 96, .85);
+    }
+    .af-workflow-icon {
+      display: inline-flex;
+      width: 22px;
+      height: 22px;
+      color: var(--coral-deep);
       margin-bottom: .55rem;
     }
     .af-workflow-step h3 {
-      font-size: .95rem;
+      font-size: clamp(1.1rem, 2.4vw, 1.375rem);
       font-weight: 600;
-      margin: 0 0 .3rem;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
+      margin: 0 0 .45rem;
     }
     .af-workflow-step p {
-      margin: 0;
-      font-size: .84rem;
-      line-height: 1.45;
+      margin: 0 auto;
+      font-size: .94rem;
+      line-height: 1.5;
       color: var(--text-muted);
+      max-width: 180px;
     }
 
     .af-install-label {
@@ -645,9 +657,43 @@
 
     .af-contact-block { margin-top: 0; }
 
+    @media (max-width: 900px) {
+      .af-workflow {
+        max-width: 840px;
+      }
+      .af-workflow-steps {
+        gap: 1rem;
+      }
+    }
+
     @media (max-width: 768px) {
-      .af-workflow-steps { grid-template-columns: 1fr; }
-      .af-workflow-step::after { display: none !important; }
+      .af-workflow {
+        padding-left: 1.4rem;
+      }
+      .af-workflow-track {
+        top: 0;
+        bottom: 0;
+        left: .7rem;
+        right: auto;
+        width: 1px;
+        height: auto;
+      }
+      .af-workflow-track::after {
+        transform: scaleY(0);
+        transform-origin: top;
+      }
+      .af-workflow.reveal-in .af-workflow-track::after { transform: scaleY(1); }
+      .af-workflow-steps {
+        grid-template-columns: 1fr;
+        gap: 1.4rem;
+      }
+      .af-workflow-step {
+        text-align: left;
+        padding: 0 0 0 1.25rem;
+      }
+      .af-workflow-num {
+        margin-bottom: .7rem;
+      }
       .af-install-grid,
       .af-showcase-grid { grid-template-columns: 1fr; }
       .af-cred-block { grid-template-columns: 1fr; }
@@ -713,19 +759,28 @@
           <div class="af-workflow-track" aria-hidden="true"></div>
           <ol class="af-workflow-steps">
             <li class="af-workflow-step">
-              <span class="af-workflow-num">1</span>
-              <h3>Choose your method</h3>
-              <p>Script tag for any site, or npm for React, Next.js, Astro, and Vite.</p>
+              <span class="af-workflow-num">Step 1</span>
+              <span class="af-workflow-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/></svg>
+              </span>
+              <h3>Choose a platform</h3>
+              <p>Wix, WordPress, Webflow, React, or any modern stack.</p>
             </li>
             <li class="af-workflow-step">
-              <span class="af-workflow-num">2</span>
+              <span class="af-workflow-num">Step 2</span>
+              <span class="af-workflow-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M8 9L4.5 12l3.5 3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 9l3.5 3-3.5 3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.6 6.5l-3.2 11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              </span>
               <h3>Paste one line</h3>
-              <p>Add the script before <code>&lt;/body&gt;</code>, or import in your app entry.</p>
+              <p>Copy the install snippet and drop it in your site.</p>
             </li>
             <li class="af-workflow-step">
-              <span class="af-workflow-num">3</span>
-              <h3>Toolbar goes live</h3>
-              <p>Visitors get controls instantly. Settings save in the browser per visitor.</p>
+              <span class="af-workflow-num">Step 3</span>
+              <span class="af-workflow-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/><path d="M8.4 12.3l2.4 2.4 4.8-4.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <h3>You're live</h3>
+              <p>Accessibility tools appear instantly and visitor settings persist.</p>
             </li>
           </ol>
         </div>
