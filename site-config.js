@@ -5,5 +5,5 @@
 window.AXOL_SITE = Object.freeze({
   origin: 'https://axolassist.com',
   chromeWebStoreUrl:
-    'https://chrome.google.com/webstore/detail/accessibility-surfer/PLACEHOLDER_EXTENSION_ID',
+    'https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn',
 });

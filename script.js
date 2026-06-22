@@ -335,7 +335,7 @@ revealTargets.forEach(el => {
       `</div>` +
       `<button class="epd-close" type="button" aria-label="Close popup preview">✕</button>` +
     `</div>` +
-    `<p class="epd-note">Preview of the extension's toolbar popup. <a href="${(window.AXOL_SITE && window.AXOL_SITE.chromeWebStoreUrl) || 'https://chrome.google.com/webstore/detail/accessibility-surfer/PLACEHOLDER_EXTENSION_ID'}" data-chrome-install rel="noopener noreferrer">Add to Chrome</a> to use these controls for real.</p>` +
+    `<p class="epd-note">Preview of the extension's toolbar popup. <a href="${(window.AXOL_SITE && window.AXOL_SITE.chromeWebStoreUrl) || 'https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn'}" data-chrome-install rel="noopener noreferrer">Add to Chrome</a> to use these controls for real.</p>` +
 
     `<h3 class="epd-section-heading">YouTube</h3>` +
     `<div class="epd-toggle-row">` +

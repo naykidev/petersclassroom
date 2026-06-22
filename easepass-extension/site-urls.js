@@ -4,4 +4,4 @@
  */
 const AXOL_ORIGIN = 'https://axolassist.com';
 const CHROME_WEB_STORE_URL =
-  'https://chrome.google.com/webstore/detail/accessibility-surfer/PLACEHOLDER_EXTENSION_ID';
+  'https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn';
