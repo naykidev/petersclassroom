@@ -100,15 +100,15 @@
   panel.innerHTML =
     '<div class="live-demo-head">' +
       '<div>' +
-        '<p class="live-demo-kicker">Try it live</p>' +
-        '<h2 id="liveDemoTitle">Experience Axol Assist on this page</h2>' +
+        '<p class="live-demo-kicker">Accessibility Surfer</p>' +
+        '<h2 id="liveDemoTitle">Experience Accessibility Surfer on this page</h2>' +
       '</div>' +
       '<button type="button" class="live-demo-collapse" id="liveDemoCollapse" aria-expanded="true" aria-controls="liveDemoBody" aria-label="Collapse demo panel">' +
         '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true"><path d="M6 15l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
       '</button>' +
     '</div>' +
     '<div class="live-demo-body" id="liveDemoBody">' +
-      '<p class="live-demo-lead">Toggle a setting and watch this page change instantly. No install required.</p>' +
+      '<p class="live-demo-lead">Preview Surfer\'s reading controls on this page. Toggle a setting and watch it change instantly.</p>' +
       '<ul class="live-demo-toggles" role="list">' +
         toggleRow('clutter', 'Reduce visual clutter', 'Hide decorative elements so content is easier to scan.') +
         toggleRow('font-size', 'Increase font size', 'Make body text larger across the page.') +
@@ -118,7 +118,7 @@
       '</ul>' +
       '<div class="live-demo-actions">' +
         '<button type="button" class="live-demo-reset" id="liveDemoReset" disabled aria-disabled="true">Reset page</button>' +
-        '<a href="#products" class="live-demo-install">Get the full extension</a>' +
+        '<a href="easepass.html" class="live-demo-install">About Accessibility Surfer</a>' +
       '</div>' +
     '</div>';
 
