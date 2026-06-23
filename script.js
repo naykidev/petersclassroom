@@ -82,6 +82,7 @@ revealTargets.forEach(el => {
   // loads (index, easepass, privacy). Idempotent: bails if already present
   // (e.g. an older page that still has the static markup).
   function injectAccessibilityToolbar() {
+    if (document.body && document.body.hasAttribute('data-skip-a11y-toolbar')) return;
     if (document.getElementById('a11yPanel')) return;
     const group = (heading, label, buttons) =>
       `<div class="a11y-group">
