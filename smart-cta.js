@@ -61,7 +61,10 @@
   }
 
   function emailFormHtml(variant, id) {
-    const btnClass = variant === 'btn' ? 'btn btn-primary smart-cta-submit' : 'hero-cta-link smart-cta-submit';
+    const btnClass =
+      variant === 'btn' ? 'btn btn-primary smart-cta-submit' :
+      variant === 'install-fallback' ? 'btn btn-ghost smart-cta-submit' :
+      'hero-cta-link smart-cta-submit';
     return (
       '<form class="smart-cta-form" data-smart-cta-form novalidate>' +
         '<div class="smart-cta-fields">' +
@@ -70,7 +73,7 @@
             'placeholder="you@example.com" autocomplete="email" required inputmode="email" />' +
           '<button type="submit" class="' + btnClass + '">Email Me a Link</button>' +
         '</div>' +
-        '<p class="smart-cta-hint">Not on Chrome? We\'ll send the install link so you can add it later.</p>' +
+        '<p class="smart-cta-hint">Not on Chrome? We\'ll send the install link to your email.</p>' +
         '<p class="smart-cta-status" role="status" aria-live="polite"></p>' +
       '</form>'
     );
@@ -160,9 +163,57 @@
     });
   }
 
+  function showCopyToast(btn, toast) {
+    if (toast) {
+      toast.textContent = 'Link copied to clipboard';
+      toast.classList.add('is-visible');
+      setTimeout(function () {
+        toast.classList.remove('is-visible');
+        toast.textContent = '';
+      }, 2800);
+    }
+    const orig = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(function () { btn.textContent = orig; }, 2200);
+  }
+
+  function initCopyStoreLinks() {
+    document.querySelectorAll('[data-copy-store-link]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const url = storeUrl();
+        const panel = btn.closest('.chrome-install-panel') || btn.closest('section');
+        const toast = panel && panel.querySelector('[data-copy-toast]');
+        copyText(url).then(function () {
+          showCopyToast(btn, toast);
+        }).catch(function () {});
+      });
+    });
+  }
+
+  function syncStoreLinks() {
+    const url = storeUrl();
+    document.querySelectorAll('[data-chrome-install]').forEach(function (a) {
+      a.href = url;
+    });
+  }
+
   function mount(el, index) {
     const variant = el.getAttribute('data-variant') || 'hero';
     const useChrome = isChromeDesktop();
+
+    if (variant === 'install-fallback') {
+      el.classList.add('smart-cta', 'smart-cta--install-fallback');
+      if (useChrome) {
+        el.hidden = true;
+        return;
+      }
+      el.hidden = false;
+      el.classList.add('is-email');
+      const inputId = 'smart-cta-email-' + index;
+      el.innerHTML = emailFormHtml(variant, inputId);
+      bindForm(el, storeUrl());
+      return;
+    }
 
     el.classList.add('smart-cta', 'smart-cta--' + variant);
     if (useChrome) {
@@ -184,6 +235,8 @@
   }
 
   function run() {
+    syncStoreLinks();
+    initCopyStoreLinks();
     document.querySelectorAll('[data-smart-chrome-cta]').forEach(function (el, i) {
       mount(el, i);
     });
