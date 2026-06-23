@@ -1635,3 +1635,91 @@ html[data-contrast="dark"] .epd-bubble::before {
   background: linear-gradient(135deg, #1a1224 0%, #2a1830 100%);
   border-color: rgba(236, 196, 214, .22);
 }
+
+/* ════════════════ SMART CHROME CTA ════════════════ */
+.smart-cta--hero { width: 100%; max-width: 28rem; }
+.smart-cta--btn { width: 100%; }
+.smart-cta-form { margin: 0; width: 100%; }
+.smart-cta-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  align-items: stretch;
+}
+.smart-cta-input {
+  flex: 1 1 11rem;
+  min-width: 0;
+  padding: .82rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  font-family: inherit;
+  font-size: .95rem;
+  background: var(--white);
+  color: var(--ink);
+  transition: border-color .18s, box-shadow .18s;
+}
+.smart-cta-input:focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: 2px;
+  border-color: var(--coral);
+  box-shadow: 0 0 0 4px var(--coral-tint);
+}
+.smart-cta-input::placeholder { color: var(--muted-2); }
+.smart-cta-submit { flex-shrink: 0; white-space: nowrap; border: none; cursor: pointer; }
+.smart-cta-hint {
+  margin: .55rem 0 0;
+  font-size: .82rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.smart-cta-status {
+  margin: .45rem 0 0;
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--coral-deep);
+  min-height: 0;
+}
+.smart-cta-status.is-visible { min-height: 1.2rem; }
+.smart-cta-success {
+  padding: 1rem 1.1rem;
+  background: var(--coral-tint);
+  border: 1px solid var(--coral-tint2);
+  border-radius: var(--r);
+}
+.smart-cta-success-lead {
+  margin: 0 0 .75rem;
+  font-size: .92rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.smart-cta-success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  align-items: center;
+}
+.smart-cta-success-note {
+  margin: .65rem 0 0;
+  font-size: .8rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.smart-cta-copy { font-size: .9rem; padding: .75rem 1.1rem; }
+.smart-cta-nav-email { display: inline-flex !important; }
+
+.demo .smart-cta-hint { color: rgba(255,255,255,.65); }
+.demo .smart-cta-input { background: rgba(255,255,255,.95); }
+.demo .smart-cta-success { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.18); }
+.demo .smart-cta-success-lead { color: #fff; }
+.demo .smart-cta-success-note { color: rgba(255,255,255,.65); }
+
+@media (max-width: 600px) {
+  .smart-cta-fields { flex-direction: column; }
+  .smart-cta-submit { width: 100%; justify-content: center; }
+  .nav-links .smart-cta--nav { width: 100%; }
+  .nav-links .smart-cta-nav-email { width: 100%; justify-content: center; text-align: center; }
+}
+
+html[data-contrast="dark"] .smart-cta-input { background: #16101e; border-color: #2a2438; color: #f4f1ec; }
+html[data-contrast="dark"] .smart-cta-success { background: #1e1528; border-color: #2a2438; }
+html[data-contrast="dark"] .smart-cta-success-lead { color: #f4f1ec; }
