@@ -326,7 +326,9 @@ revealTargets.forEach(el => {
   const bubble = document.createElement('span');
   bubble.className = 'epd-bubble';
   bubble.id = 'epd-bubble';
-  bubble.textContent = 'Try Accessibility Surfer';
+  bubble.innerHTML =
+    '<span class="epd-bubble-kicker">Free Chrome extension</span>' +
+    '<span class="epd-bubble-text">Try <em class="epd-bubble-accent">Accessibility Surfer</em></span>';
   launcher.appendChild(toggle);
   launcher.appendChild(bubble);
 
