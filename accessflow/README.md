@@ -1,6 +1,6 @@
 # AccessFlow
 
-Visitor-controlled accessibility toolbar by **Axolo Assist**.
+Visitor-controlled accessibility toolbar by **Axol Assist**.
 
 ## Install
 

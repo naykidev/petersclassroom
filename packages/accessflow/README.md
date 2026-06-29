@@ -1,6 +1,6 @@
 # @axol-assist/accessflow
 
-Production-ready accessibility toolbar SDK by [Axolo Assist](https://axolassist.com). Add visitor-controlled font, contrast, spacing, and motion controls to any site with one import.
+Production-ready accessibility toolbar SDK by [Axol Assist](https://axolassist.com). Add visitor-controlled font, contrast, spacing, and motion controls to any site with one import.
 
 ## Quick start
 
@@ -108,7 +108,7 @@ Styles, fonts, and the toggle icon are inlined in the CDN bundle.
 | `iconUrl` | bundled icon | Toggle button image (override with your own URL) |
 | `cssUrl` | — | Load stylesheet via `<link>` instead of bundled CSS |
 | `skipCssInject` | `false` | Skip bundled CSS inject (use with `cssUrl`) |
-| `showBranding` | `true` | Show “Powered by Axolo Assist” in the panel footer |
+| `showBranding` | `true` | Show “Powered by Axol Assist” in the panel footer |
 | `skipAutoInit` | `false` | CDN/auto entry only — disable auto boot |
 | `storageKey` | `accessflow-settings-v1` | localStorage key |
 | `features` | all enabled | Toggle toolbar sections |
@@ -184,4 +184,4 @@ AccessFlow does not collect visitor data. Settings stay in the visitor's browser
 
 ## License
 
-MIT © Axolo Assist
+MIT © Axol Assist
