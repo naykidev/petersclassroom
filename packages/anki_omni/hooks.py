@@ -71,7 +71,7 @@ def _on_main_window_did_init() -> None:
 
 def register_hooks() -> None:
     addon_root = __name__.split(".")[0]
-    mw.addonManager.setWebExports(addon_root, r"web/.*\.(js|css|woff|woff2)")
+    mw.addonManager.setWebExports(addon_root, r"web/.*\.(js|css|woff|woff2|png)")
     gui_hooks.webview_will_set_content.append(_on_webview_will_set_content)
     gui_hooks.webview_did_receive_js_message.append(bridge.handle_js_message)
     gui_hooks.reviewer_did_show_question.append(bridge.on_reviewer_state)

@@ -31,11 +31,23 @@
     toolbarX: 12,
     toolbarY: 12,
     activePanel: null,
-    toolbarCollapsed: false,
+    panelOpen: false,
   };
 
   var state = Object.assign({}, defaults);
-  var root, panel, rulerEl, dwellSession, scanCache, lastHideDistractions;
+  var root, rulerEl, dwellSession, scanCache, lastHideDistractions;
+  var assetBase = '';
+
+  function resolveAssetBase() {
+    var scripts = document.getElementsByTagName('script');
+    for (var i = 0; i < scripts.length; i++) {
+      var src = scripts[i].src || '';
+      if (src.indexOf('reviewer.js') !== -1) {
+        return src.replace(/reviewer\.js(?:\?.*)?$/, '');
+      }
+    }
+    return '';
+  }
 
   function pycmd(msg) {
     if (typeof window.pycmd === 'function') return window.pycmd(msg);
@@ -52,7 +64,10 @@
   function loadState() {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) Object.assign(state, defaults, JSON.parse(raw));
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        Object.assign(state, defaults, parsed);
+      }
     } catch (_) {}
   }
 
@@ -286,36 +301,46 @@
   /* ── Toolbar markup ── */
   function toolbarMarkup() {
     return (
-      '<div class="aoa-toolbar-root" role="region" aria-label="Anki Omni Accessibility toolbar">' +
-      '<div class="aoa-toolbar-bar" data-aoa-drag-handle>' +
-      '<button type="button" class="aoa-tb-btn" data-action="toggle-collapse" aria-label="Collapse toolbar" title="Collapse">≡</button>' +
-      '<button type="button" class="aoa-tb-btn" data-panel="font" aria-pressed="false"><span class="aoa-tb-icon">A</span><span class="aoa-tb-label">Font</span></button>' +
-      '<button type="button" class="aoa-tb-btn" data-panel="spacing" aria-pressed="false"><span class="aoa-tb-icon">↕</span><span class="aoa-tb-label">Spacing</span></button>' +
-      '<button type="button" class="aoa-tb-btn" data-panel="contrast" aria-pressed="false"><span class="aoa-tb-icon">◐</span><span class="aoa-tb-label">Contrast</span></button>' +
-      '<button type="button" class="aoa-tb-btn" data-panel="focus" aria-pressed="false"><span class="aoa-tb-icon">◎</span><span class="aoa-tb-label">Focus</span></button>' +
-      '<button type="button" class="aoa-tb-btn" data-panel="scanner" aria-pressed="false"><span class="aoa-tb-icon">✓</span><span class="aoa-tb-label">Scanner</span></button>' +
-      '<button type="button" class="aoa-tb-btn" data-panel="tts" aria-pressed="false"><span class="aoa-tb-icon">🔊</span><span class="aoa-tb-label">TTS</span></button>' +
-      '<button type="button" class="aoa-tb-btn" data-panel="motor" aria-pressed="false"><span class="aoa-tb-icon">⌖</span><span class="aoa-tb-label">Motor</span></button>' +
-      '</div>' +
-      '<div class="aoa-panel" hidden>' +
-      panelSection('font', 'Font', fontPanel()) +
-      panelSection('spacing', 'Spacing', spacingPanel()) +
-      panelSection('contrast', 'Contrast', contrastPanel()) +
-      panelSection('focus', 'Focus & Reading', focusPanel()) +
-      panelSection('scanner', 'Accessibility Scanner', scannerPanel()) +
-      panelSection('tts', 'Text to Speech', ttsPanel()) +
-      panelSection('motor', 'Motor Accessibility', motorPanel()) +
+      '<div class="aoa-toolbar-root" role="region" aria-label="Anki Omni Accessibility">' +
+      '<button type="button" class="aoa-fab" data-aoa-drag-handle aria-label="Open accessibility settings" aria-expanded="false" aria-controls="aoaPanel">' +
+      '<img src="" alt="" width="60" height="60" class="aoa-fab-icon" aria-hidden="true" />' +
+      '</button>' +
+      '<div class="aoa-overlay" aria-hidden="true"></div>' +
+      '<aside class="aoa-drawer" id="aoaPanel" role="dialog" aria-modal="true" aria-labelledby="aoaTitle" hidden tabindex="-1">' +
+      '<header class="aoa-drawer-header">' +
+      '<h2 id="aoaTitle">Accessibility</h2>' +
+      '<button type="button" class="aoa-panel-close" data-action="close-panel" aria-label="Close accessibility settings">×</button>' +
+      '</header>' +
+      '<nav class="aoa-tabs" role="tablist" aria-label="Accessibility features">' +
+      tabBtn('font', 'Font') +
+      tabBtn('spacing', 'Spacing') +
+      tabBtn('contrast', 'Contrast') +
+      tabBtn('focus', 'Focus') +
+      tabBtn('scanner', 'Scanner') +
+      tabBtn('tts', 'TTS') +
+      tabBtn('motor', 'Motor') +
+      '</nav>' +
+      '<div class="aoa-panel">' +
+      panelSection('font', fontPanel()) +
+      panelSection('spacing', spacingPanel()) +
+      panelSection('contrast', contrastPanel()) +
+      panelSection('focus', focusPanel()) +
+      panelSection('scanner', scannerPanel()) +
+      panelSection('tts', ttsPanel()) +
+      panelSection('motor', motorPanel()) +
       '</div>' +
       '<p class="aoa-powered">Powered by <a href="https://axolassist.com/anki-omni/" target="_blank" rel="noopener">Axol Assist</a></p>' +
-      '</div>'
+      '</aside></div>'
     );
   }
 
-  function panelSection(id, title, body) {
+  function tabBtn(id, label) {
+    return '<button type="button" class="aoa-tab" role="tab" data-panel="' + id + '" aria-selected="false" aria-controls="aoa-section-' + id + '">' + label + '</button>';
+  }
+
+  function panelSection(id, body) {
     return (
-      '<section class="aoa-panel-section" data-panel="' + id + '" hidden>' +
-      '<header class="aoa-panel-header"><h3>' + title + '</h3>' +
-      '<button type="button" class="aoa-panel-close" data-action="close-panel" aria-label="Close panel">×</button></header>' +
+      '<section class="aoa-panel-section" id="aoa-section-' + id + '" data-panel="' + id + '" role="tabpanel" hidden>' +
       '<div class="aoa-panel-body">' + body + '</div></section>'
     );
   }
@@ -432,33 +457,59 @@
       btn.setAttribute('aria-checked', String(on));
       btn.classList.toggle('is-on', on);
     });
-    root.classList.toggle('is-collapsed', !!state.toolbarCollapsed);
+
+    var fab = qs('.aoa-fab', root);
+    var drawer = qs('.aoa-drawer', root);
+    var overlay = qs('.aoa-overlay', root);
+    var isOpen = !!state.panelOpen;
+
+    if (fab) {
+      fab.setAttribute('aria-expanded', String(isOpen));
+      fab.classList.toggle('is-open', isOpen);
+    }
+    if (drawer) drawer.hidden = !isOpen;
+    if (overlay) {
+      overlay.classList.toggle('is-open', isOpen);
+      overlay.setAttribute('aria-hidden', String(!isOpen));
+    }
+    root.classList.toggle('is-open', isOpen);
+
     root.style.left = state.toolbarX + 'px';
     root.style.top = state.toolbarY + 'px';
+
+    qsa('.aoa-tab', root).forEach(function (btn) {
+      var id = btn.getAttribute('data-panel');
+      var selected = isOpen && state.activePanel === id;
+      btn.setAttribute('aria-selected', String(selected));
+      btn.classList.toggle('is-active', selected);
+    });
+    qsa('.aoa-panel-section', root).forEach(function (sec) {
+      sec.hidden = !(isOpen && sec.getAttribute('data-panel') === state.activePanel);
+    });
   }
 
   function openPanel(id) {
-    state.activePanel = id;
-    var panelWrap = qs('.aoa-panel', root);
-    if (panelWrap) panelWrap.hidden = false;
-    qsa('.aoa-panel-section', root).forEach(function (sec) {
-      sec.hidden = sec.getAttribute('data-panel') !== id;
-    });
-    qsa('[data-panel].aoa-tb-btn', root).forEach(function (btn) {
-      btn.setAttribute('aria-pressed', String(btn.getAttribute('data-panel') === id));
-    });
-    if (id === 'scanner' && scanCache) renderScanResults(scanCache);
+    state.panelOpen = true;
+    state.activePanel = id || state.activePanel || 'font';
+    syncControls();
+    if (state.activePanel === 'scanner' && scanCache) renderScanResults(scanCache);
+    var drawer = qs('.aoa-drawer', root);
+    if (drawer) drawer.focus();
     saveState();
   }
 
   function closePanel() {
+    state.panelOpen = false;
     state.activePanel = null;
-    var panelWrap = qs('.aoa-panel', root);
-    if (panelWrap) panelWrap.hidden = true;
-    qsa('[data-panel].aoa-tb-btn', root).forEach(function (btn) {
-      btn.setAttribute('aria-pressed', 'false');
-    });
+    syncControls();
+    var fab = qs('.aoa-fab', root);
+    if (fab) fab.focus();
     saveState();
+  }
+
+  function togglePanel() {
+    if (state.panelOpen) closePanel();
+    else openPanel(state.activePanel || 'font');
   }
 
   function applyAll() {
@@ -473,14 +524,15 @@
   function bindToolbar() {
     root.addEventListener('click', function (e) {
       var btn = e.target.closest('button');
-      if (!btn || !root.contains(btn)) return;
+      if (!btn) return;
 
-      if (btn.getAttribute('data-action') === 'toggle-collapse') {
-        state.toolbarCollapsed = !state.toolbarCollapsed;
-        applyAll();
-        saveState();
+      if (btn.classList.contains('aoa-fab')) {
+        togglePanel();
         return;
       }
+
+      if (!root.contains(btn)) return;
+
       if (btn.getAttribute('data-action') === 'close-panel') {
         closePanel();
         return;
@@ -498,9 +550,8 @@
         return;
       }
       var panelId = btn.getAttribute('data-panel');
-      if (panelId) {
-        if (state.activePanel === panelId) closePanel();
-        else openPanel(panelId);
+      if (panelId && btn.classList.contains('aoa-tab')) {
+        openPanel(panelId);
         return;
       }
       var optKey = btn.getAttribute('data-option');
@@ -527,13 +578,28 @@
       saveState();
     });
 
+    var overlay = qs('.aoa-overlay', root);
+    if (overlay) {
+      overlay.addEventListener('click', function () {
+        closePanel();
+      });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (!state.panelOpen || !root) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closePanel();
+      }
+    });
+
     var handle = qs('[data-aoa-drag-handle]', root);
     var dragging = false;
     var offsetX = 0;
     var offsetY = 0;
 
     handle.addEventListener('mousedown', function (e) {
-      if (e.target.closest('button') && !e.target.closest('[data-action="toggle-collapse"]')) return;
+      if (e.button !== 0) return;
       dragging = true;
       offsetX = e.clientX - root.offsetLeft;
       offsetY = e.clientY - root.offsetTop;
@@ -554,14 +620,19 @@
 
   function initToolbar() {
     if (qs('.aoa-toolbar-root')) return;
+    assetBase = resolveAssetBase();
     loadState();
     var wrap = document.createElement('div');
     wrap.innerHTML = toolbarMarkup();
     root = wrap.firstElementChild;
     document.body.appendChild(root);
+
+    var icon = qs('.aoa-fab-icon', root);
+    if (icon && assetBase) icon.src = assetBase + 'accessibility.png';
+
     bindToolbar();
     applyAll();
-    if (state.activePanel) openPanel(state.activePanel);
+    if (state.panelOpen && state.activePanel) syncControls();
 
     document.addEventListener('mousemove', onRulerMove);
     document.addEventListener('mousemove', onDwellMove);
@@ -574,6 +645,11 @@
         applyAll();
       } catch (_) {}
     }
+
+    requestAnimationFrame(function () {
+      var fab = qs('.aoa-fab', root);
+      if (fab) fab.classList.add('is-ready');
+    });
   }
 
   /* ── Bridge API (Python callbacks) ── */
@@ -587,7 +663,11 @@
     },
     toggleToolbar: function () {
       if (!root) return;
-      root.classList.toggle('aoa-hidden');
+      if (root.classList.contains('aoa-hidden')) {
+        root.classList.remove('aoa-hidden');
+        return;
+      }
+      togglePanel();
     },
     resetCardState: function () {
       var answer = answerEl();

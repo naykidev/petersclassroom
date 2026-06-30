@@ -28,7 +28,7 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "toolbarX": 12,
     "toolbarY": 12,
     "activePanel": None,
-    "toolbarCollapsed": False,
+    "panelOpen": False,
     "shortcuts": {
         "readQuestion": "Alt+Q",
         "readAnswer": "Alt+A",
