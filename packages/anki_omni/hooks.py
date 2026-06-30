@@ -23,11 +23,15 @@ def _on_webview_will_set_content(web_content, context) -> None:
 def _on_card_will_show(text: str, card, kind: str) -> str:
     if not kind.startswith("review"):
         return text
+    style = bridge.card_style_tag()
     return (
-        text
+        style
+        + text
         + "<script>if (typeof onShownHook !== 'undefined') {"
-        + "onShownHook.push(function () { if (window.AoaBoot) window.AoaBoot(); });"
-        + "} if (window.AoaBoot) window.AoaBoot();</script>"
+        + "onShownHook.push(function () { if (window.AoaBoot) window.AoaBoot(); "
+        + "if (window.AoaBridge) window.AoaBridge.refreshCard(); });"
+        + "} if (window.AoaBoot) window.AoaBoot(); "
+        + "if (window.AoaBridge) window.AoaBridge.refreshCard();</script>"
     )
 
 

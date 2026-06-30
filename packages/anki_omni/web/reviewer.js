@@ -105,23 +105,77 @@
     return (d.textContent || d.innerText || '').trim();
   }
 
-  /* ── Visual accessibility ── */
-  function applyVisual() {
+  /* ── Card style injection (applies to review content) ── */
+  var CARD_STYLE_ID = 'anki-omni-styles';
+
+  function buildCardCss() {
+    var fontPct = Number(state.fontSize) || 100;
+    var lineHeight = Number(state.lineSpacing) || 1.5;
+    var letterPx = Number(state.letterSpacing) || 0;
+    var wordPx = Number(state.wordSpacing) || 0;
+    var fontStack = '';
+    if (state.fontFamily === 'dyslexia') {
+      fontStack = "'OpenDyslexic', system-ui, sans-serif";
+    } else if (state.fontFamily === 'sans') {
+      fontStack = "system-ui, -apple-system, 'Segoe UI', sans-serif";
+    } else if (state.fontFamily === 'serif') {
+      fontStack = "Georgia, 'Times New Roman', serif";
+    }
+
+    var css = '';
+    css += 'body, #qa, .card, #qarea, #answer, #middle {\n';
+    css += '  font-size: ' + fontPct + '% !important;\n';
+    if (fontStack) css += '  font-family: ' + fontStack + ' !important;\n';
+    css += '  line-height: ' + lineHeight + ' !important;\n';
+    css += '  letter-spacing: ' + letterPx + 'px !important;\n';
+    css += '  word-spacing: ' + wordPx + 'px !important;\n';
+    css += '}\n';
+    css += '#qa *, .card *, #qarea *, #answer *, #middle * {\n';
+    css += '  font-size: inherit !important;\n';
+    if (fontStack) css += '  font-family: inherit !important;\n';
+    css += '  line-height: inherit !important;\n';
+    css += '  letter-spacing: inherit !important;\n';
+    css += '  word-spacing: inherit !important;\n';
+    css += '}\n';
+    return css;
+  }
+
+  function injectCardStyles() {
     var html = document.documentElement;
-    html.setAttribute('data-aoa-font-size', String(state.fontSize));
+    var fontPct = Number(state.fontSize) || 100;
+    var lineHeight = Number(state.lineSpacing) || 1.5;
+    var letterPx = Number(state.letterSpacing) || 0;
+    var wordPx = Number(state.wordSpacing) || 0;
+
+    var styleEl = document.getElementById(CARD_STYLE_ID);
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = CARD_STYLE_ID;
+      document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = buildCardCss();
+
+    html.setAttribute('data-aoa-font-size', String(fontPct));
     html.setAttribute('data-aoa-font-family', state.fontFamily);
-    html.setAttribute('data-aoa-line-spacing', String(state.lineSpacing));
-    html.setAttribute('data-aoa-letter-spacing', String(state.letterSpacing));
-    html.setAttribute('data-aoa-word-spacing', String(state.wordSpacing));
+    html.setAttribute('data-aoa-line-spacing', String(lineHeight));
+    html.setAttribute('data-aoa-letter-spacing', String(letterPx));
+    html.setAttribute('data-aoa-word-spacing', String(wordPx));
     html.setAttribute('data-aoa-contrast', state.contrast);
-    html.style.setProperty('--aoa-font-size', String(state.fontSize));
-    html.style.setProperty('--aoa-line-height', String(state.lineSpacing));
-    html.style.setProperty('--aoa-letter', String(state.letterSpacing));
-    html.style.setProperty('--aoa-word', String(state.wordSpacing));
-    html.style.fontSize = (state.fontSize / 100 * 16) + 'px';
+    html.style.setProperty('--aoa-font-size', String(fontPct));
+    html.style.setProperty('--aoa-line-height', String(lineHeight));
+    html.style.setProperty('--aoa-letter', String(letterPx));
+    html.style.setProperty('--aoa-word', String(wordPx));
     html.toggleAttribute('data-aoa-large-ui', !!state.largeUi);
     html.toggleAttribute('data-aoa-large-buttons', !!state.largeButtons);
     html.toggleAttribute('data-aoa-keyboard-nav', !!state.keyboardNav);
+
+    pycmd('aoa:injectStyles:' + JSON.stringify({
+      fontSize: fontPct,
+      fontFamily: state.fontFamily,
+      lineSpacing: lineHeight,
+      letterSpacing: letterPx,
+      wordSpacing: wordPx,
+    }));
   }
 
   /* ── Focus + reading modes ── */
@@ -325,7 +379,7 @@
       '</div>' +
       '<button type="button" class="aoa-panel-close" data-action="close-panel" aria-label="Close accessibility settings">×</button>' +
       '</header>' +
-      '<nav class="aoa-tabs" role="tablist" aria-label="Accessibility features">' +
+      '<div class="aoa-tab-grid" role="tablist" aria-label="Accessibility features">' +
       tabBtn('font', 'Font') +
       tabBtn('spacing', 'Spacing') +
       tabBtn('contrast', 'Contrast') +
@@ -333,7 +387,7 @@
       tabBtn('scanner', 'Scanner') +
       tabBtn('tts', 'TTS') +
       tabBtn('motor', 'Motor') +
-      '</nav>' +
+      '</div>' +
       '<div class="aoa-panel">' +
       panelSection('font', fontPanel()) +
       panelSection('spacing', spacingPanel()) +
@@ -349,7 +403,11 @@
   }
 
   function tabBtn(id, label) {
-    return '<button type="button" class="aoa-tab" role="tab" data-panel="' + id + '" aria-selected="false" aria-controls="aoa-section-' + id + '">' + label + '</button>';
+    return (
+      '<div class="aoa-tab" role="tab" tabindex="0" data-panel="' + id + '" ' +
+      'aria-selected="false" aria-controls="aoa-section-' + id + '">' +
+      '<span class="aoa-tab-label">' + label + '</span></div>'
+    );
   }
 
   function panelSection(id, body) {
@@ -409,22 +467,22 @@
       optionBtn('contrast', 'dark', 'Dark') +
       optionBtn('contrast', 'light', 'Light') +
       '</div>') +
-      settingCard('Display size', toggleRow('largeUi', 'Large UI mode', 'Increases control and label sizes in this panel.') +
-      toggleRow('largeButtons', 'Large answer buttons', 'Expands tappable targets inside the card area.'))
+      settingCard('Display size', binaryChoice('largeUi', 'Large UI mode', 'Increases control and label sizes in this panel.') +
+      binaryChoice('largeButtons', 'Large answer buttons', 'Expands tappable targets inside the card area.'))
     );
   }
 
   function focusPanel() {
     return (
       sectionIntro('Reduce visual noise and reveal answer content at a comfortable pace.') +
-      settingCard('Attention', toggleRow('focusMode', 'Focus mode', 'Dims everything outside the active card.') +
-      toggleRow('hideDistractions', 'Hide distractions', 'Minimizes extra chrome while you study.')) +
-      settingCard('Reading support', toggleRow('readingRuler', 'Reading ruler', 'Highlights the line you are reading.') +
-      '<div class="aoa-btn-row" role="group" aria-label="Ruler follow mode">' +
+      settingCard('Attention', binaryChoice('focusMode', 'Focus mode', 'Dims everything outside the active card.') +
+      binaryChoice('hideDistractions', 'Hide distractions', 'Minimizes extra chrome while you study.')) +
+      settingCard('Reading support', binaryChoice('readingRuler', 'Reading ruler', 'Highlights the line you are reading.') +
+      '<div class="aoa-segmented aoa-segmented-wide" role="group" aria-label="Ruler follow mode">' +
       optionBtn('rulerFollow', 'cursor', 'Follow cursor') +
       optionBtn('rulerFollow', 'center', 'Center line') +
       '</div>' +
-      toggleRow('progressiveReveal', 'Progressive reveal', 'Shows multi-step answers one section at a time.'))
+      binaryChoice('progressiveReveal', 'Progressive reveal', 'Shows multi-step answers one section at a time.'))
     );
   }
 
@@ -445,16 +503,16 @@
       '<button type="button" class="aoa-secondary" data-action="read-question">Read question</button>' +
       '<button type="button" class="aoa-secondary" data-action="read-answer">Read answer</button>' +
       '</div>' +
-      toggleRow('autoRead', 'Auto-read cards', 'Speaks each side automatically when it appears.'))
+      binaryChoice('autoRead', 'Auto-read cards', 'Speaks each side automatically when it appears.'))
     );
   }
 
   function motorPanel() {
     return (
       sectionIntro('Support pointer and keyboard control during review.') +
-      settingCard('Pointer access', toggleRow('dwellClick', 'Dwell clicking', 'Hover over a target to activate it without pressing.') +
+      settingCard('Pointer access', binaryChoice('dwellClick', 'Dwell clicking', 'Hover over a target to activate it without pressing.') +
       rangeField('aoa-dwell-ms', 'Dwell duration', 'dwellMs', 400, 2500, 100, 'ms')) +
-      settingCard('Keyboard', toggleRow('keyboardNav', 'Focus highlights', 'Makes keyboard focus easier to see.') +
+      settingCard('Keyboard', binaryChoice('keyboardNav', 'Focus highlights', 'Makes keyboard focus easier to see.') +
       '<p class="aoa-hint">Shortcuts: Alt+Q read question · Alt+A read answer · Alt+Shift+A toggle panel.</p>')
     );
   }
@@ -463,16 +521,18 @@
     return '<button type="button" class="aoa-opt" data-option="' + key + '" data-value="' + value + '">' + label + '</button>';
   }
 
-  function toggleRow(key, label, hint) {
-    var id = 'aoa-sw-' + key;
+  function binaryChoice(key, label, hint) {
+    var groupId = 'aoa-bin-' + key;
     return (
-      '<div class="aoa-toggle-row">' +
-      '<div class="aoa-toggle-copy">' +
-      '<span class="aoa-toggle-label" id="' + id + '-label">' + label + '</span>' +
+      '<div class="aoa-setting-block">' +
+      '<div class="aoa-setting-head">' +
+      '<span class="aoa-setting-label" id="' + groupId + '-label">' + label + '</span>' +
       (hint ? '<span class="aoa-hint">' + hint + '</span>' : '') +
       '</div>' +
-      '<button type="button" class="aoa-switch" role="switch" id="' + id + '" data-toggle="' + key + '" aria-labelledby="' + id + '-label" aria-checked="false"></button>' +
-      '</div>'
+      '<div class="aoa-segmented" role="group" aria-labelledby="' + groupId + '-label">' +
+      '<button type="button" class="aoa-segment" data-binary="' + key + '" data-value="1" aria-pressed="false">On</button>' +
+      '<button type="button" class="aoa-segment" data-binary="' + key + '" data-value="0" aria-pressed="false">Off</button>' +
+      '</div></div>'
     );
   }
 
@@ -490,11 +550,13 @@
       var value = btn.getAttribute('data-value');
       btn.setAttribute('aria-pressed', String(state[key] === value));
     });
-    qsa('[data-toggle]', root).forEach(function (btn) {
-      var key = btn.getAttribute('data-toggle');
+    qsa('[data-binary]', root).forEach(function (btn) {
+      var key = btn.getAttribute('data-binary');
+      var val = btn.getAttribute('data-value');
       var on = !!state[key];
-      btn.setAttribute('aria-checked', String(on));
-      btn.classList.toggle('is-on', on);
+      var active = (val === '1' && on) || (val === '0' && !on);
+      btn.setAttribute('aria-pressed', String(active));
+      btn.classList.toggle('is-active', active);
     });
 
     var fab = qs('.aoa-fab', root);
@@ -554,7 +616,7 @@
   }
 
   function applyAll() {
-    applyVisual();
+    injectCardStyles();
     applyFocusMode();
     applyReadingRuler();
     applyProgressiveReveal();
@@ -564,6 +626,12 @@
 
   function bindToolbar() {
     root.addEventListener('click', function (e) {
+      var tab = e.target.closest('.aoa-tab');
+      if (tab && root.contains(tab)) {
+        openPanel(tab.getAttribute('data-panel'));
+        return;
+      }
+
       var btn = e.target.closest('button');
       if (!btn) return;
 
@@ -590,11 +658,6 @@
         readAnswer();
         return;
       }
-      var panelId = btn.getAttribute('data-panel');
-      if (panelId && btn.classList.contains('aoa-tab')) {
-        openPanel(panelId);
-        return;
-      }
       var optKey = btn.getAttribute('data-option');
       if (optKey) {
         state[optKey] = btn.getAttribute('data-value');
@@ -602,11 +665,12 @@
         saveState();
         return;
       }
-      var toggleKey = btn.getAttribute('data-toggle');
-      if (toggleKey) {
-        state[toggleKey] = !state[toggleKey];
+      var binKey = btn.getAttribute('data-binary');
+      if (binKey) {
+        state[binKey] = btn.getAttribute('data-value') === '1';
         applyAll();
         saveState();
+        return;
       }
     });
 
@@ -631,6 +695,12 @@
       if (e.key === 'Escape') {
         e.preventDefault();
         closePanel();
+        return;
+      }
+      var tab = e.target.closest && e.target.closest('.aoa-tab');
+      if (tab && root.contains(tab) && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        openPanel(tab.getAttribute('data-panel'));
       }
     });
 
@@ -713,6 +783,7 @@
 
   /* ── Bridge API (Python callbacks) ── */
   window.AoaBridge = {
+    injectCardStyles: injectCardStyles,
     applyConfig: function (cfg) {
       Object.assign(state, defaults, cfg || {});
       applyAll();
@@ -736,12 +807,13 @@
           el.classList.remove('aoa-reveal-step', 'aoa-reveal-hidden');
         });
       }
-      applyVisual();
+      injectCardStyles();
       applyFocusMode();
       applyReadingRuler();
       syncControls();
     },
     onCardShown: function () {
+      injectCardStyles();
       if (state.progressiveReveal) applyProgressiveReveal();
     },
     refreshCard: function () {

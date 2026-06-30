@@ -12,6 +12,7 @@ from aqt.reviewer import Reviewer
 from . import config, scanner, tts_engine
 
 _shortcuts: list[QShortcut] = []
+_CARD_STYLE_ID = "anki-omni-styles"
 
 
 def _reviewer() -> Reviewer | None:
@@ -26,11 +27,89 @@ def _reviewer_web():
     return getattr(reviewer, "web", None)
 
 
+def _font_stack(family: str) -> str:
+    if family == "dyslexia":
+        return "'OpenDyslexic', system-ui, sans-serif"
+    if family == "sans":
+        return "system-ui, -apple-system, 'Segoe UI', sans-serif"
+    if family == "serif":
+        return "Georgia, 'Times New Roman', serif"
+    return ""
+
+
+def _build_card_css(cfg: dict[str, Any]) -> str:
+    font_pct = int(cfg.get("fontSize", 100))
+    line_height = float(cfg.get("lineSpacing", 1.5))
+    letter_px = float(cfg.get("letterSpacing", 0))
+    word_px = float(cfg.get("wordSpacing", 0))
+    family = str(cfg.get("fontFamily", "default"))
+    stack = _font_stack(family)
+
+    family_root = f"  font-family: {stack} !important;\n" if stack else ""
+    family_child = "  font-family: inherit !important;\n" if stack else ""
+
+    return (
+        "body, #qa, .card, #qarea, #answer, #middle {\n"
+        f"  font-size: {font_pct}% !important;\n"
+        f"{family_root}"
+        f"  line-height: {line_height} !important;\n"
+        f"  letter-spacing: {letter_px}px !important;\n"
+        f"  word-spacing: {word_px}px !important;\n"
+        "}\n"
+        "#qa *, .card *, #qarea *, #answer *, #middle * {\n"
+        "  font-size: inherit !important;\n"
+        f"{family_child}"
+        "  line-height: inherit !important;\n"
+        "  letter-spacing: inherit !important;\n"
+        "  word-spacing: inherit !important;\n"
+        "}\n"
+    )
+
+
+def card_style_tag(cfg: dict[str, Any] | None = None) -> str:
+    """Inline <style> block embedded in each card's HTML."""
+    if cfg is None:
+        cfg = config.load_config()
+    css = _build_card_css(cfg).replace("</", "<\\/")
+    return f'<style id="{_CARD_STYLE_ID}-inline">{css}</style>'
+
+
+def inject_reviewer_styles(cfg: dict[str, Any] | None = None) -> None:
+    """Push typography CSS into the reviewer webview via mw.reviewer.web.eval."""
+    web = _reviewer_web()
+    if web is None:
+        return
+    if cfg is None:
+        cfg = config.load_config()
+    css = _build_card_css(cfg)
+    css_json = json.dumps(css)
+    style_id = _CARD_STYLE_ID
+    js = (
+        "(function(){"
+        f"var id={json.dumps(style_id)};"
+        f"var css={css_json};"
+        "var el=document.getElementById(id);"
+        "if(!el){"
+        "el=document.createElement('style');"
+        "el.id=id;"
+        "(document.head||document.documentElement).appendChild(el);"
+        "}"
+        "el.textContent=css;"
+        "})();"
+    )
+    try:
+        web.eval(js)
+    except Exception:
+        pass
+
+
 def _push_config() -> None:
     web = _reviewer_web()
     if web is None:
         return
-    payload = json.dumps(config.load_config())
+    cfg = config.load_config()
+    inject_reviewer_styles(cfg)
+    payload = json.dumps(cfg)
     web.eval(f"window.AoaBridge && window.AoaBridge.applyConfig({payload});")
 
 
@@ -98,9 +177,18 @@ def handle_js_message(handled: tuple[bool, Any], message: str, context: Any) -> 
             data = json.loads(message[len("aoa:saveConfig:") :])
             config.save_config(data)
             _register_shortcuts()
+            inject_reviewer_styles(data)
             return (True, "ok")
         except Exception as exc:
             return (True, json.dumps({"error": str(exc)}))
+
+    if message.startswith("aoa:injectStyles:"):
+        try:
+            data = json.loads(message[len("aoa:injectStyles:") :])
+            inject_reviewer_styles(data)
+        except Exception:
+            inject_reviewer_styles()
+        return (True, "ok")
 
     if message == "aoa:readQuestion":
         tts_engine.speak(_card_html("question"))
@@ -120,6 +208,14 @@ def handle_js_message(handled: tuple[bool, Any], message: str, context: Any) -> 
             _set_hide_distractions(hidden)
         except Exception:
             pass
+        return (True, "ok")
+
+    if message.startswith("aoa:stylesUpdated:"):
+        try:
+            data = json.loads(message[len("aoa:stylesUpdated:") :])
+            inject_reviewer_styles(data)
+        except Exception:
+            inject_reviewer_styles()
         return (True, "ok")
 
     if message == "aoa:scanDeck":
@@ -178,10 +274,13 @@ def _toggle_toolbar() -> None:
 
 def on_reviewer_state(card) -> None:
     _register_shortcuts()
-    _push_config()
+    inject_reviewer_styles()
     web = _reviewer_web()
     if web is not None:
-        web.eval("window.AoaBoot && window.AoaBoot();")
+        web.eval(
+            "window.AoaBoot && window.AoaBoot(); "
+            "window.AoaBridge && window.AoaBridge.refreshCard();"
+        )
     cfg = config.load_config()
     if not cfg.get("autoRead"):
         return
