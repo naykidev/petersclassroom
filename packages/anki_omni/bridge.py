@@ -38,9 +38,31 @@ def _set_hide_distractions(hidden: bool) -> None:
     reviewer = _reviewer()
     if reviewer is None:
         return
+
+    webviews: list[Any] = []
     bottom = getattr(reviewer, "bottom", None)
     if bottom is not None:
-        bottom.setVisible(not hidden)
+        web = getattr(bottom, "web", None)
+        if web is not None:
+            webviews.append(web)
+
+    mw_bottom = getattr(mw, "bottomWeb", None)
+    if mw_bottom is not None and mw_bottom not in webviews:
+        webviews.append(mw_bottom)
+
+    for web in webviews:
+        try:
+            if hidden:
+                if hasattr(web, "hide"):
+                    web.hide()
+                elif hasattr(web, "setVisible"):
+                    web.setVisible(False)
+            elif hasattr(web, "show"):
+                web.show()
+            elif hasattr(web, "setVisible"):
+                web.setVisible(True)
+        except Exception:
+            continue
 
 
 def _card_html(side: str) -> str:
@@ -94,7 +116,10 @@ def handle_js_message(handled: tuple[bool, Any], message: str, context: Any) -> 
 
     if message.startswith("aoa:hideDistractions:"):
         hidden = message.endswith(":1")
-        _set_hide_distractions(hidden)
+        try:
+            _set_hide_distractions(hidden)
+        except Exception:
+            pass
         return (True, "ok")
 
     if message == "aoa:scanDeck":
