@@ -35,7 +35,7 @@
   };
 
   var state = Object.assign({}, defaults);
-  var root, panel, rulerEl, dwellSession, scanCache;
+  var root, panel, rulerEl, dwellSession, scanCache, lastHideDistractions;
 
   function pycmd(msg) {
     if (typeof window.pycmd === 'function') return window.pycmd(msg);
@@ -168,6 +168,8 @@
 
   function applyHideDistractions() {
     document.documentElement.toggleAttribute('data-aoa-hide-distractions', !!state.hideDistractions);
+    if (lastHideDistractions === state.hideDistractions) return;
+    lastHideDistractions = state.hideDistractions;
     pycmd('aoa:hideDistractions:' + (state.hideDistractions ? '1' : '0'));
   }
 
@@ -587,30 +589,45 @@
       if (!root) return;
       root.classList.toggle('aoa-hidden');
     },
-    refreshCard: function () {
+    resetCardState: function () {
       var answer = answerEl();
-      if (answer) answer.removeAttribute('data-aoa-reveal-ready');
-      applyAll();
-      if (state.autoRead) {
-        var showingAnswer = answer && answer.offsetParent !== null && !answer.hidden;
-        pycmd(showingAnswer ? 'aoa:autoReadAnswer' : 'aoa:autoReadQuestion');
+      if (answer) {
+        answer.removeAttribute('data-aoa-reveal-ready');
+        qsa('.aoa-reveal-step', answer).forEach(function (el) {
+          el.classList.remove('aoa-reveal-step', 'aoa-reveal-hidden');
+        });
       }
+      applyVisual();
+      applyFocusMode();
+      applyReadingRuler();
+      syncControls();
+    },
+    onCardShown: function () {
+      if (state.progressiveReveal) applyProgressiveReveal();
+    },
+    refreshCard: function () {
+      this.resetCardState();
+      this.onCardShown();
     },
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initToolbar);
-  } else {
+  function boot() {
     initToolbar();
   }
 
-  /* Re-apply when Anki swaps card HTML */
-  var refreshTimer;
-  var observer = new MutationObserver(function () {
-    clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(function () {
-      if (window.AoaBridge) window.AoaBridge.refreshCard();
-    }, 120);
-  });
-  observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  if (typeof onUpdateHook !== 'undefined') {
+    onUpdateHook.push(function () {
+      if (window.AoaBridge) window.AoaBridge.resetCardState();
+    });
+  }
+  if (typeof onShownHook !== 'undefined') {
+    onShownHook.push(function () {
+      boot();
+      if (window.AoaBridge) window.AoaBridge.onCardShown();
+    });
+  } else if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();

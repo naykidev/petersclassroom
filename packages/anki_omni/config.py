@@ -27,6 +27,8 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "autoRead": False,
     "toolbarX": 12,
     "toolbarY": 12,
+    "activePanel": None,
+    "toolbarCollapsed": False,
     "shortcuts": {
         "readQuestion": "Alt+Q",
         "readAnswer": "Alt+A",
@@ -46,11 +48,17 @@ def load_config() -> dict[str, Any]:
     if not stored:
         return deepcopy(DEFAULT_CONFIG)
     merged = deepcopy(DEFAULT_CONFIG)
-    merged.update(stored)
+    merged.update({k: v for k, v in stored.items() if k in DEFAULT_CONFIG})
     if isinstance(stored.get("shortcuts"), dict):
         merged["shortcuts"] = {**DEFAULT_CONFIG["shortcuts"], **stored["shortcuts"]}
     return merged
 
 
-def save_config(config: dict[str, Any]) -> None:
-    mw.addonManager.writeConfig(_addon_name(), config)
+def save_config(raw: dict[str, Any]) -> None:
+    clean = deepcopy(DEFAULT_CONFIG)
+    for key in DEFAULT_CONFIG:
+        if key in raw:
+            clean[key] = raw[key]
+    if isinstance(raw.get("shortcuts"), dict):
+        clean["shortcuts"] = {**DEFAULT_CONFIG["shortcuts"], **raw["shortcuts"]}
+    mw.addonManager.writeConfig(_addon_name(), clean)

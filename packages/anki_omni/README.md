@@ -56,7 +56,9 @@ chmod +x packages/anki_omni/scripts/build-addon.sh
 packages/anki_omni/scripts/build-addon.sh
 ```
 
-Then in Anki: **Tools → Add-ons → Install from file…** and select `dist/anki_omni_accessibility-v0.1.0.ankiaddon`.
+Then in Anki: **Tools → Add-ons → Install from file…** and select `dist/anki_omni_accessibility-v0.1.3.ankiaddon`.
+
+Local `.ankiaddon` installs require `manifest.json` with both `package` (install folder name) and `name` (display label).
 
 **Or symlink for live development:**
 

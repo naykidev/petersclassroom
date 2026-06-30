@@ -7,18 +7,20 @@ from typing import Any
 
 from aqt import mw
 from aqt.qt import QKeySequence, QShortcut
+from aqt.reviewer import Reviewer
 
 from . import config, scanner, tts_engine
 
 _shortcuts: list[QShortcut] = []
 
 
-def _addon_package() -> str:
-    return mw.addonManager.addonFromModule(__name__.rsplit(".", 1)[0])
+def _reviewer() -> Reviewer | None:
+    reviewer = getattr(mw, "reviewer", None)
+    return reviewer if isinstance(reviewer, Reviewer) else None
 
 
 def _reviewer_web():
-    reviewer = getattr(mw, "reviewer", None)
+    reviewer = _reviewer()
     if reviewer is None:
         return None
     return getattr(reviewer, "web", None)
@@ -33,37 +35,35 @@ def _push_config() -> None:
 
 
 def _set_hide_distractions(hidden: bool) -> None:
-    reviewer = getattr(mw, "reviewer", None)
+    reviewer = _reviewer()
     if reviewer is None:
         return
     bottom = getattr(reviewer, "bottom", None)
     if bottom is not None:
         bottom.setVisible(not hidden)
-    for attr in ("web",):
-        widget = getattr(reviewer, attr, None)
-        if widget is not None and hasattr(widget, "page"):
-            pass
 
 
-def _card_plain_text(side: str) -> str:
-    reviewer = getattr(mw, "reviewer", None)
+def _card_html(side: str) -> str:
+    reviewer = _reviewer()
     if reviewer is None or reviewer.card is None:
         return ""
     card = reviewer.card
-    note = card.note()
-    if side == "question":
-        idx = card.ord if hasattr(card, "ord") else 0
-        if idx < len(note.fields):
-            return note.fields[idx]
+    try:
+        return card.question() if side == "question" else card.answer()
+    except Exception:
+        note = card.note()
+        if side == "question":
+            return note.fields[0] if note.fields else ""
+        if len(note.fields) > 1:
+            return " ".join(note.fields[1:])
         return note.fields[0] if note.fields else ""
-    parts = []
-    for field in note.fields:
-        parts.append(field)
-    return " ".join(parts)
 
 
 def handle_js_message(handled: tuple[bool, Any], message: str, context: Any) -> tuple[bool, Any]:
     if not message.startswith("aoa:"):
+        return handled
+
+    if context is not None and not isinstance(context, Reviewer):
         return handled
 
     web = _reviewer_web()
@@ -81,11 +81,11 @@ def handle_js_message(handled: tuple[bool, Any], message: str, context: Any) -> 
             return (True, json.dumps({"error": str(exc)}))
 
     if message == "aoa:readQuestion":
-        tts_engine.speak(_card_plain_text("question"))
+        tts_engine.speak(_card_html("question"))
         return (True, "ok")
 
     if message == "aoa:readAnswer":
-        tts_engine.speak(_card_plain_text("answer"))
+        tts_engine.speak(_card_html("answer"))
         return (True, "ok")
 
     if message == "aoa:stopTts":
@@ -112,11 +112,11 @@ def handle_js_message(handled: tuple[bool, Any], message: str, context: Any) -> 
         return (True, "pending")
 
     if message == "aoa:autoReadQuestion":
-        tts_engine.speak(_card_plain_text("question"))
+        tts_engine.speak(_card_html("question"))
         return (True, "ok")
 
     if message == "aoa:autoReadAnswer":
-        tts_engine.speak(_card_plain_text("answer"))
+        tts_engine.speak(_card_html("answer"))
         return (True, "ok")
 
     return handled
@@ -130,8 +130,8 @@ def _register_shortcuts() -> None:
 
     cfg = config.load_config()
     mapping = {
-        "readQuestion": lambda: tts_engine.speak(_card_plain_text("question")),
-        "readAnswer": lambda: tts_engine.speak(_card_plain_text("answer")),
+        "readQuestion": lambda: tts_engine.speak(_card_html("question")),
+        "readAnswer": lambda: tts_engine.speak(_card_html("answer")),
         "toggleToolbar": _toggle_toolbar,
     }
 
@@ -151,10 +151,19 @@ def _toggle_toolbar() -> None:
     web.eval("window.AoaBridge && window.AoaBridge.toggleToolbar();")
 
 
-def on_reviewer_state() -> None:
+def on_reviewer_state(card) -> None:
     _register_shortcuts()
     _push_config()
     cfg = config.load_config()
-    if cfg.get("autoRead"):
-        side = "answer" if getattr(mw.reviewer, "state", "") == "answer" else "question"
-        tts_engine.speak(_card_plain_text(side))
+    if not cfg.get("autoRead"):
+        return
+    reviewer = _reviewer()
+    if reviewer is None:
+        return
+    side = "answer" if reviewer.state == "answer" else "question"
+    tts_engine.speak(_card_html(side))
+
+
+def on_leave_review() -> None:
+    _set_hide_distractions(False)
+    tts_engine.stop()

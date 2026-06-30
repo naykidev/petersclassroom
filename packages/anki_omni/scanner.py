@@ -107,7 +107,13 @@ def scan_deck(deck_id: int | None = None) -> dict[str, Any]:
     if col is None:
         return {"deckScore": 0, "deckName": "", "totalCards": 0, "issues": []}
 
-    did = deck_id if deck_id is not None else col.decks.selected()
+    did = deck_id
+    if did is None:
+        reviewer = getattr(mw, "reviewer", None)
+        if reviewer is not None and getattr(reviewer, "card", None) is not None:
+            did = reviewer.card.did
+        else:
+            did = col.decks.selected()
     deck_name = col.decks.name(did)
     card_ids = col.find_cards(f"did:{did}")
 

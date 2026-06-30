@@ -3,17 +3,25 @@
 from __future__ import annotations
 
 from aqt import gui_hooks, mw
+from aqt.reviewer import Reviewer
 
 from . import bridge, config
 
+_menu_setup_done = False
 
-def _on_webview_will_set_content(webview, context) -> None:
-    if context.context != "reviewer":
+
+def _on_webview_will_set_content(web_content, context) -> None:
+    if not isinstance(context, Reviewer):
         return
     package = mw.addonManager.addonFromModule(__name__.split(".")[0])
     base = f"/_addons/{package}/web"
-    context.css.append(f"{base}/reviewer.css")
-    context.js.append(f"{base}/reviewer.js")
+    web_content.css.append(f"{base}/reviewer.css")
+    web_content.js.append(f"{base}/reviewer.js")
+
+
+def _on_state_did_change(new_state: str, old_state: str) -> None:
+    if old_state == "review" and new_state != "review":
+        bridge.on_leave_review()
 
 
 def _open_config() -> None:
@@ -39,6 +47,11 @@ def _reset_config() -> None:
 
 
 def _setup_menu() -> None:
+    global _menu_setup_done
+    if _menu_setup_done:
+        return
+    _menu_setup_done = True
+
     from aqt.qt import QAction
 
     menu = mw.form.menuTools
@@ -52,10 +65,12 @@ def _setup_menu() -> None:
 
 
 def register_hooks() -> None:
-    mw.addonManager.setWebExports(__name__.split(".")[0], r"web/.*\.(js|css|woff|woff2)")
+    addon_root = __name__.split(".")[0]
+    mw.addonManager.setWebExports(addon_root, r"web/.*\.(js|css|woff|woff2)")
     gui_hooks.webview_will_set_content.append(_on_webview_will_set_content)
     gui_hooks.webview_did_receive_js_message.append(bridge.handle_js_message)
-    gui_hooks.reviewer_did_show_question.append(lambda _card: bridge.on_reviewer_state())
-    gui_hooks.reviewer_did_show_answer.append(lambda _card: bridge.on_reviewer_state())
+    gui_hooks.reviewer_did_show_question.append(bridge.on_reviewer_state)
+    gui_hooks.reviewer_did_show_answer.append(bridge.on_reviewer_state)
+    gui_hooks.state_did_change.append(_on_state_did_change)
     gui_hooks.main_window_did_init.append(lambda _mw: _setup_menu())
     gui_hooks.main_window_did_init.append(lambda _mw: bridge._register_shortcuts())
