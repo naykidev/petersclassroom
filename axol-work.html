@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Axol Work · Accessible work &amp; community</title>
+  <meta name="description" content="Axol Work is an accessibility-first shift-work marketplace and professional network built for neurodivergent and disability-inclusive hiring. Find shifts matched to your needs, get verified, and connect." />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Axol Assist" />
+  <meta property="og:title" content="Axol Work · Accessible work &amp; community" />
+  <meta property="og:description" content="A shift-work marketplace and professional network for neurodivergent and disability-inclusive hiring. Shifts matched to your accommodation needs." />
+  <meta property="og:url" content="https://axolassist.com/axol-work.html" />
+  <meta property="og:image" content="https://axolassist.com/logo.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Axol Work · Accessible work &amp; community" />
+  <meta name="twitter:description" content="Find shifts that fit how you work. An accessibility-first work marketplace and network." />
+  <meta name="twitter:image" content="https://axolassist.com/logo.png" />
+  <meta name="theme-color" content="#FBFAF8" />
+
+  <link rel="icon" type="image/png" href="accessibility.png">
+  <link rel="canonical" href="https://axolassist.com/axol-work.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add('js');</script>
+  <style>
+    /* ── Axol Work product page ── */
+    .aw-hero { background: radial-gradient(120% 80% at 85% -10%, var(--coral-tint) 0%, transparent 55%), var(--paper); }
+    .aw-hero .wrap { max-width: 880px; }
+    .page-label {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: var(--font-display); font-size: .78rem; font-weight: 600; letter-spacing: .04em;
+      color: var(--coral-deep); background: var(--coral-tint); padding: .45rem 1rem; border-radius: 999px;
+      margin-bottom: 1.6rem;
+    }
+    .page-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--coral); }
+    .product-hero-title {
+      display: flex; align-items: center; gap: 0.32em;
+      flex-wrap: nowrap; margin: 0;
+      font-size: clamp(2.4rem, 7.5vw, 5.4rem);
+      line-height: 1;
+    }
+    .product-hero-logo {
+      display: block; width: 0.92em; height: 0.92em; flex: 0 0 auto;
+      border-radius: 0.2em; object-fit: contain;
+      box-shadow: 0 0.12em 0.28em -0.12em rgba(48, 16, 112, .35);
+    }
+    .product-hero-wordmark {
+      display: block; font-family: var(--font-display); font-weight: 600;
+      font-size: 1em; letter-spacing: -0.035em; line-height: 1; color: var(--ink);
+      white-space: nowrap;
+    }
+    .product-hero-wordmark .accent { color: var(--coral-deep); }
+    .aw-hero .hero-tagline { margin-left: 0; }
+
+    /* Stat band */
+    .aw-stats { background: var(--paper); padding: 0 0 clamp(2rem,5vw,3.5rem); }
+    .aw-stat-row {
+      max-width: 960px; margin: 0 auto; display: grid; gap: 1rem;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .aw-stat {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+      padding: 1.5rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
+    .aw-stat b { display: block; font-family: var(--font-display); font-size: 1.9rem; color: var(--coral-deep); line-height: 1; }
+    .aw-stat span { display: block; margin-top: .5rem; font-size: .95rem; color: var(--ink-soft); }
+    @media (max-width: 640px) { .aw-stat-row { grid-template-columns: 1fr; } }
+
+    /* Fit badge illustration */
+    .aw-fit {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(31,122,82,.12); color: #1f7a52;
+      font-family: var(--font-display); font-weight: 600; font-size: .8rem;
+      padding: .35rem .8rem; border-radius: 999px;
+    }
+    .aw-role-tag {
+      display: inline-block; font-family: var(--font-display); font-weight: 600;
+      font-size: .72rem; letter-spacing: .05em; text-transform: uppercase;
+      color: var(--coral-deep); margin-bottom: .5rem;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- NAV -->
+  <nav id="siteNav" aria-label="Main navigation">
+    <a href="/" class="nav-logo" aria-label="Axol Assist, back to home">
+      <span class="axol-mark" role="img" aria-label="Axol the axolotl"></span>
+      <span><span class="nav-axolo">Axol</span> <span class="nav-assist">Assist</span></span>
+    </a>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="siteNavMenu" aria-label="Open menu">
+      <span class="nav-toggle-icon" aria-hidden="true"></span>
+    </button>
+    <ul class="nav-links" id="siteNavMenu">
+      <li><a href="/#products">All products</a></li>
+      <li><a href="#for-whom">Who it's for</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="/work/" class="nav-cta">Open Axol Work</a></li>
+    </ul>
+  </nav>
+
+  <main id="main" tabindex="-1">
+
+    <!-- HERO -->
+    <header class="hero aw-hero">
+      <div class="wrap">
+        <span class="page-label">Web app · Free to join</span>
+        <h1 class="product-hero-title">
+          <img src="/work/favicon.svg" alt="" class="product-hero-logo" aria-hidden="true" />
+          <span class="product-hero-wordmark">Axol <span class="accent">Work.</span></span>
+        </h1>
+        <p class="hero-tagline">Work that fits how you work. Axol Work is a shift-work marketplace and professional network built for neurodivergent and disability-inclusive hiring. Seekers find shifts matched to their accommodation needs. Employers hire people who are ready to do great work. Everyone gets a community that has their back.</p>
+        <div class="hero-links">
+          <a href="/work/" class="hero-cta-link">
+            Open Axol Work
+            <svg viewBox="0 0 24 24" fill="none" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#how" class="hero-link">See how it works</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- STAT BAND -->
+    <section class="aw-stats" aria-label="At a glance">
+      <div class="aw-stat-row">
+        <div class="aw-stat reveal"><b>2 roles</b><span>Seekers &amp; employers, one platform</span></div>
+        <div class="aw-stat reveal"><b>Fit-first</b><span>Shifts ranked by your accommodation needs</span></div>
+        <div class="aw-stat reveal"><b>WCAG AA</b><span>Accessible by design, keyboard &amp; screen-reader ready</span></div>
+      </div>
+    </section>
+
+    <!-- MISSION -->
+    <section class="mission">
+      <div class="wrap reveal">
+        <h2>Hiring that starts with <span class="accent">accommodation.</span></h2>
+        <p>Most job platforms make you disclose what you need and hope for the best. Axol Work flips it around. You tell us how you do your best work once, and every shift you see is ranked by how well it fits. Employers say up front what they offer. No guessing, no awkward asks, no barriers hiding in the fine print.</p>
+      </div>
+    </section>
+
+    <!-- AUDIENCES -->
+    <section class="audiences" id="for-whom">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Who it's for</span>
+          <h2>Built for people who work <span class="accent">differently.</span></h2>
+          <p>Whether you're looking for shifts or looking to hire, Axol Work is designed so accommodations are the starting point, not an afterthought.</p>
+        </div>
+        <div class="audience-grid">
+          <article class="audience-card reveal">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.7"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            <h3>Seekers</h3>
+            <p>Neurodivergent and disabled workers looking for shift work that respects how they operate. Set your accommodation needs once, browse shifts sorted by fit, apply in a tap, and build a verified work history that speaks for you.</p>
+          </article>
+          <article class="audience-card reveal">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V9l8-5 8 5v11" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 20v-6h6v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <h3>Employers</h3>
+            <p>Businesses that want an inclusive, reliable workforce. Post shifts with the accommodations you offer, review applicants, and confirm work history so great workers get the credit they've earned.</p>
+          </article>
+          <article class="audience-card reveal">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M17.5 20a5.5 5.5 0 0 0-3-4.9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            <h3>The community</h3>
+            <p>Beyond jobs, Axol Work is a professional network. Connect with peers, join community groups, find a mentor who shares your background, and message people directly. Careers grow through people, not just postings.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS: SEEKERS -->
+    <section class="principles" id="how">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">For seekers</span>
+          <h2>Find work that <span class="accent">fits.</span></h2>
+          <p>Four steps from sign-up to shift, with your needs leading the way.</p>
+        </div>
+        <div class="principles-grid">
+          <div class="principle reveal"><span class="principle-num">1</span><h3>Set how you work</h3><p>Pick your experience, availability, and accommodation needs, quiet workspace, seated breaks, written instructions, flexible starts. It takes a couple of minutes and you only do it once.</p></div>
+          <div class="principle reveal"><span class="principle-num">2</span><h3>See shifts ranked by fit</h3><p>Every open shift shows a fit badge like <span class="aw-fit">3 of 4 needs met</span> so you know at a glance which ones actually work for you. Filter by city and browse without the guesswork.</p></div>
+          <div class="principle reveal"><span class="principle-num">3</span><h3>Apply in a tap</h3><p>One tap to apply. Track every application, submitted, viewed, accepted, from a single screen, and message the employer directly with any questions.</p></div>
+          <div class="principle reveal"><span class="principle-num">4</span><h3>Build a verified history</h3><p>Ask employers to confirm the jobs you've done. A verified badge turns your track record into proof, so the next opportunity comes easier.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS: EMPLOYERS -->
+    <section class="principles features-section" id="employers">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">For employers</span>
+          <h2>Hire people who are <span class="accent">ready to work.</span></h2>
+          <p>Post a shift, meet applicants, and build an inclusive workplace, all from one dashboard.</p>
+        </div>
+        <div class="principles-grid">
+          <div class="principle reveal"><span class="principle-num">01</span><h3>Post the shift and the support</h3><p>Title, pay, time, and the accommodations you offer, headphones allowed, seated stations, structured training. Seekers who fit find you first.</p></div>
+          <div class="principle reveal"><span class="principle-num">02</span><h3>Review applicants side by side</h3><p>See everyone who applied across all your shifts. Open a profile, message them, and accept or decline, without a pile of email threads.</p></div>
+          <div class="principle reveal"><span class="principle-num">03</span><h3>Close the loop</h3><p>Mark an accepted shift complete with hours worked. Clean records for you, a growing verified history for the worker.</p></div>
+          <div class="principle reveal"><span class="principle-num">04</span><h3>Earn a reputation</h3><p>Verified employees can leave tag-based reviews, break policy clear, accommodations honored, so inclusive employers get recognized for it.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLATFORM / EVERYONE -->
+    <section class="products" id="platform">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">More than a job board</span>
+          <h2>A network that <span class="accent">has your back.</span></h2>
+          <p class="product-statement">Work is only part of it. Axol Work brings the connective tissue of a professional community, built accessibly from the ground up, to everyone on the platform.</p>
+        </div>
+        <div class="product-grid">
+          <article class="product-card websites reveal">
+            <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><rect x="7" y="10" width="34" height="24" rx="6" stroke="currentColor" stroke-width="2.4"/><path class="icon-accent" d="M15 40l7-6h13" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="card-badge">Real-time</span>
+            <h3>Messaging &amp; connections</h3>
+            <p>Direct 1:1 chat with read receipts and emoji reactions. Send and accept connection requests, and grow a network of people who get it.</p>
+          </article>
+          <article class="product-card hardware reveal">
+            <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><circle cx="18" cy="17" r="6" stroke="currentColor" stroke-width="2.4"/><path d="M6 39a12 12 0 0 1 24 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M33 11a6 6 0 0 1 0 12M42 39a12 12 0 0 0-7-10.9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+            <span class="card-badge">Community</span>
+            <h3>Groups &amp; mentorship</h3>
+            <p>Join community groups around shared interests with their own discussion feeds, and get matched to mentors and peers who share your work background.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCESSIBILITY -->
+    <section class="principles" id="accessibility">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Accessible by design</span>
+          <h2>Not a feature. <span class="accent">The foundation.</span></h2>
+          <p>Axol Work meets WCAG 2.1 AA, because a platform for disability-inclusive hiring has to work for everyone who uses it.</p>
+        </div>
+        <div class="principles-grid">
+          <div class="principle reveal"><span class="principle-num">01</span><h3>Full keyboard &amp; screen reader</h3><p>Semantic structure, visible focus, and live announcements for new messages, notifications, and status changes. Everything works without a mouse.</p></div>
+          <div class="principle reveal"><span class="principle-num">02</span><h3>Light, dark &amp; your zoom</h3><p>A proper dark mode, respect for your system preference, and layouts that hold together when you scale text or zoom the page.</p></div>
+          <div class="principle reveal"><span class="principle-num">03</span><h3>Calm by default</h3><p>Motion is gated behind your reduced-motion setting, targets are large and easy to hit, and color is never the only signal, status always pairs with text and icons.</p></div>
+          <div class="principle reveal"><span class="principle-num">04</span><h3>Private &amp; respectful</h3><p>Your email stays out of your public profile. Block anyone, report content, and control who sees your posts, connections only or everyone.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="notify" id="get-started">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Get started</span>
+          <h2>Join <span class="accent">Axol Work.</span></h2>
+          <p>Free to join. Create an account, choose seeker or employer, and you're in.</p>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-info reveal">
+            <h3>Open the app</h3>
+            <p><a href="/work/" class="btn btn-primary" style="display:inline-flex;margin-bottom:1rem;">Open Axol Work</a></p>
+            <p class="contact-note">Runs in your browser. Sign up with an email and password, no download required.</p>
+            <h3 style="margin-top: 1.8rem;">Questions or partnerships</h3>
+            <p><a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a></p>
+            <p class="contact-note">We typically respond within 2 business days.</p>
+            <h3 style="margin-top: 1.8rem;">Who Axol Work is for</h3>
+            <ul class="contact-list">
+              <li>Neurodivergent and disabled shift workers</li>
+              <li>Inclusive employers and hiring teams</li>
+              <li>Job coaches, case managers, and advocates</li>
+              <li>Community and mentorship organizations</li>
+            </ul>
+          </div>
+          <div class="contact-info reveal">
+            <h3>What you can do today</h3>
+            <ul class="contact-list">
+              <li><strong>Seekers:</strong> browse fit-ranked shifts, apply, and track status</li>
+              <li><strong>Seekers:</strong> build a verified work history and profile</li>
+              <li><strong>Employers:</strong> post shifts and review applicants in one place</li>
+              <li><strong>Employers:</strong> confirm work history and receive reviews</li>
+              <li><strong>Everyone:</strong> message, connect, join groups, find mentors</li>
+            </ul>
+            <p style="margin-top:1.4rem;">
+              <a href="/work/" class="hero-cta-link">
+                Open Axol Work
+                <svg viewBox="0 0 24 24" fill="none" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer role="contentinfo">
+    <div class="wrap">
+      <div class="footer-top">
+        <a href="/" class="footer-brand"><span class="axol-mark" aria-hidden="true"></span>Axol Assist</a>
+        <span class="footer-colors" aria-hidden="true">
+          <svg viewBox="0 0 240 24" fill="none" preserveAspectRatio="none"><path d="M0,14 C40,4 80,22 120,12 C160,2 200,20 240,10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="footer-bottom">
+        <p>Copyright &copy; 2026 <strong class="accent">Axol Assist</strong>. All rights reserved.</p>
+        <p><a href="/">Home</a> &nbsp;·&nbsp; <a href="/work/">Open app</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="site-config.js"></script>
+  <script src="script.js"></script>
+  <script>
+  (function () {
+    var nav = document.getElementById('siteNav');
+    var onScroll = function () { if (nav) nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+    onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) document.documentElement.classList.add('reveal-static');
+    var reveals = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('reveal-in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      reveals.forEach(function (el) { io.observe(el); });
+    } else { reveals.forEach(function (el) { el.classList.add('reveal-in'); }); }
+  })();
+  </script>
+
+</body>
+</html>
