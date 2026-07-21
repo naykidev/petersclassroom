@@ -910,6 +910,9 @@ footer a:focus-visible,
 .product-card--surfer {
   background: linear-gradient(165deg, var(--surface) 0%, rgba(243, 240, 234, .9) 100%);
 }
+.product-card--work {
+  background: linear-gradient(165deg, var(--surface) 0%, rgba(184, 36, 98, .10) 100%);
+}
 .product-card-top .card-badge { margin-bottom: 0; text-align: right; }
 .product-card .card-glow { display: none; }
 .product-card.websites { background: linear-gradient(180deg, #fff, var(--coral-tint)); }
@@ -1294,6 +1297,7 @@ html[data-contrast="dark"] .mission p strong, html[data-contrast="dark"] .proble
 html[data-contrast="dark"] .audience-card, html[data-contrast="dark"] .product-card, html[data-contrast="dark"] .build-card, html[data-contrast="dark"] .why-principle, html[data-contrast="dark"] .why-commitment, html[data-contrast="dark"] .contact-form { background: #16101e; border-color: #2a2438; }
 html[data-contrast="dark"] .product-card--accessflow { background: linear-gradient(165deg, #16101e 0%, #1e1528 100%); }
 html[data-contrast="dark"] .product-card--surfer { background: linear-gradient(165deg, #16101e 0%, #141018 100%); }
+html[data-contrast="dark"] .product-card--work { background: linear-gradient(165deg, #1a0f16 0%, #241019 100%); }
 html[data-contrast="dark"] .cred-badge { background: #16101e; border-color: #2a2438; color: #cfc9c1; }
 html[data-contrast="dark"] .credibility-section { border-color: #2a2438; }
 html[data-contrast="dark"] .build-card-icon { background: rgba(176,48,96,.18); color: var(--coral-tint2); }

@@ -1,0 +1,38 @@
+import { onSnapshot, orderBy, query, serverTimestamp, where } from 'firebase/firestore'
+import { COL, createDoc, typedCollection } from '@/lib/firestore'
+import type { EmployerReview } from '@/models'
+
+/** Live stream of reviews left for an employer (newest first). */
+export function subscribeEmployerReviews(
+  employerUID: string,
+  cb: (reviews: EmployerReview[]) => void,
+  onError?: (e: Error) => void,
+): () => void {
+  const q = query(
+    typedCollection<EmployerReview>(COL.employerReviews),
+    where('employerUID', '==', employerUID),
+    orderBy('createdAt', 'desc'),
+  )
+  return onSnapshot(
+    q,
+    (snap) => cb(snap.docs.map((d) => d.data())),
+    (e) => onError?.(e),
+  )
+}
+
+/** A seeker leaves a tag-based review for an employer. */
+export async function createEmployerReview(input: {
+  employerUID: string
+  reviewer: { uid: string; name: string }
+  ratingTags: string[]
+  optionalNote: string
+}): Promise<string> {
+  return createDoc<EmployerReview>(COL.employerReviews, {
+    employerUID: input.employerUID,
+    reviewerUID: input.reviewer.uid,
+    reviewerName: input.reviewer.name,
+    ratingTags: input.ratingTags,
+    optionalNote: input.optionalNote,
+    createdAt: serverTimestamp(),
+  })
+}
