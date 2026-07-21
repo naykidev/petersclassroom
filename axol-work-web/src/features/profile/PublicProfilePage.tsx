@@ -1,28 +1,24 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { BadgeCheck, MapPin, MessageSquare, UserPlus, Ban, Flag, Check, Building2 } from 'lucide-react'
+import { BadgeCheck, MapPin, MessageSquare, Ban, Flag, Building2, Star } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
-import { useSocialStore } from '@/stores/socialStore'
 import type { AppUser } from '@/models'
 import { Avatar, Badge, Button, Card, Chip, EmptyState, Spinner } from '@/components/ui'
 import { ReportModal } from '@/components/ReportModal'
 import { getUser, blockUser, unblockUser } from '@/features/users/api'
 import { getOrCreateConversation } from '@/features/messaging/api'
-import { sendConnectionRequest } from '@/features/connections/api'
+import { ConnectionButton } from '@/features/connections/ConnectionButton'
 import { EmployerReviewsList } from '@/features/reviews/EmployerReviewsList'
 import { ReviewModal } from '@/features/reviews/ReviewModal'
-import { Star } from 'lucide-react'
 
 export function PublicProfilePage() {
   const { uid } = useParams()
   const { user, updateUser } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
-  const { connections } = useSocialStore()
   const [profile, setProfile] = useState<AppUser | null | undefined>(undefined)
   const [reportOpen, setReportOpen] = useState(false)
   const [reviewOpen, setReviewOpen] = useState(false)
-  const [requested, setRequested] = useState(false)
 
   useEffect(() => {
     if (!uid) return
@@ -32,11 +28,6 @@ export function PublicProfilePage() {
 
   if (uid === me.uid) return <Navigate to="/profile" replace />
 
-  const record = connections.find(
-    (c) => c.fromUID === uid || c.toUID === uid,
-  )
-  const isConnected = record?.status === 'accepted'
-  const isPending = record?.status === 'pending'
   const isBlocked = (me.blockedUIDs ?? []).includes(uid ?? '')
 
   if (profile === undefined) return <Spinner label="Loading profile" />
@@ -54,14 +45,6 @@ export function PublicProfilePage() {
       { uid: profile!.uid, name: displayName },
     )
     navigate(`/messages/${id}`)
-  }
-
-  async function connect() {
-    await sendConnectionRequest(
-      { uid: me.uid, name: me.displayName },
-      { uid: profile!.uid, name: displayName },
-    )
-    setRequested(true)
   }
 
   async function toggleBlock() {
@@ -107,18 +90,10 @@ export function PublicProfilePage() {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          {!isConnected && !isEmployer && (
-            <Button onClick={connect} disabled={isPending || requested}>
-              <UserPlus className="h-4 w-4" aria-hidden />
-              {isPending || requested ? 'Requested' : 'Connect'}
-            </Button>
-          )}
-          {isConnected && (
-            <Badge tone="success" icon={Check}>
-              Connected
-            </Badge>
-          )}
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <ConnectionButton
+            target={{ uid: profile.uid, displayName, role: profile.role }}
+          />
           <Button variant="secondary" onClick={message}>
             <MessageSquare className="h-4 w-4" aria-hidden /> Message
           </Button>

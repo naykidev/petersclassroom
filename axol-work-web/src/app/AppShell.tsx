@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useSocialStore } from '@/stores/socialStore'
 import { useThemeStore } from '@/stores/themeStore'
 import { primaryNav, sharedNav, type NavItem } from './nav'
-import { Avatar } from '@/components/ui'
+import { Avatar, Toaster } from '@/components/ui'
 import { cn } from '@/utils/cn'
 
 export function AppShell() {
@@ -103,6 +103,8 @@ export function AppShell() {
           <Outlet />
         </div>
       </main>
+
+      <Toaster />
     </div>
   )
 }

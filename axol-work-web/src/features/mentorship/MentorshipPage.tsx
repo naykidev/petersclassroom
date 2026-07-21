@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, UserPlus, MessageSquare, BadgeCheck } from 'lucide-react'
+import { Sparkles, MessageSquare, BadgeCheck } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
-import { useSocialStore } from '@/stores/socialStore'
 import type { AppUser } from '@/models'
-import { Avatar, Badge, Button, Card, Chip, EmptyState, Spinner } from '@/components/ui'
+import { Avatar, Button, Card, Chip, EmptyState, Spinner } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
 import { findUsersByTags } from '@/features/users/api'
 import { getOrCreateConversation } from '@/features/messaging/api'
-import { sendConnectionRequest } from '@/features/connections/api'
+import { ConnectionButton } from '@/features/connections/ConnectionButton'
 
 interface Match {
   user: AppUser
@@ -19,15 +18,12 @@ export function MentorshipPage() {
   const { user } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
-  const { connectedUIDs } = useSocialStore()
   const [candidates, setCandidates] = useState<AppUser[] | null>(null)
-  const [requested, setRequested] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     findUsersByTags(me.workHistoryTags).then(setCandidates)
   }, [me.workHistoryTags])
 
-  const connected = connectedUIDs(me.uid)
   const blocked = new Set(me.blockedUIDs ?? [])
   const myTags = new Set(me.workHistoryTags)
 
@@ -45,11 +41,6 @@ export function MentorshipPage() {
         return b.shared.length - a.shared.length
       })
   }, [candidates, me.uid, blocked, myTags])
-
-  async function connect(u: AppUser) {
-    await sendConnectionRequest({ uid: me.uid, name: me.displayName }, { uid: u.uid, name: u.displayName })
-    setRequested((s) => new Set(s).add(u.uid))
-  }
 
   async function message(u: AppUser) {
     const id = await getOrCreateConversation(
@@ -80,8 +71,6 @@ export function MentorshipPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {matches.map(({ user: u, shared }) => {
-            const isConnected = connected.has(u.uid)
-            const isRequested = requested.has(u.uid)
             return (
               <Card key={u.uid} className="flex flex-col gap-3">
                 <button className="flex items-center gap-3 text-left" onClick={() => navigate(`/u/${u.uid}`)}>
@@ -104,14 +93,11 @@ export function MentorshipPage() {
                     ))}
                   </div>
                 </div>
-                <div className="mt-auto flex gap-2">
-                  {isConnected ? (
-                    <Badge tone="success">Connected</Badge>
-                  ) : (
-                    <Button size="sm" disabled={isRequested} onClick={() => connect(u)}>
-                      <UserPlus className="h-4 w-4" aria-hidden /> {isRequested ? 'Requested' : 'Connect'}
-                    </Button>
-                  )}
+                <div className="mt-auto flex flex-wrap items-center gap-2">
+                  <ConnectionButton
+                    target={{ uid: u.uid, displayName: u.displayName, role: u.role }}
+                    size="sm"
+                  />
                   <Button size="sm" variant="secondary" onClick={() => message(u)}>
                     <MessageSquare className="h-4 w-4" aria-hidden /> Message
                   </Button>

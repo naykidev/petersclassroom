@@ -9,8 +9,15 @@ import {
 } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { COL, pairId, setDocAt, typedCollection } from '@/lib/firestore'
-import type { ConnectionRequest } from '@/models'
+import type { ConnectionRequest, UserRole } from '@/models'
 import { createNotification } from '@/features/notifications/api'
+import { connectionCopy } from './labels'
+
+interface ConnectionParty {
+  uid: string
+  name: string
+  role: UserRole
+}
 
 /**
  * A connection between two users, keyed by the deterministic sorted pair id.
@@ -21,8 +28,8 @@ import { createNotification } from '@/features/notifications/api'
  * count from the connection records instead.
  */
 export async function sendConnectionRequest(
-  me: { uid: string; name: string },
-  other: { uid: string; name: string },
+  me: ConnectionParty,
+  other: ConnectionParty,
 ): Promise<void> {
   const id = pairId(me.uid, other.uid)
   const existing = await getDoc(doc(db, COL.connectionRequests, id))
@@ -33,12 +40,14 @@ export async function sendConnectionRequest(
     otherUserName: other.name,
     status: 'pending',
   })
+  // Role-aware notification copy (e.g. "… scouted you").
+  const copy = connectionCopy(me.role, other.role)
   await createNotification({
     recipientUID: other.uid,
     actorUID: me.uid,
     actorName: me.name,
     kind: 'connectionRequest',
-    message: `${me.name} wants to connect`,
+    message: copy.notify(me.name),
     targetID: me.uid,
   })
 }
@@ -54,7 +63,7 @@ export async function acceptConnectionRequest(
     actorUID: me.uid,
     actorName: me.name,
     kind: 'connectionAccepted',
-    message: `${me.name} accepted your connection request`,
+    message: `${me.name} is now in your network`,
     targetID: me.uid,
   })
 }

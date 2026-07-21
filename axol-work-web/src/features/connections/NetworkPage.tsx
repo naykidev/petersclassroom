@@ -1,17 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { UserPlus, Users, Check, X, MessageSquare, Search } from 'lucide-react'
+import { Users, Check, X, MessageSquare, Search } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import type { AppUser, ConnectionRequest } from '@/models'
 import { Avatar, Button, Card, EmptyState, Input, Modal, Spinner } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
 import { getUsers, searchUsersByName } from '@/features/users/api'
 import { getOrCreateConversation } from '@/features/messaging/api'
+import { ConnectionButton } from './ConnectionButton'
 import {
   acceptConnectionRequest,
   cancelRequest,
   removeConnection,
-  sendConnectionRequest,
   subscribeConnections,
 } from './api'
 
@@ -160,13 +160,7 @@ export function NetworkPage() {
         </div>
       )}
 
-      {findOpen && (
-        <FindPeopleModal
-          me={me}
-          existing={new Set((records ?? []).map(otherUID))}
-          onClose={() => setFindOpen(false)}
-        />
-      )}
+      {findOpen && <FindPeopleModal me={me} onClose={() => setFindOpen(false)} />}
     </div>
   )
 }
@@ -193,16 +187,13 @@ function PersonInfo({
 
 function FindPeopleModal({
   me,
-  existing,
   onClose,
 }: {
   me: AppUser
-  existing: Set<string>
   onClose: () => void
 }) {
   const [term, setTerm] = useState('')
   const [results, setResults] = useState<AppUser[] | null>(null)
-  const [sent, setSent] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
 
   async function run(e: React.FormEvent) {
@@ -214,11 +205,6 @@ function FindPeopleModal({
     } finally {
       setLoading(false)
     }
-  }
-
-  async function connect(u: AppUser) {
-    await sendConnectionRequest({ uid: me.uid, name: me.displayName }, { uid: u.uid, name: u.displayName })
-    setSent((s) => new Set(s).add(u.uid))
   }
 
   return (
@@ -235,23 +221,21 @@ function FindPeopleModal({
         <p className="py-6 text-center text-sm text-fg-muted">No people found.</p>
       ) : (
         <ul className="flex flex-col gap-2">
-          {results.map((u) => {
-            const already = existing.has(u.uid) || sent.has(u.uid)
-            return (
-              <li key={u.uid} className="flex items-center justify-between gap-3 rounded-btn border border-border p-2">
-                <div className="flex min-w-0 items-center gap-3">
-                  <Avatar name={u.displayName} size="sm" />
-                  <div className="min-w-0">
-                    <p className="truncate font-semibold text-fg">{u.displayName}</p>
-                    {u.headline && <p className="truncate text-caption text-fg-muted">{u.headline}</p>}
-                  </div>
+          {results.map((u) => (
+            <li key={u.uid} className="flex items-center justify-between gap-3 rounded-btn border border-border p-2">
+              <div className="flex min-w-0 items-center gap-3">
+                <Avatar name={u.displayName} size="sm" />
+                <div className="min-w-0">
+                  <p className="truncate font-semibold text-fg">{u.displayName}</p>
+                  {u.headline && <p className="truncate text-caption text-fg-muted">{u.headline}</p>}
                 </div>
-                <Button size="sm" variant={already ? 'secondary' : 'primary'} disabled={already} onClick={() => connect(u)}>
-                  {already ? 'Requested' : <><UserPlus className="h-4 w-4" aria-hidden /> Connect</>}
-                </Button>
-              </li>
-            )
-          })}
+              </div>
+              <ConnectionButton
+                target={{ uid: u.uid, displayName: u.displayName, role: u.role }}
+                size="sm"
+              />
+            </li>
+          ))}
         </ul>
       )}
     </Modal>
