@@ -28,7 +28,7 @@ export function NetworkPage() {
   // Resolve the "other" user's profile for every record.
   useEffect(() => {
     if (!records) return
-    const otherUIDs = records.map((r) => (r.userAUID === me.uid ? r.userBUID : r.userAUID))
+    const otherUIDs = records.map((r) => (r.fromUID === me.uid ? r.toUID : r.fromUID))
     const missing = otherUIDs.filter((u) => !profiles[u])
     if (!missing.length) return
     getUsers(missing).then((users) => {
@@ -41,14 +41,14 @@ export function NetworkPage() {
   }, [records, me.uid, profiles])
 
   const blocked = new Set(me.blockedUIDs ?? [])
-  const otherUID = (r: ConnectionRequest) => (r.userAUID === me.uid ? r.userBUID : r.userAUID)
+  const otherUID = (r: ConnectionRequest) => (r.fromUID === me.uid ? r.toUID : r.fromUID)
 
   const incoming = useMemo(
-    () => (records ?? []).filter((r) => r.status === 'pending' && r.userBUID === me.uid && !blocked.has(r.userAUID)),
+    () => (records ?? []).filter((r) => r.status === 'pending' && r.toUID === me.uid && !blocked.has(r.fromUID)),
     [records, me.uid, blocked],
   )
   const outgoing = useMemo(
-    () => (records ?? []).filter((r) => r.status === 'pending' && r.userAUID === me.uid),
+    () => (records ?? []).filter((r) => r.status === 'pending' && r.fromUID === me.uid),
     [records, me.uid],
   )
   const connected = useMemo(
@@ -88,11 +88,11 @@ export function NetworkPage() {
               </h2>
               <div className="flex flex-col gap-2">
                 {incoming.map((r) => {
-                  const p = profiles[r.userAUID]
-                  const name = p?.displayName ?? r.otherUserName
+                  const p = profiles[r.fromUID]
+                  const name = p?.displayName ?? r.otherUserName ?? 'Someone'
                   return (
                     <Card key={r.id} className="flex items-center justify-between gap-3">
-                      <PersonInfo name={name} headline={p?.headline} onClick={() => navigate(`/u/${r.userAUID}`)} />
+                      <PersonInfo name={name} headline={p?.headline} onClick={() => navigate(`/u/${r.fromUID}`)} />
                       <div className="flex gap-2">
                         <Button size="sm" onClick={() => acceptConnectionRequest(r, { uid: me.uid, name: me.displayName })}>
                           <Check className="h-4 w-4" aria-hidden /> Accept
@@ -115,10 +115,10 @@ export function NetworkPage() {
               </h2>
               <div className="flex flex-col gap-2">
                 {outgoing.map((r) => {
-                  const p = profiles[r.userBUID]
+                  const p = profiles[r.toUID]
                   return (
                     <Card key={r.id} className="flex items-center justify-between gap-3">
-                      <PersonInfo name={p?.displayName ?? r.otherUserName} headline="Pending…" onClick={() => navigate(`/u/${r.userBUID}`)} />
+                      <PersonInfo name={p?.displayName ?? r.otherUserName ?? 'Pending'} headline="Pending…" onClick={() => navigate(`/u/${r.toUID}`)} />
                       <Button size="sm" variant="ghost" onClick={() => cancelRequest(r.id)}>
                         Cancel
                       </Button>
@@ -147,7 +147,7 @@ export function NetworkPage() {
                   const p = profiles[uid]
                   return (
                     <Card key={r.id} className="flex items-center justify-between gap-3">
-                      <PersonInfo name={p?.displayName ?? r.otherUserName} headline={p?.headline} onClick={() => navigate(`/u/${uid}`)} />
+                      <PersonInfo name={p?.displayName ?? r.otherUserName ?? 'Connection'} headline={p?.headline} onClick={() => navigate(`/u/${uid}`)} />
                       <Button size="sm" variant="secondary" onClick={() => message(uid)} aria-label={`Message ${p?.displayName ?? 'user'}`}>
                         <MessageSquare className="h-4 w-4" aria-hidden />
                       </Button>

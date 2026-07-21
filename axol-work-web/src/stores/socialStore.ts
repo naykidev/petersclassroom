@@ -67,12 +67,12 @@ export const useSocialStore = create<SocialState>((set, get) => ({
       onSnapshot(convQ, (snap) =>
         set({ conversations: snap.docs.map((d) => d.data()), ready: true }),
       ),
-      onSnapshot(query(connCol, where('userAUID', '==', uid)), (snap) => {
+      onSnapshot(query(connCol, where('fromUID', '==', uid)), (snap) => {
         byA.clear()
         snap.docs.forEach((d) => byA.set(d.id, d.data()))
         emitConns()
       }),
-      onSnapshot(query(connCol, where('userBUID', '==', uid)), (snap) => {
+      onSnapshot(query(connCol, where('toUID', '==', uid)), (snap) => {
         byB.clear()
         snap.docs.forEach((d) => byB.set(d.id, d.data()))
         emitConns()
@@ -101,7 +101,7 @@ export const useSocialStore = create<SocialState>((set, get) => ({
     const set2 = new Set<string>()
     get().connections
       .filter((c) => c.status === 'accepted')
-      .forEach((c) => set2.add(c.userAUID === uid ? c.userBUID : c.userAUID))
+      .forEach((c) => set2.add(c.fromUID === uid ? c.toUID : c.fromUID))
     return set2
   },
 }))

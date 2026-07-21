@@ -4,12 +4,13 @@ import type { ConnectionStatus, PostVisibility } from './enums'
 /**
  * connectionRequests/{id}
  * Deterministic id = sorted [uidA, uidB].join("_").
+ * `fromUID` is the requester, `toUID` the recipient (per the deployed rules).
  */
 export interface ConnectionRequest {
   id: string
-  userAUID: string
-  userBUID: string
-  otherUserName: string
+  fromUID: string
+  toUID: string
+  otherUserName?: string
   status: ConnectionStatus
 }
 
@@ -56,6 +57,7 @@ export interface Post {
 /** posts/{id}/comments/{id} */
 export interface Comment {
   id: string
+  postID: string
   authorUID: string
   authorName: string
   text: string

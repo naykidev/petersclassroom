@@ -64,7 +64,14 @@ export function ReviewModal({
             ))}
           </div>
         </div>
-        <TextArea label="Note (optional)" value={note} onChange={(e) => setNote(e.target.value)} rows={3} />
+        <TextArea
+          label="Note (optional)"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          rows={3}
+          maxLength={280}
+          hint="Up to 280 characters"
+        />
       </div>
     </Modal>
   )

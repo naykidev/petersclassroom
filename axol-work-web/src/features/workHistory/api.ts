@@ -4,15 +4,14 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   where,
-  writeBatch,
   Timestamp,
-  doc,
 } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
 import {
   COL,
   createDoc,
+  setDocAt,
   typedCollection,
   typedDoc,
   userDoc,
@@ -77,26 +76,30 @@ export async function respondToWorkHistory(
   decision: 'verified' | 'declined',
   employer: { uid: string; name: string },
 ): Promise<void> {
-  const batch = writeBatch(db)
-  batch.update(typedDoc<WorkHistoryEntry>(COL.workHistoryEntries, entry.id), {
+  // Sequenced (not batched): the seeker-doc update is only permitted once the
+  // employmentVerifications doc EXISTS (rules use `exists()`, which can't see a
+  // same-batch write), so the verification doc must be committed first.
+  if (decision === 'verified') {
+    const vid = verificationId(entry.employerUID, entry.seekerUID)
+    await setDocAt<EmploymentVerification>(COL.employmentVerifications, vid, {
+      employerUID: entry.employerUID,
+      seekerUID: entry.seekerUID,
+      confirmedByUID: employer.uid,
+      createdAt: serverTimestamp(),
+    })
+  }
+
+  await updateDoc(typedDoc<WorkHistoryEntry>(COL.workHistoryEntries, entry.id), {
     status: decision,
     respondedAt: serverTimestamp(),
   })
 
   if (decision === 'verified') {
-    const vid = verificationId(entry.employerUID, entry.seekerUID)
-    batch.set(doc(db, COL.employmentVerifications, vid), {
-      employerUID: entry.employerUID,
-      seekerUID: entry.seekerUID,
-      createdAt: serverTimestamp(),
-    })
-    batch.update(userDoc(entry.seekerUID), {
+    await updateDoc(userDoc(entry.seekerUID), {
       isVerifiedEmployed: true,
       verifiedEmployerUIDs: arrayUnion(entry.employerUID),
     })
   }
-
-  await batch.commit()
 
   await createNotification({
     recipientUID: entry.seekerUID,
@@ -110,6 +113,3 @@ export async function respondToWorkHistory(
     targetID: entry.id,
   })
 }
-
-/** Existence check used defensively by UIs. */
-export type { EmploymentVerification }

@@ -35,5 +35,7 @@ export interface EmploymentVerification {
   id: string
   employerUID: string
   seekerUID: string
+  /** Must equal the confirming employer's uid (enforced by rules). */
+  confirmedByUID: string
   createdAt?: Timestamp
 }

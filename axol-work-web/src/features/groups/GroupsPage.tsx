@@ -78,11 +78,17 @@ function CreateGroupModal({ onClose }: { onClose: () => void }) {
   const [desc, setDesc] = useState('')
   const [saving, setSaving] = useState(false)
 
+  const trimmedName = name.trim()
+  const trimmedDesc = desc.trim()
+  const nameValid = trimmedName.length >= 3 && trimmedName.length <= 60
+  const descValid = trimmedDesc.length >= 10 && trimmedDesc.length <= 280
+  const canSave = nameValid && descValid
+
   async function save() {
-    if (!name.trim()) return
+    if (!canSave) return
     setSaving(true)
     try {
-      const id = await createGroup({ uid: me.uid, name: me.displayName }, name.trim(), desc.trim())
+      const id = await createGroup({ uid: me.uid, name: me.displayName }, trimmedName, trimmedDesc)
       onClose()
       navigate(`/groups/${id}`)
     } finally {
@@ -98,13 +104,27 @@ function CreateGroupModal({ onClose }: { onClose: () => void }) {
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>Cancel</Button>
-          <Button onClick={save} loading={saving} disabled={!name.trim()}>Create</Button>
+          <Button onClick={save} loading={saving} disabled={!canSave}>Create</Button>
         </>
       }
     >
       <div className="flex flex-col gap-4">
-        <Input label="Group name" value={name} onChange={(e) => setName(e.target.value)} />
-        <TextArea label="Description" value={desc} onChange={(e) => setDesc(e.target.value)} />
+        <Input
+          label="Group name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          maxLength={60}
+          hint="3–60 characters"
+          error={name && !nameValid ? 'Must be 3–60 characters.' : undefined}
+        />
+        <TextArea
+          label="Description"
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
+          maxLength={280}
+          hint="10–280 characters"
+          error={desc && !descValid ? 'Must be 10–280 characters.' : undefined}
+        />
       </div>
     </Modal>
   )

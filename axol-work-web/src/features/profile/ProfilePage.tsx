@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BadgeCheck, MapPin, Pencil, Plus, Briefcase } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { useSocialStore } from '@/stores/socialStore'
 import type { WorkHistoryEntry } from '@/models'
 import {
   ACCOMMODATION_NEEDS,
@@ -27,6 +28,8 @@ import { AddWorkHistoryModal } from '@/features/workHistory/AddWorkHistoryModal'
 export function ProfilePage() {
   const { user } = useAuthStore()
   const me = user!
+  const { connectedUIDs } = useSocialStore()
+  const connectionCount = connectedUIDs(me.uid).size
   const [editOpen, setEditOpen] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
   const [entries, setEntries] = useState<WorkHistoryEntry[] | null>(null)
@@ -55,7 +58,7 @@ export function ProfilePage() {
                     <MapPin className="h-4 w-4" aria-hidden /> {me.selectedCity}
                   </span>
                 )}
-                <span>{me.connectionCount} connections</span>
+                <span>{connectionCount} connections</span>
               </div>
             </div>
           </div>

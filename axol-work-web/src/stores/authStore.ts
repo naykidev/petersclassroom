@@ -39,11 +39,13 @@ interface AuthState {
   clearError: () => void
 }
 
-function defaultUserDoc(uid: string, email: string, displayName: string): AppUser {
+// NOTE: `email` is intentionally omitted — the Firestore rules reject any
+// write to users/{uid} containing an `email` field (PII stays in Auth).
+function defaultUserDoc(uid: string, _email: string, displayName: string): AppUser {
+  void _email
   return {
     uid,
     displayName,
-    email,
     role: 'unassigned',
     headline: '',
     workHistoryTags: [],
@@ -103,10 +105,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
 
       // Subscribe to live user-doc updates so role/onboarding stay in sync.
+      // Email isn't stored on the doc — merge it in from the auth session.
       userDocUnsub = onSnapshot(
         ref,
         (docSnap) => {
-          set({ user: docSnap.data() ?? null, loading: false })
+          const data = docSnap.data()
+          set({
+            user: data ? { ...data, email: fbUser.email ?? '' } : null,
+            loading: false,
+          })
         },
         () => set({ loading: false, error: 'Could not load your profile.' }),
       )

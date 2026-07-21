@@ -135,7 +135,11 @@ export function typedDoc<T extends { id: string }>(path: string, id: string) {
  */
 const userConverter: FirestoreDataConverter<AppUser> = {
   toFirestore(u) {
-    return u as DocumentData
+    // Never persist `email` (PII) or the synthetic `uid` field body — the
+    // Firestore rules reject any users/{uid} write containing `email`.
+    const { email: _email, ...rest } = u as AppUser
+    void _email
+    return rest as DocumentData
   },
   fromFirestore(snapshot: QueryDocumentSnapshot): AppUser {
     return { ...(snapshot.data() as AppUser), uid: snapshot.id }

@@ -106,6 +106,7 @@ export async function addComment(
   text: string,
 ): Promise<void> {
   await createSubDoc<Comment>(COL.posts, post.id, 'comments', {
+    postID: post.id,
     authorUID: author.uid,
     authorName: author.name,
     text: text.trim(),

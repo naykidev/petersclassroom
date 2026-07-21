@@ -27,7 +27,13 @@ export interface EmployerProfile {
 export interface AppUser {
   uid: string
   displayName: string
-  email: string
+  /**
+   * Email is PII and is NOT stored on the world-readable profile doc (the
+   * Firestore rules reject any write containing `email`). It lives in Firebase
+   * Auth only; for the current user it's populated in-memory from the auth
+   * session. Undefined for other users.
+   */
+  email?: string
   role: UserRole
 
   // Public profile

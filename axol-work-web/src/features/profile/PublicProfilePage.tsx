@@ -33,7 +33,7 @@ export function PublicProfilePage() {
   if (uid === me.uid) return <Navigate to="/profile" replace />
 
   const record = connections.find(
-    (c) => c.userAUID === uid || c.userBUID === uid,
+    (c) => c.fromUID === uid || c.toUID === uid,
   )
   const isConnected = record?.status === 'accepted'
   const isPending = record?.status === 'pending'
@@ -122,11 +122,14 @@ export function PublicProfilePage() {
           <Button variant="secondary" onClick={message}>
             <MessageSquare className="h-4 w-4" aria-hidden /> Message
           </Button>
-          {isEmployer && me.role === 'seeker' && (
-            <Button variant="secondary" onClick={() => setReviewOpen(true)}>
-              <Star className="h-4 w-4" aria-hidden /> Leave a review
-            </Button>
-          )}
+          {/* Only verified employees may review (enforced by rules). */}
+          {isEmployer &&
+            me.role === 'seeker' &&
+            (me.verifiedEmployerUIDs ?? []).includes(profile.uid) && (
+              <Button variant="secondary" onClick={() => setReviewOpen(true)}>
+                <Star className="h-4 w-4" aria-hidden /> Leave a review
+              </Button>
+            )}
           <Button variant="ghost" onClick={toggleBlock}>
             <Ban className="h-4 w-4" aria-hidden /> {isBlocked ? 'Unblock' : 'Block'}
           </Button>

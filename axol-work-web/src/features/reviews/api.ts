@@ -1,5 +1,5 @@
 import { onSnapshot, orderBy, query, serverTimestamp, where } from 'firebase/firestore'
-import { COL, createDoc, typedCollection } from '@/lib/firestore'
+import { COL, setDocAt, typedCollection } from '@/lib/firestore'
 import type { EmployerReview } from '@/models'
 
 /** Live stream of reviews left for an employer (newest first). */
@@ -20,19 +20,25 @@ export function subscribeEmployerReviews(
   )
 }
 
-/** A seeker leaves a tag-based review for an employer. */
+/**
+ * A verified employee leaves a tag-based review for an employer. The doc id is
+ * deterministic — `{employerUID}_{reviewerUID}` — so one review per pair
+ * (rules enforce both the id and that the reviewer has an employment
+ * verification with this employer). Note is capped at 280 chars.
+ */
 export async function createEmployerReview(input: {
   employerUID: string
   reviewer: { uid: string; name: string }
   ratingTags: string[]
   optionalNote: string
-}): Promise<string> {
-  return createDoc<EmployerReview>(COL.employerReviews, {
+}): Promise<void> {
+  const id = `${input.employerUID}_${input.reviewer.uid}`
+  await setDocAt<EmployerReview>(COL.employerReviews, id, {
     employerUID: input.employerUID,
     reviewerUID: input.reviewer.uid,
     reviewerName: input.reviewer.name,
     ratingTags: input.ratingTags,
-    optionalNote: input.optionalNote,
+    optionalNote: input.optionalNote.slice(0, 280),
     createdAt: serverTimestamp(),
   })
 }

@@ -33,7 +33,7 @@ export type NotificationKind =
 
 export type ReportTargetType = 'post' | 'group' | 'user' | 'review' | 'comment'
 
-export type ReportStatus = 'open' | 'reviewed' | 'actioned' | 'dismissed'
+export type ReportStatus = 'pending' | 'reviewed' | 'actioned' | 'dismissed'
 
 // Arrays of every raw value, for exhaustive UI rendering / validation.
 export const USER_ROLES: UserRole[] = ['unassigned', 'seeker', 'employer']

@@ -91,6 +91,6 @@ export async function reportContent(input: {
   await createDoc<Report>(COL.reports, {
     ...input,
     createdAt: serverTimestamp(),
-    status: 'open',
+    status: 'pending',
   })
 }
