@@ -19,9 +19,14 @@ export function AppShell() {
   const sidebar = (
     <nav aria-label="Main navigation" className="flex h-full flex-col gap-1 p-3">
       <div className="mb-4 flex items-center gap-2 px-2 pt-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-btn bg-brand text-brand-fg font-bold">
-          A
-        </div>
+        <img
+          src={`${import.meta.env.BASE_URL}logo.png`}
+          alt=""
+          width={36}
+          height={36}
+          className="h-9 w-9 rounded-full"
+          aria-hidden="true"
+        />
         <span className="text-headline text-fg">Axol Work</span>
       </div>
 
@@ -78,6 +83,14 @@ export function AppShell() {
         >
           <Menu className="h-6 w-6" />
         </button>
+        <img
+          src={`${import.meta.env.BASE_URL}logo.png`}
+          alt=""
+          width={28}
+          height={28}
+          className="h-7 w-7 rounded-full"
+          aria-hidden="true"
+        />
         <span className="text-headline">Axol Work</span>
       </header>
 

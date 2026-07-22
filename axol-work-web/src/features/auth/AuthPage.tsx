@@ -62,9 +62,14 @@ export function AuthPage() {
     <main className="min-h-screen flex items-center justify-center p-6 bg-page">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-card bg-brand text-brand-fg text-2xl font-bold">
-            A
-          </div>
+          <img
+            src={`${import.meta.env.BASE_URL}logo.png`}
+            alt=""
+            width={56}
+            height={56}
+            className="mx-auto mb-3 h-14 w-14 rounded-full"
+            aria-hidden="true"
+          />
           <h1 className="text-title-2 text-fg">Axol Work</h1>
           <p className="mt-1 text-sm text-fg-muted">
             Accessibility-first work &amp; community
