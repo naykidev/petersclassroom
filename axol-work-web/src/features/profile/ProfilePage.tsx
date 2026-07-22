@@ -58,7 +58,7 @@ export function ProfilePage() {
                     <MapPin className="h-4 w-4" aria-hidden /> {me.selectedCity}
                   </span>
                 )}
-                <span>{connectionCount} connections</span>
+                <span>{connectionCount} in network</span>
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@ export function ProfilePage() {
           <div className="flex items-center gap-3 text-fg-muted">
             <Briefcase className="h-5 w-5" aria-hidden />
             <p className="text-sm">
-              Add a job and request verification from the employer to earn a Verified badge.
+              Add a job and request verification from the Recruiter to earn a Verified badge.
             </p>
           </div>
         </Card>

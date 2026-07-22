@@ -112,7 +112,7 @@ function Composer({
                     )}
                   >
                     {v === 'everyone' ? <Globe className="h-4 w-4" aria-hidden /> : <Users className="h-4 w-4" aria-hidden />}
-                    {v === 'everyone' ? 'Everyone' : 'Connections'}
+                    {v === 'everyone' ? 'Everyone' : 'Network'}
                   </button>
                 ))}
               </div>

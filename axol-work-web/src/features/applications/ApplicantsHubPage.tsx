@@ -73,7 +73,7 @@ export function ApplicantsHubPage() {
       {!apps ? (
         <Spinner label="Loading applicants" />
       ) : visible.length === 0 ? (
-        <EmptyState icon={Inbox} title="No applicants yet" message="Applicants appear here once seekers apply." />
+        <EmptyState icon={Inbox} title="No applicants yet" message="Applicants appear here once Prospects apply." />
       ) : (
         <div className="grid gap-4 md:grid-cols-[1fr_1.2fr]">
           <ul className="flex flex-col gap-2">

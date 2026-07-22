@@ -34,7 +34,7 @@ export function CompanyPage() {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-title-2 text-fg">{profile?.companyName ?? me.displayName}</h1>
-                <Badge tone="brand" icon={Building2}>Employer</Badge>
+                <Badge tone="brand" icon={Building2}>Recruiter</Badge>
               </div>
               {profile?.workplaceAddress && (
                 <p className="mt-1 flex items-center gap-1 text-sm text-fg-muted">

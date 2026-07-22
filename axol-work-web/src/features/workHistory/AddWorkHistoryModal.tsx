@@ -85,14 +85,14 @@ export function AddWorkHistoryModal({ onClose }: { onClose: () => void }) {
         ) : (
           <div>
             <form onSubmit={search} className="flex gap-2">
-              <Input placeholder="Search employer by name…" value={term} onChange={(e) => setTerm(e.target.value)} className="flex-1" />
+              <Input placeholder="Search Recruiter by name…" value={term} onChange={(e) => setTerm(e.target.value)} className="flex-1" />
               <Button type="submit" loading={searching}>
                 <Search className="h-4 w-4" aria-hidden />
               </Button>
             </form>
             {results && (
               <ul className="mt-2 flex flex-col gap-1">
-                {results.length === 0 && <li className="text-sm text-fg-muted">No employers found.</li>}
+                {results.length === 0 && <li className="text-sm text-fg-muted">No Recruiters found.</li>}
                 {results.map((u) => (
                   <li key={u.uid}>
                     <button

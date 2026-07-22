@@ -11,7 +11,7 @@ import { db } from '@/lib/firebase'
 import { COL, pairId, setDocAt, typedCollection } from '@/lib/firestore'
 import type { ConnectionRequest, UserRole } from '@/models'
 import { createNotification } from '@/features/notifications/api'
-import { connectionCopy } from './labels'
+import { connectionCopy, acceptNotify } from './labels'
 
 interface ConnectionParty {
   uid: string
@@ -63,7 +63,7 @@ export async function acceptConnectionRequest(
     actorUID: me.uid,
     actorName: me.name,
     kind: 'connectionAccepted',
-    message: `${me.name} is now in your network`,
+    message: acceptNotify(me.name),
     targetID: me.uid,
   })
 }

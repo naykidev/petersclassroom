@@ -46,7 +46,7 @@ export function PostCard({ post }: { post: Post }) {
               {post.visibility === 'everyone' ? (
                 <><Globe className="h-3 w-3" aria-hidden /> Everyone</>
               ) : (
-                <><Users className="h-3 w-3" aria-hidden /> Connections</>
+                <><Users className="h-3 w-3" aria-hidden /> Network</>
               )}
             </p>
           </div>

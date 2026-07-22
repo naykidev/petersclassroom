@@ -73,7 +73,7 @@ export function PublicProfilePage() {
                 )}
                 {isEmployer && (
                   <Badge tone="brand" icon={Building2}>
-                    Employer
+                    Recruiter
                   </Badge>
                 )}
               </div>
@@ -84,7 +84,7 @@ export function PublicProfilePage() {
                     <MapPin className="h-4 w-4" aria-hidden /> {profile.selectedCity}
                   </span>
                 )}
-                {!isEmployer && <span>{profile.connectionCount} connections</span>}
+                {!isEmployer && <span>{profile.connectionCount} in network</span>}
               </div>
             </div>
           </div>

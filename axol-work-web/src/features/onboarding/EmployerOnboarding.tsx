@@ -75,7 +75,7 @@ export function EmployerOnboarding() {
         <div className="mb-6 text-center">
           <h1 className="text-title-2 text-fg">Set up your company</h1>
           <p className="mt-1 text-fg-muted">
-            Tell seekers what accommodations you offer.
+            Tell Prospects what accommodations you offer.
           </p>
         </div>
 

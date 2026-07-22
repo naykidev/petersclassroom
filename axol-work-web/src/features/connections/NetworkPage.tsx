@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Users, Check, X, MessageSquare, Search } from 'lucide-react'
+import { Users, MessageSquare, Search } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import type { AppUser, ConnectionRequest } from '@/models'
 import { Avatar, Button, Card, EmptyState, Input, Modal, Spinner } from '@/components/ui'
@@ -9,11 +9,10 @@ import { getUsers, searchUsersByName } from '@/features/users/api'
 import { getOrCreateConversation } from '@/features/messaging/api'
 import { ConnectionButton } from './ConnectionButton'
 import {
-  acceptConnectionRequest,
   cancelRequest,
-  removeConnection,
   subscribeConnections,
 } from './api'
+import { connectionCopy } from './labels'
 
 export function NetworkPage() {
   const { user } = useAuthStore()
@@ -69,7 +68,7 @@ export function NetworkPage() {
     <div>
       <PageHeader
         title="Network"
-        subtitle="Manage your connections and requests"
+        subtitle="People you've scouted, expressed interest in, or reached out to"
         action={
           <Button onClick={() => setFindOpen(true)}>
             <Search className="h-4 w-4" aria-hidden /> Find people
@@ -84,7 +83,7 @@ export function NetworkPage() {
           {incoming.length > 0 && (
             <section aria-labelledby="incoming-h">
               <h2 id="incoming-h" className="mb-3 text-headline text-fg">
-                Requests received ({incoming.length})
+                Incoming ({incoming.length})
               </h2>
               <div className="flex flex-col gap-2">
                 {incoming.map((r) => {
@@ -93,14 +92,14 @@ export function NetworkPage() {
                   return (
                     <Card key={r.id} className="flex items-center justify-between gap-3">
                       <PersonInfo name={name} headline={p?.headline} onClick={() => navigate(`/u/${r.fromUID}`)} />
-                      <div className="flex gap-2">
-                        <Button size="sm" onClick={() => acceptConnectionRequest(r, { uid: me.uid, name: me.displayName })}>
-                          <Check className="h-4 w-4" aria-hidden /> Accept
-                        </Button>
-                        <Button size="sm" variant="secondary" onClick={() => removeConnection(r)}>
-                          <X className="h-4 w-4" aria-hidden /> Decline
-                        </Button>
-                      </div>
+                      <ConnectionButton
+                        target={{
+                          uid: r.fromUID,
+                          displayName: name,
+                          role: p?.role ?? 'unassigned',
+                        }}
+                        size="sm"
+                      />
                     </Card>
                   )
                 })}
@@ -111,14 +110,20 @@ export function NetworkPage() {
           {outgoing.length > 0 && (
             <section aria-labelledby="outgoing-h">
               <h2 id="outgoing-h" className="mb-3 text-headline text-fg">
-                Sent requests ({outgoing.length})
+                Pending ({outgoing.length})
               </h2>
               <div className="flex flex-col gap-2">
                 {outgoing.map((r) => {
                   const p = profiles[r.toUID]
+                  const name = p?.displayName ?? r.otherUserName ?? 'Pending'
+                  const copy = connectionCopy(me.role, p?.role ?? 'unassigned')
                   return (
                     <Card key={r.id} className="flex items-center justify-between gap-3">
-                      <PersonInfo name={p?.displayName ?? r.otherUserName ?? 'Pending'} headline="Pending…" onClick={() => navigate(`/u/${r.toUID}`)} />
+                      <PersonInfo
+                        name={name}
+                        headline={`${copy.sentLabel} · Pending`}
+                        onClick={() => navigate(`/u/${r.toUID}`)}
+                      />
                       <Button size="sm" variant="ghost" onClick={() => cancelRequest(r.id)}>
                         Cancel
                       </Button>
@@ -131,13 +136,13 @@ export function NetworkPage() {
 
           <section aria-labelledby="conn-h">
             <h2 id="conn-h" className="mb-3 text-headline text-fg">
-              Your connections ({connected.length})
+              Your network ({connected.length})
             </h2>
             {connected.length === 0 ? (
               <EmptyState
                 icon={Users}
-                title="No connections yet"
-                message="Find people to grow your network."
+                title="Your network is empty"
+                message="Scout prospects, express interest in recruiters, or reach out to peers."
                 action={<Button onClick={() => setFindOpen(true)}>Find people</Button>}
               />
             ) : (
@@ -147,7 +152,7 @@ export function NetworkPage() {
                   const p = profiles[uid]
                   return (
                     <Card key={r.id} className="flex items-center justify-between gap-3">
-                      <PersonInfo name={p?.displayName ?? r.otherUserName ?? 'Connection'} headline={p?.headline} onClick={() => navigate(`/u/${uid}`)} />
+                      <PersonInfo name={p?.displayName ?? r.otherUserName ?? 'Member'} headline={p?.headline} onClick={() => navigate(`/u/${uid}`)} />
                       <Button size="sm" variant="secondary" onClick={() => message(uid)} aria-label={`Message ${p?.displayName ?? 'user'}`}>
                         <MessageSquare className="h-4 w-4" aria-hidden />
                       </Button>

@@ -12,7 +12,7 @@ export function EmployerReviewsList({ employerUID }: { employerUID: string }) {
 
   if (!reviews) return <Spinner label="Loading reviews" />
   if (reviews.length === 0)
-    return <EmptyState icon={Star} title="No reviews yet" message="Reviews from seekers will appear here." />
+    return <EmptyState icon={Star} title="No reviews yet" message="Reviews from Prospects will appear here." />
 
   return (
     <ul className="flex flex-col gap-3">

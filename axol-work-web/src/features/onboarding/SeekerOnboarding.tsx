@@ -23,7 +23,7 @@ const STEPS = [
   { key: 'city', title: 'Where you work', help: 'Choose the area you can work in.' },
   { key: 'availability', title: 'When you’re free', help: 'Select all that apply.' },
   { key: 'needs', title: 'What helps you thrive', help: 'We’ll match shifts to these needs.' },
-  { key: 'notes', title: 'Anything else?', help: 'Optional — add context for employers.' },
+  { key: 'notes', title: 'Anything else?', help: 'Optional — add context for Recruiters.' },
 ] as const
 
 function toggle(list: string[], value: string): string[] {
@@ -133,7 +133,7 @@ export function SeekerOnboarding() {
             )}
             {current.key === 'notes' && (
               <TextArea
-                label="Notes for employers (optional)"
+                label="Notes for Recruiters (optional)"
                 placeholder="e.g. I do my best work in the mornings and prefer written checklists."
                 value={draft.otherNotes}
                 onChange={(e) => setDraft((d) => ({ ...d, otherNotes: e.target.value }))}

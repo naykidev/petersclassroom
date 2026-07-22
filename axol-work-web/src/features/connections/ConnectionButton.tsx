@@ -5,7 +5,7 @@ import { useSocialStore } from '@/stores/socialStore'
 import { useToastStore } from '@/stores/toastStore'
 import type { UserRole } from '@/models'
 import { Badge, Button } from '@/components/ui'
-import { connectionCopy, IN_NETWORK_LABEL } from './labels'
+import { connectionCopy, IN_NETWORK_LABEL, acceptToast } from './labels'
 import { acceptConnectionRequest, removeConnection, sendConnectionRequest } from './api'
 
 interface Target {
@@ -75,7 +75,7 @@ export function ConnectionButton({
     setBusy(true)
     try {
       await acceptConnectionRequest(record, { uid: me.uid, name: me.displayName })
-      push(`You're now connected with ${target.displayName}.`, 'success')
+      push(acceptToast(target.displayName), 'success')
     } catch {
       push('Something went wrong. Please try again.', 'error')
     } finally {

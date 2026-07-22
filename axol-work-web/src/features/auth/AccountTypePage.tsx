@@ -7,19 +7,22 @@ import type { UserRole } from '@/models'
 const CHOICES: {
   role: Exclude<UserRole, 'unassigned'>
   title: string
+  label: string
   desc: string
   icon: typeof Search
 }[] = [
   {
     role: 'seeker',
-    title: 'Find work',
-    desc: 'Browse shifts matched to your accommodation needs, build a profile, and connect.',
+    title: 'Prospect',
+    label: 'Find work',
+    desc: 'Browse shifts matched to your accommodation needs, Express interest in Recruiters, and build your network.',
     icon: Search,
   },
   {
     role: 'employer',
-    title: 'Hire people',
-    desc: 'Post shifts, review applicants, and build an inclusive, accessible workplace.',
+    title: 'Recruiter',
+    label: 'Hire people',
+    desc: 'Post shifts, Scout Prospects, review applicants, and build an inclusive, accessible workplace.',
     icon: Briefcase,
   },
 ]
@@ -58,6 +61,7 @@ export function AccountTypePage() {
               </div>
               <div>
                 <p className="text-headline text-fg">{c.title}</p>
+                <p className="mt-0.5 text-sm font-medium text-brand">{c.label}</p>
                 <p className="mt-1 text-sm text-fg-muted">{c.desc}</p>
               </div>
               <span className="mt-2 text-sm font-semibold text-brand">

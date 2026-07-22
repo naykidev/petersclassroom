@@ -7,6 +7,7 @@ import { useThemeStore } from '@/stores/themeStore'
 import { primaryNav, sharedNav, type NavItem } from './nav'
 import { Avatar, Toaster } from '@/components/ui'
 import { cn } from '@/utils/cn'
+import { roleLabel } from '@/utils/roleLabel'
 
 export function AppShell() {
   const { user } = useAuthStore()
@@ -48,7 +49,7 @@ export function AppShell() {
         <Avatar name={user.displayName} size="sm" />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-fg">{user.displayName}</p>
-          <p className="truncate text-caption text-fg-muted capitalize">{user.role}</p>
+          <p className="truncate text-caption text-fg-muted">{roleLabel(user.role)}</p>
         </div>
         <button
           onClick={toggle}
