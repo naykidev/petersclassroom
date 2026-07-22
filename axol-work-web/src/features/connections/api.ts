@@ -24,7 +24,7 @@ interface ConnectionParty {
  * `fromUID` is the requester, `toUID` the recipient (matches deployed rules).
  *
  * Note: the rules only allow a user to write their OWN user doc, so
- * `connectionCount` is NOT maintained cross-user here — the UI derives the live
+ * `connectionCount` is NOT maintained cross-user here: the UI derives the live
  * count from the connection records instead.
  */
 export async function sendConnectionRequest(

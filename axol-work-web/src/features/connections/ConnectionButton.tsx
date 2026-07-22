@@ -25,7 +25,7 @@ type Size = 'sm' | 'md' | 'lg'
  *   incoming  -> "Accept" + "Decline"
  *   accepted  -> "In your network" badge
  *
- * Reuses the shared <Button>/<Badge> — no bespoke styles.
+ * Reuses the shared <Button>/<Badge>: no bespoke styles.
  */
 export function ConnectionButton({
   target,

@@ -11,7 +11,7 @@ import type { UserRole } from '@/models'
  *   Prospect  → Recruiter: "Express interest"
  *   peer / same-role     : "Reach out"
  *
- * Deliberately never "Connect" — that's LinkedIn's word.
+ * Deliberately never "Connect". That's LinkedIn's word.
  */
 export interface ConnectionCopy {
   /** Idle button label */
@@ -25,7 +25,7 @@ export interface ConnectionCopy {
   notify: (actorName: string) => string
 }
 
-/** Mutual / accepted state — avoids LinkedIn's "Connected". */
+/** Mutual / accepted state. Avoids LinkedIn's "Connected". */
 export const IN_NETWORK_LABEL = 'In your network'
 
 export function connectionCopy(
@@ -39,7 +39,7 @@ export function connectionCopy(
       sentLabel: 'Scouted',
       Icon: Target,
       toast: (n) => `You scouted ${n}. They'll be notified.`,
-      notify: (a) => `${a} scouted you — a recruiter is interested in your profile`,
+      notify: (a) => `${a} scouted you. A recruiter is interested in your profile`,
     }
   }
   // Prospect signaling interest to a Recruiter.
@@ -58,7 +58,7 @@ export function connectionCopy(
     sentLabel: 'Request sent',
     Icon: UserPlus,
     toast: (n) => `You reached out to ${n}. They'll be notified.`,
-    notify: (a) => `${a} reached out — they're interested in connecting`,
+    notify: (a) => `${a} reached out. They're interested in connecting`,
   }
 }
 

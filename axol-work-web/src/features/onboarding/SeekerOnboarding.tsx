@@ -23,7 +23,7 @@ const STEPS = [
   { key: 'city', title: 'Where you work', help: 'Choose the area you can work in.' },
   { key: 'availability', title: 'When you’re free', help: 'Select all that apply.' },
   { key: 'needs', title: 'What helps you thrive', help: 'We’ll match shifts to these needs.' },
-  { key: 'notes', title: 'Anything else?', help: 'Optional — add context for Recruiters.' },
+  { key: 'notes', title: 'Anything else?', help: 'Optional. Add context for Recruiters.' },
 ] as const
 
 function toggle(list: string[], value: string): string[] {

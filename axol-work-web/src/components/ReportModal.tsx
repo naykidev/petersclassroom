@@ -73,7 +73,7 @@ export function ReportModal({
     >
       {done ? (
         <p className="text-sm text-fg">
-          Thanks — your report has been submitted for review.
+          Thanks. Your report has been submitted for review.
         </p>
       ) : (
         <div className="flex flex-col gap-4">
