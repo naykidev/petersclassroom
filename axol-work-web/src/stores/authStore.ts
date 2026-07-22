@@ -77,6 +77,8 @@ function toMessage(e: unknown): string {
     'auth/too-many-requests': 'Too many attempts. Try again later.',
     'auth/popup-closed-by-user': 'Sign-in was cancelled.',
     'auth/popup-blocked': 'Pop-up was blocked. Allow pop-ups and try again.',
+    'auth/unauthorized-domain':
+      'This site is not authorized for Google sign-in yet. Add axolassist.com under Firebase Authentication → Settings → Authorized domains.',
     'auth/account-exists-with-different-credential':
       'An account already exists with this email using a different sign-in method.',
     'auth/operation-not-allowed':
