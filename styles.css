@@ -984,6 +984,19 @@ footer a:focus-visible,
 .contact-info p { font-size: 1.02rem; line-height: 1.6; color: var(--muted); margin-bottom: .5rem; }
 .contact-info a { color: var(--coral-deep); text-decoration: none; font-weight: 600; word-break: break-word; }
 .contact-info a:hover { text-decoration: underline; }
+.contact-info a.btn,
+.contact-info a.btn-primary,
+.contact-info a.hero-cta-link {
+  color: #fff;
+  text-decoration: none;
+  word-break: normal;
+}
+.contact-info a.btn:hover,
+.contact-info a.btn-primary:hover,
+.contact-info a.hero-cta-link:hover {
+  color: #fff;
+  text-decoration: none;
+}
 .contact-note { font-size: .92rem !important; color: var(--muted) !important; }
 .contact-list { list-style: none; padding: 0; margin: .5rem 0 0; }
 .contact-list li { font-size: 1rem; color: var(--muted); line-height: 1.5; padding-left: 1.5rem; position: relative; margin-bottom: .5rem; }
