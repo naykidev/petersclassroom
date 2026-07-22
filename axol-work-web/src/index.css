@@ -15,7 +15,8 @@
     --muted: 241 241 244;
     --border: 226 226 232;
     --fg: 24 24 27;
-    --fg-muted: 96 96 105;
+    /* ~5.9:1 on white / page for body helper text (WCAG AA) */
+    --fg-muted: 82 82 91;
 
     /* Status */
     --success: 21 128 61;

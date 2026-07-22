@@ -1,5 +1,5 @@
 export { Button } from './Button'
-export { Input, TextArea } from './Input'
+export { Input, PasswordInput, TextArea } from './Input'
 export { Select } from './Select'
 export { Card, SectionHeader } from './Card'
 export { Chip, SelectChip } from './Chip'
