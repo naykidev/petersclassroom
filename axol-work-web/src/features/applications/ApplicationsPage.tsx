@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { relativeTime } from '@/utils/format'
 import { subscribeSeekerApplications, withdrawApplication } from './api'
 import { getOrCreateConversation } from '@/features/messaging/api'
+import { DEMO_SEEKER_APPLICATIONS } from '@/data/demoFixtures'
 
 export const APP_STATUS_META: Record<
   ApplicationStatus,
@@ -35,11 +36,11 @@ export function ApplicationsPage() {
   const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
-  const [apps, setApps] = useState<ShiftApplication[] | null>(isGuest ? [] : null)
+  const [apps, setApps] = useState<ShiftApplication[] | null>(isGuest ? DEMO_SEEKER_APPLICATIONS : null)
 
   useEffect(() => {
     if (isGuest) {
-      setApps([])
+      setApps(DEMO_SEEKER_APPLICATIONS)
       return
     }
     return subscribeSeekerApplications(me.uid, setApps)
@@ -67,12 +68,8 @@ export function ApplicationsPage() {
       ) : apps.length === 0 ? (
         <EmptyState
           icon={ClipboardList}
-          title={isGuest ? 'Preview mode' : 'No applications yet'}
-          message={
-            isGuest
-              ? 'Sign up to apply for shifts and track them here.'
-              : 'Apply to shifts from the Home tab and track them here.'
-          }
+          title="No applications yet"
+          message="Apply to shifts from the Home tab and track them here."
           action={<Button onClick={() => navigate('/')}>Browse shifts</Button>}
         />
       ) : (

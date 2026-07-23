@@ -2,6 +2,11 @@ import { useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { useSocialStore } from '@/stores/socialStore'
+import {
+  demoConnectionsFor,
+  demoConversationsFor,
+  demoNotificationsFor,
+} from '@/data/demoFixtures'
 import { AppShell } from './AppShell'
 import { MessagesPage } from '@/features/messaging/MessagesPage'
 import { NotificationsPage } from '@/features/notifications/NotificationsPage'
@@ -22,13 +27,22 @@ import { SettingsPage } from '@/features/settings/SettingsPage'
 
 export function MainApp() {
   const { user, isGuest } = useAuthStore()
-  const { subscribe, unsubscribe } = useSocialStore()
+  const { subscribe, unsubscribe, seedGuest } = useSocialStore()
 
   useEffect(() => {
-    if (!user || isGuest) return
+    if (!user) return
+    if (isGuest) {
+      const role = user.role === 'employer' ? 'employer' : 'seeker'
+      seedGuest({
+        notifications: demoNotificationsFor(role),
+        conversations: demoConversationsFor(role),
+        connections: demoConnectionsFor(role),
+      })
+      return () => unsubscribe()
+    }
     subscribe(user.uid)
     return () => unsubscribe()
-  }, [user, isGuest, subscribe, unsubscribe])
+  }, [user, isGuest, subscribe, unsubscribe, seedGuest])
 
   if (!user) return null
   const isEmployer = user.role === 'employer'

@@ -25,6 +25,12 @@ interface SocialState {
 
   subscribe: (uid: string) => void
   unsubscribe: () => void
+  /** Hydrate in-memory demo social data for guest preview (no Firestore). */
+  seedGuest: (data: {
+    notifications: AppNotification[]
+    conversations: Conversation[]
+    connections: ConnectionRequest[]
+  }) => void
   unreadNotificationCount: () => number
   unreadConversationCount: (uid: string) => number
   /** Set of uids the current user is connected to (accepted only). */
@@ -84,6 +90,11 @@ export const useSocialStore = create<SocialState>((set, get) => ({
     unsubs.forEach((u) => u())
     unsubs = []
     set({ notifications: [], conversations: [], connections: [], ready: false })
+  },
+
+  seedGuest: ({ notifications, conversations, connections }) => {
+    get().unsubscribe()
+    set({ notifications, conversations, connections, ready: true })
   },
 
   unreadNotificationCount: () => get().notifications.filter((n) => !n.isRead).length,

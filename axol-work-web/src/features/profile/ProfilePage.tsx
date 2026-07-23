@@ -25,6 +25,7 @@ import { fullDate } from '@/utils/format'
 import { subscribeSeekerWorkHistory } from '@/features/workHistory/api'
 import { WorkHistoryStatusBadge } from '@/features/workHistory/WorkHistoryStatusBadge'
 import { AddWorkHistoryModal } from '@/features/workHistory/AddWorkHistoryModal'
+import { DEMO_SEEKER_WORK_HISTORY } from '@/data/demoFixtures'
 
 export function ProfilePage() {
   const { user, isGuest } = useAuthStore()
@@ -33,11 +34,11 @@ export function ProfilePage() {
   const connectionCount = connectedUIDs(me.uid).size
   const [editOpen, setEditOpen] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
-  const [entries, setEntries] = useState<WorkHistoryEntry[] | null>(isGuest ? [] : null)
+  const [entries, setEntries] = useState<WorkHistoryEntry[] | null>(isGuest ? DEMO_SEEKER_WORK_HISTORY : null)
 
   useEffect(() => {
     if (isGuest) {
-      setEntries([])
+      setEntries(DEMO_SEEKER_WORK_HISTORY)
       return
     }
     return subscribeSeekerWorkHistory(me.uid, setEntries)
@@ -124,9 +125,7 @@ export function ProfilePage() {
           <div className="flex items-center gap-3 text-fg-muted">
             <Briefcase className="h-5 w-5" aria-hidden />
             <p className="text-sm">
-              {isGuest
-                ? 'Sign up to add jobs and request verification from Recruiters.'
-                : 'Add a job and request verification from the Recruiter to earn a Verified badge.'}
+              Add a job and request verification from the Recruiter to earn a Verified badge.
             </p>
           </div>
         </Card>

@@ -16,19 +16,20 @@ import {
 } from './api'
 import { ApplicationStatusBadge } from './ApplicationsPage'
 import { getOrCreateConversation } from '@/features/messaging/api'
+import { DEMO_EMPLOYER_APPLICATIONS } from '@/data/demoFixtures'
 
 export function ApplicantsHubPage() {
   const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
-  const [apps, setApps] = useState<ShiftApplication[] | null>(isGuest ? [] : null)
+  const [apps, setApps] = useState<ShiftApplication[] | null>(isGuest ? DEMO_EMPLOYER_APPLICATIONS : null)
   const [shiftFilter, setShiftFilter] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [completeFor, setCompleteFor] = useState<ShiftApplication | null>(null)
 
   useEffect(() => {
     if (isGuest) {
-      setApps([])
+      setApps(DEMO_EMPLOYER_APPLICATIONS)
       return
     }
     return subscribeEmployerApplications(me.uid, setApps)
@@ -88,12 +89,8 @@ export function ApplicantsHubPage() {
       ) : visible.length === 0 ? (
         <EmptyState
           icon={Inbox}
-          title={isGuest ? 'Preview mode' : 'No applicants yet'}
-          message={
-            isGuest
-              ? 'Sign up to post shifts and review applicants here.'
-              : 'Applicants appear here once Prospects apply.'
-          }
+          title="No applicants yet"
+          message="Applicants appear here once Prospects apply."
         />
       ) : (
         <div className="grid gap-4 md:grid-cols-[1fr_1.2fr]">

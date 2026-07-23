@@ -187,11 +187,10 @@ export function AppShell() {
 }
 
 function NavItemLink({ item, onNavigate }: { item: NavItem; onNavigate: () => void }) {
-  const { user, isGuest } = useAuthStore()
+  const { user } = useAuthStore()
   const { unreadNotificationCount, unreadConversationCount } = useSocialStore()
-  const count = isGuest
-    ? 0
-    : item.badge === 'notifications'
+  const count =
+    item.badge === 'notifications'
       ? unreadNotificationCount()
       : item.badge === 'messages' && user
         ? unreadConversationCount(user.uid)

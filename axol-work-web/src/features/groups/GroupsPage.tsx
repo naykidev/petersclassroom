@@ -7,15 +7,22 @@ import type { CommunityGroup } from '@/models'
 import { Button, Card, EmptyState, Input, Modal, Spinner, TextArea } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
 import { createGroup, joinGroup, leaveGroup, subscribeGroups } from './api'
+import { DEMO_GROUPS } from '@/data/demoFixtures'
 
 export function GroupsPage() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
-  const [groups, setGroups] = useState<CommunityGroup[] | null>(null)
+  const [groups, setGroups] = useState<CommunityGroup[] | null>(isGuest ? DEMO_GROUPS : null)
   const [createOpen, setCreateOpen] = useState(false)
 
-  useEffect(() => subscribeGroups(setGroups), [])
+  useEffect(() => {
+    if (isGuest) {
+      setGroups(DEMO_GROUPS)
+      return
+    }
+    return subscribeGroups(setGroups)
+  }, [isGuest])
 
   function openCreate() {
     if (usePreviewStore.getState().requireAccount('Create a free account to create a group.')) return

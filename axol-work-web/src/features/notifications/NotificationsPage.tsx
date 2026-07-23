@@ -50,11 +50,10 @@ function linkFor(n: AppNotification, isEmployer: boolean): string {
 }
 
 export function NotificationsPage() {
-  const { user, isGuest } = useAuthStore()
+  const { user } = useAuthStore()
   const { notifications } = useSocialStore()
   const navigate = useNavigate()
-  const list = isGuest ? [] : notifications
-  const unread = list.filter((n) => !n.isRead).length
+  const unread = notifications.filter((n) => !n.isRead).length
 
   function open(n: AppNotification) {
     if (!n.isRead) {
@@ -68,7 +67,7 @@ export function NotificationsPage() {
     <div>
       <PageHeader
         title="Notifications"
-        subtitle={isGuest ? 'Preview mode' : unread ? `${unread} unread` : 'You’re all caught up'}
+        subtitle={unread ? `${unread} unread` : 'You’re all caught up'}
         action={
           unread > 0 && (
             <Button
@@ -78,7 +77,7 @@ export function NotificationsPage() {
                 if (usePreviewStore.getState().requireAccount('Create a free account to manage notifications.')) {
                   return
                 }
-                markAllNotificationsRead(list)
+                markAllNotificationsRead(notifications)
               }}
             >
               Mark all read
@@ -87,15 +86,15 @@ export function NotificationsPage() {
         }
       />
 
-      {list.length === 0 ? (
+      {notifications.length === 0 ? (
         <EmptyState
           icon={Bell}
-          title={isGuest ? 'Preview mode' : 'No notifications'}
-          message={isGuest ? 'Sign up to receive activity updates here.' : 'Activity will show up here.'}
+          title="No notifications"
+          message="Activity will show up here."
         />
       ) : (
         <ul className="flex flex-col gap-2" aria-live="polite">
-          {list.map((n) => {
+          {notifications.map((n) => {
             const Icon = ICONS[n.kind]
             return (
               <li key={n.id}>

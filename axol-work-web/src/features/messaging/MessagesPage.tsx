@@ -14,18 +14,17 @@ import {
   toggleReaction,
 } from './api'
 import { usePreviewStore } from '@/stores/previewStore'
+import { DEMO_MESSAGES } from '@/data/demoFixtures'
 
 const REACTIONS = ['👍', '❤️', '🎉', '😂', '🙏']
 
 export function MessagesPage() {
-  const { user, isGuest } = useAuthStore()
+  const { user } = useAuthStore()
   const { conversations, ready } = useSocialStore()
   const { conversationId } = useParams()
   const navigate = useNavigate()
 
-  const listReady = isGuest || ready
-  const list = isGuest ? [] : conversations
-  const active = list.find((c) => c.id === conversationId) ?? null
+  const active = conversations.find((c) => c.id === conversationId) ?? null
 
   return (
     <div className="grid h-[calc(100vh-8rem)] grid-cols-1 gap-4 md:grid-cols-[320px_1fr]">
@@ -40,21 +39,13 @@ export function MessagesPage() {
           <h1 className="text-headline text-fg">Messages</h1>
         </div>
         <div className="flex-1 overflow-y-auto">
-          {!listReady ? (
+          {!ready ? (
             <Spinner label="Loading conversations" />
-          ) : list.length === 0 ? (
-            <EmptyState
-              icon={Mail}
-              title={isGuest ? 'Preview mode' : 'No conversations yet'}
-              message={
-                isGuest
-                  ? 'Sign up to message Prospects and Recruiters.'
-                  : 'Start one from someone’s profile.'
-              }
-            />
+          ) : conversations.length === 0 ? (
+            <EmptyState icon={Mail} title="No conversations yet" message="Start one from someone’s profile." />
           ) : (
             <ul>
-              {list.map((c) => (
+              {conversations.map((c) => (
                 <ConversationRow
                   key={c.id}
                   conversation={c}
@@ -135,7 +126,7 @@ function ConversationRow({
 }
 
 function Thread({ conversation }: { conversation: Conversation }) {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const otherUID = conversation.participantUIDs.find((u) => u !== me.uid) ?? me.uid
   const otherName = conversation.participantNames?.[otherUID] ?? 'Unknown'
@@ -146,15 +137,20 @@ function Thread({ conversation }: { conversation: Conversation }) {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (isGuest) {
+      setMessages(DEMO_MESSAGES[conversation.id] ?? [])
+      return
+    }
     setMessages(null)
     const unsub = subscribeMessages(conversation.id, setMessages)
     return unsub
-  }, [conversation.id])
+  }, [conversation.id, isGuest])
 
   // Mark read whenever new messages arrive in the open thread.
   useEffect(() => {
+    if (isGuest) return
     if (messages && messages.length) markConversationRead(conversation.id, me.uid)
-  }, [messages, conversation.id, me.uid])
+  }, [messages, conversation.id, me.uid, isGuest])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: 'end' })

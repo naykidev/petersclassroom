@@ -8,6 +8,7 @@ import { cn } from '@/utils/cn'
 import { createPost, subscribePosts } from './api'
 import { PostCard } from './PostCard'
 import { usePreviewStore } from '@/stores/previewStore'
+import { DEMO_POSTS } from '@/data/demoFixtures'
 
 /**
  * Shared feed. `groupID` null renders the general Community feed (with
@@ -20,12 +21,18 @@ export function Feed({
   groupID?: string | null
   canPost?: boolean
 }) {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const { connectedUIDs } = useSocialStore()
   const [posts, setPosts] = useState<Post[] | null>(null)
 
-  useEffect(() => subscribePosts(groupID, setPosts), [groupID])
+  useEffect(() => {
+    if (isGuest) {
+      setPosts(groupID ? DEMO_POSTS.filter((p) => p.groupID === groupID) : DEMO_POSTS)
+      return
+    }
+    return subscribePosts(groupID, setPosts)
+  }, [groupID, isGuest])
 
   const connected = connectedUIDs(me.uid)
   const blocked = new Set(me.blockedUIDs ?? [])

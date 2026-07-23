@@ -4,11 +4,24 @@ import type { EmployerReview } from '@/models'
 import { Avatar, Card, Chip, EmptyState, Spinner } from '@/components/ui'
 import { relativeTime } from '@/utils/format'
 import { subscribeEmployerReviews } from './api'
+import { DEMO_REVIEWS_FOR_GUEST_EMPLOYER, GUEST_UID } from '@/data/demoFixtures'
+import { useAuthStore } from '@/stores/authStore'
 
 export function EmployerReviewsList({ employerUID }: { employerUID: string }) {
+  const { isGuest } = useAuthStore()
   const [reviews, setReviews] = useState<EmployerReview[] | null>(null)
 
-  useEffect(() => subscribeEmployerReviews(employerUID, setReviews), [employerUID])
+  useEffect(() => {
+    if (isGuest && employerUID === GUEST_UID) {
+      setReviews(DEMO_REVIEWS_FOR_GUEST_EMPLOYER)
+      return
+    }
+    if (isGuest) {
+      setReviews([])
+      return
+    }
+    return subscribeEmployerReviews(employerUID, setReviews)
+  }, [employerUID, isGuest])
 
   if (!reviews) return <Spinner label="Loading reviews" />
   if (reviews.length === 0)

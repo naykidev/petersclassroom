@@ -14,22 +14,27 @@ import {
   subscribeConnections,
 } from './api'
 import { connectionCopy } from './labels'
+import { DEMO_USERS_BY_UID, demoConnectionsFor, searchDemoUsers } from '@/data/demoFixtures'
 
 export function NetworkPage() {
   const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
-  const [records, setRecords] = useState<ConnectionRequest[] | null>(isGuest ? [] : null)
-  const [profiles, setProfiles] = useState<Record<string, AppUser>>({})
+  const role = me.role === 'employer' ? 'employer' : 'seeker'
+  const [records, setRecords] = useState<ConnectionRequest[] | null>(
+    isGuest ? demoConnectionsFor(role) : null,
+  )
+  const [profiles, setProfiles] = useState<Record<string, AppUser>>(isGuest ? { ...DEMO_USERS_BY_UID } : {})
   const [findOpen, setFindOpen] = useState(false)
 
   useEffect(() => {
     if (isGuest) {
-      setRecords([])
+      setRecords(demoConnectionsFor(role))
+      setProfiles({ ...DEMO_USERS_BY_UID })
       return
     }
     return subscribeConnections(me.uid, setRecords)
-  }, [me.uid, isGuest])
+  }, [me.uid, isGuest, role])
 
   // Resolve the "other" user's profile for every record.
   useEffect(() => {
@@ -154,12 +159,8 @@ export function NetworkPage() {
             {connected.length === 0 ? (
               <EmptyState
                 icon={Users}
-                title={isGuest ? 'Preview mode' : 'Your network is empty'}
-                message={
-                  isGuest
-                    ? 'Sign up to Scout, Express interest, and build your network.'
-                    : 'Scout prospects, express interest in recruiters, or reach out to peers.'
-                }
+                title="Your network is empty"
+                message="Scout prospects, express interest in recruiters, or reach out to peers."
                 action={<Button onClick={() => setFindOpen(true)}>Find people</Button>}
               />
             ) : (
@@ -222,7 +223,9 @@ function FindPeopleModal({
     e.preventDefault()
     setLoading(true)
     try {
-      const r = await searchUsersByName(term)
+      const r = useAuthStore.getState().isGuest
+        ? searchDemoUsers(term)
+        : await searchUsersByName(term)
       setResults(r.filter((u) => u.uid !== me.uid && !(me.blockedUIDs ?? []).includes(u.uid)))
     } finally {
       setLoading(false)

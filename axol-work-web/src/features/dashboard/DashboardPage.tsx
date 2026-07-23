@@ -7,20 +7,27 @@ import { Button, Card } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
 import { subscribeEmployerShifts } from '@/features/shifts/api'
 import { subscribeEmployerApplications } from '@/features/applications/api'
+import { DEMO_EMPLOYER_APPLICATIONS, DEMO_EMPLOYER_SHIFTS } from '@/data/demoFixtures'
 
 export function DashboardPage() {
   const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
-  const [shifts, setShifts] = useState<Shift[]>([])
-  const [apps, setApps] = useState<ShiftApplication[]>([])
+  const [shifts, setShifts] = useState<Shift[]>(isGuest ? DEMO_EMPLOYER_SHIFTS : [])
+  const [apps, setApps] = useState<ShiftApplication[]>(isGuest ? DEMO_EMPLOYER_APPLICATIONS : [])
 
   useEffect(() => {
-    if (isGuest) return
+    if (isGuest) {
+      setShifts(DEMO_EMPLOYER_SHIFTS)
+      return
+    }
     return subscribeEmployerShifts(me.uid, setShifts)
   }, [me.uid, isGuest])
   useEffect(() => {
-    if (isGuest) return
+    if (isGuest) {
+      setApps(DEMO_EMPLOYER_APPLICATIONS)
+      return
+    }
     return subscribeEmployerApplications(me.uid, setApps)
   }, [me.uid, isGuest])
 

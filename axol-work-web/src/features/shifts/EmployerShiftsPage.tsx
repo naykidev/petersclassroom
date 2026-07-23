@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { shiftRange } from '@/utils/format'
 import { setShiftStatus, subscribeEmployerShifts } from './api'
 import { ShiftFormModal } from './ShiftFormModal'
+import { DEMO_EMPLOYER_SHIFTS } from '@/data/demoFixtures'
 
 const STATUS_META: Record<ShiftStatus, { label: string; tone: 'success' | 'info' | 'neutral' }> = {
   open: { label: 'Open', tone: 'success' },
@@ -18,12 +19,12 @@ const STATUS_META: Record<ShiftStatus, { label: string; tone: 'success' | 'info'
 export function EmployerShiftsPage() {
   const { user, isGuest } = useAuthStore()
   const me = user!
-  const [shifts, setShifts] = useState<Shift[] | null>(isGuest ? [] : null)
+  const [shifts, setShifts] = useState<Shift[] | null>(isGuest ? DEMO_EMPLOYER_SHIFTS : null)
   const [formShift, setFormShift] = useState<Shift | 'new' | null>(null)
 
   useEffect(() => {
     if (isGuest) {
-      setShifts([])
+      setShifts(DEMO_EMPLOYER_SHIFTS)
       return
     }
     return subscribeEmployerShifts(me.uid, setShifts)

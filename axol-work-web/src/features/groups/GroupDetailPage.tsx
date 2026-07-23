@@ -8,10 +8,11 @@ import { Button, Card, EmptyState, Spinner } from '@/components/ui'
 import { ReportModal } from '@/components/ReportModal'
 import { Feed } from '@/features/feed/Feed'
 import { joinGroup, leaveGroup, subscribeGroup } from './api'
+import { demoGroup } from '@/data/demoFixtures'
 
 export function GroupDetailPage() {
   const { groupId } = useParams()
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
   const [group, setGroup] = useState<CommunityGroup | null | undefined>(undefined)
@@ -19,8 +20,12 @@ export function GroupDetailPage() {
 
   useEffect(() => {
     if (!groupId) return
+    if (isGuest) {
+      setGroup(demoGroup(groupId))
+      return
+    }
     return subscribeGroup(groupId, setGroup)
-  }, [groupId])
+  }, [groupId, isGuest])
 
   if (group === undefined) return <Spinner label="Loading group" />
   if (group === null)

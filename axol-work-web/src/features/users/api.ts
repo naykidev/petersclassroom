@@ -20,9 +20,14 @@ import {
   usersCollection,
 } from '@/lib/firestore'
 import type { AppUser, Report, ReportTargetType } from '@/models'
+import { getDemoUser, isDemoUid, searchDemoUsers } from '@/data/demoFixtures'
+import { useAuthStore } from '@/stores/authStore'
 
 /** Fetch a single public user profile. */
 export async function getUser(uid: string): Promise<AppUser | null> {
+  const demo = getDemoUser(uid)
+  if (demo) return demo
+  if (isDemoUid(uid)) return null
   const snap = await getDoc(userDoc(uid))
   return snap.exists() ? snap.data() : null
 }
@@ -31,8 +36,14 @@ export async function getUser(uid: string): Promise<AppUser | null> {
 export async function getUsers(uids: string[]): Promise<AppUser[]> {
   const unique = [...new Set(uids)].filter(Boolean)
   const out: AppUser[] = []
-  for (let i = 0; i < unique.length; i += 30) {
-    const chunk = unique.slice(i, i + 30)
+  const remote: string[] = []
+  for (const uid of unique) {
+    const demo = getDemoUser(uid)
+    if (demo) out.push(demo)
+    else if (!isDemoUid(uid)) remote.push(uid)
+  }
+  for (let i = 0; i < remote.length; i += 30) {
+    const chunk = remote.slice(i, i + 30)
     if (!chunk.length) continue
     const snap = await getDocs(
       query(usersCollection(), where(documentId(), 'in', chunk)),
@@ -44,6 +55,7 @@ export async function getUsers(uids: string[]): Promise<AppUser[]> {
 
 /** Prefix search by display name (case-sensitive on first char, best-effort). */
 export async function searchUsersByName(term: string): Promise<AppUser[]> {
+  if (useAuthStore.getState().isGuest) return searchDemoUsers(term)
   const t = term.trim()
   if (!t) return []
   const HIGH = String.fromCharCode(0xf8ff) // terminates the prefix range

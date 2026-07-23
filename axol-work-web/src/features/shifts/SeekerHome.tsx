@@ -19,6 +19,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { shiftRange } from '@/utils/format'
 import { accommodationFit, subscribeOpenShifts } from './api'
 import { applyToShift, subscribeSeekerApplications } from '@/features/applications/api'
+import { DEMO_OPEN_SHIFTS, DEMO_SEEKER_APPLICATIONS } from '@/data/demoFixtures'
 
 export function SeekerHome() {
   const { user, isGuest } = useAuthStore()
@@ -31,11 +32,12 @@ export function SeekerHome() {
 
   useEffect(() => {
     setError(false)
-    const unsub = subscribeOpenShifts(setShifts, () => setError(true))
     if (isGuest) {
-      setApps([])
-      return () => unsub()
+      setShifts(DEMO_OPEN_SHIFTS)
+      setApps(DEMO_SEEKER_APPLICATIONS)
+      return
     }
+    const unsub = subscribeOpenShifts(setShifts, () => setError(true))
     const unsubApps = subscribeSeekerApplications(me.uid, setApps)
     return () => {
       unsub()

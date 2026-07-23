@@ -7,17 +7,20 @@ import { Avatar, Badge, Button, Card, Chip, Input, Modal, SectionHeader, Spinner
 import { fullDate } from '@/utils/format'
 import { EmployerReviewsList } from '@/features/reviews/EmployerReviewsList'
 import { respondToWorkHistory, subscribeEmployerVerificationRequests } from '@/features/workHistory/api'
+import { DEMO_VERIFICATION_REQUESTS } from '@/data/demoFixtures'
 
 export function CompanyPage() {
   const { user, isGuest } = useAuthStore()
   const me = user!
-  const [requests, setRequests] = useState<WorkHistoryEntry[] | null>(isGuest ? [] : null)
+  const [requests, setRequests] = useState<WorkHistoryEntry[] | null>(
+    isGuest ? DEMO_VERIFICATION_REQUESTS : null,
+  )
   const [editOpen, setEditOpen] = useState(false)
   const profile = me.employerProfile
 
   useEffect(() => {
     if (isGuest) {
-      setRequests([])
+      setRequests(DEMO_VERIFICATION_REQUESTS)
       return
     }
     return subscribeEmployerVerificationRequests(me.uid, setRequests)
@@ -86,11 +89,7 @@ export function CompanyPage() {
         <Spinner />
       ) : pending.length === 0 ? (
         <Card>
-          <p className="text-sm text-fg-muted">
-            {isGuest
-              ? 'Sign up to receive and respond to work-history verification requests.'
-              : 'No pending work-history verification requests.'}
-          </p>
+          <p className="text-sm text-fg-muted">No pending work-history verification requests.</p>
         </Card>
       ) : (
         <ul className="mb-8 flex flex-col gap-2">

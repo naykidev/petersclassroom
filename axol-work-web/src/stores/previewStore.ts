@@ -1,8 +1,9 @@
 import { create } from 'zustand'
 import type { AppUser, UserRole } from '@/models'
 import { ACCOMMODATION_NEEDS, WORK_HISTORY_TAGS } from '@/models'
+import { GUEST_UID } from '@/data/demoFixtures'
 
-const GUEST_UID = 'guest-preview'
+export { GUEST_UID }
 
 export function makeDemoUser(role: Exclude<UserRole, 'unassigned'>): AppUser {
   if (role === 'employer') {
@@ -12,7 +13,7 @@ export function makeDemoUser(role: Exclude<UserRole, 'unassigned'>): AppUser {
       role: 'employer',
       headline: 'Inclusive hiring team',
       workHistoryTags: [],
-      connectionCount: 0,
+      connectionCount: 2,
       isVerifiedEmployed: false,
       verifiedEmployerUIDs: [],
       selectedCity: 'San Francisco',
@@ -36,9 +37,9 @@ export function makeDemoUser(role: Exclude<UserRole, 'unassigned'>): AppUser {
     role: 'seeker',
     headline: 'Looking for accessible shift work',
     workHistoryTags: [WORK_HISTORY_TAGS[2]!, WORK_HISTORY_TAGS[0]!],
-    connectionCount: 0,
-    isVerifiedEmployed: false,
-    verifiedEmployerUIDs: [],
+    connectionCount: 2,
+    isVerifiedEmployed: true,
+    verifiedEmployerUIDs: ['demo-employer-harbor'],
     selectedCity: 'San Francisco',
     accommodationTags: [ACCOMMODATION_NEEDS[3]!, ACCOMMODATION_NEEDS[1]!, ACCOMMODATION_NEEDS[4]!],
     accommodationNeeds: [ACCOMMODATION_NEEDS[3]!, ACCOMMODATION_NEEDS[1]!, ACCOMMODATION_NEEDS[4]!],
