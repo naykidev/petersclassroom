@@ -106,9 +106,11 @@ export function AppShell() {
       {isGuest && (
         <div
           role="status"
-          className="sticky top-0 z-40 border-b border-brand/30 bg-brand-tint px-4 py-2.5 lg:ml-64"
+          className="relative sticky top-0 z-40 isolate border-b border-brand/30 bg-card px-4 py-2.5 lg:ml-64"
         >
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
+          {/* Opaque card under a soft tint so scrolled content can’t show through. */}
+          <div className="pointer-events-none absolute inset-0 bg-brand-tint" aria-hidden />
+          <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
             <p className="text-sm font-medium text-fg">
               You’re previewing Axol Work. Look around freely. Signing up unlocks applying, posting, and messaging.
             </p>
