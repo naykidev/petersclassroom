@@ -7,6 +7,7 @@ import { Avatar, Button, EmptyState, Spinner } from '@/components/ui'
 import { cn } from '@/utils/cn'
 import { createPost, subscribePosts } from './api'
 import { PostCard } from './PostCard'
+import { usePreviewStore } from '@/stores/previewStore'
 
 /**
  * Shared feed. `groupID` null renders the general Community feed (with
@@ -73,6 +74,7 @@ function Composer({
 
   async function submit() {
     if (!text.trim() || posting) return
+    if (usePreviewStore.getState().requireAccount('Create a free account to post.')) return
     setPosting(true)
     try {
       await createPost(me, text, visibility, groupID)

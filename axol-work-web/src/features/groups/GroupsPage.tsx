@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UsersRound, Plus } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { CommunityGroup } from '@/models'
 import { Button, Card, EmptyState, Input, Modal, Spinner, TextArea } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
@@ -16,13 +17,26 @@ export function GroupsPage() {
 
   useEffect(() => subscribeGroups(setGroups), [])
 
+  function openCreate() {
+    if (usePreviewStore.getState().requireAccount('Create a free account to create a group.')) return
+    setCreateOpen(true)
+  }
+
+  function toggleMembership(g: CommunityGroup, joined: boolean) {
+    if (usePreviewStore.getState().requireAccount(joined ? 'Create a free account to leave groups.' : 'Create a free account to join groups.')) {
+      return
+    }
+    if (joined) leaveGroup(g.id, me.uid)
+    else joinGroup(g.id, me.uid)
+  }
+
   return (
     <div>
       <PageHeader
         title="Groups"
         subtitle="Join communities around shared interests"
         action={
-          <Button onClick={() => setCreateOpen(true)}>
+          <Button onClick={openCreate}>
             <Plus className="h-4 w-4" aria-hidden /> Create group
           </Button>
         }
@@ -35,7 +49,7 @@ export function GroupsPage() {
           icon={UsersRound}
           title="No groups yet"
           message="Create the first community group."
-          action={<Button onClick={() => setCreateOpen(true)}>Create group</Button>}
+          action={<Button onClick={openCreate}>Create group</Button>}
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
@@ -54,7 +68,7 @@ export function GroupsPage() {
                   <Button
                     size="sm"
                     variant={joined ? 'secondary' : 'primary'}
-                    onClick={() => (joined ? leaveGroup(g.id, me.uid) : joinGroup(g.id, me.uid))}
+                    onClick={() => toggleMembership(g, joined)}
                   >
                     {joined ? 'Leave' : 'Join'}
                   </Button>
@@ -86,6 +100,7 @@ function CreateGroupModal({ onClose }: { onClose: () => void }) {
 
   async function save() {
     if (!canSave) return
+    if (usePreviewStore.getState().requireAccount('Create a free account to create a group.')) return
     setSaving(true)
     try {
       const id = await createGroup({ uid: me.uid, name: me.displayName }, trimmedName, trimmedDesc)

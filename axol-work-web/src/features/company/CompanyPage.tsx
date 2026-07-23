@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Building2, Check, X, BadgeCheck, MapPin, Pencil } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { WorkHistoryEntry } from '@/models'
 import { Avatar, Badge, Button, Card, Chip, Input, Modal, SectionHeader, Spinner } from '@/components/ui'
 import { fullDate } from '@/utils/format'
@@ -8,16 +9,29 @@ import { EmployerReviewsList } from '@/features/reviews/EmployerReviewsList'
 import { respondToWorkHistory, subscribeEmployerVerificationRequests } from '@/features/workHistory/api'
 
 export function CompanyPage() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
-  const [requests, setRequests] = useState<WorkHistoryEntry[] | null>(null)
+  const [requests, setRequests] = useState<WorkHistoryEntry[] | null>(isGuest ? [] : null)
   const [editOpen, setEditOpen] = useState(false)
   const profile = me.employerProfile
 
-  useEffect(() => subscribeEmployerVerificationRequests(me.uid, setRequests), [me.uid])
+  useEffect(() => {
+    if (isGuest) {
+      setRequests([])
+      return
+    }
+    return subscribeEmployerVerificationRequests(me.uid, setRequests)
+  }, [me.uid, isGuest])
 
   const pending = (requests ?? []).filter((r) => r.status === 'pending')
   const actor = { uid: me.uid, name: profile?.companyName ?? me.displayName }
+
+  function respond(r: WorkHistoryEntry, status: 'verified' | 'declined') {
+    if (usePreviewStore.getState().requireAccount('Create a free account to respond to verification requests.')) {
+      return
+    }
+    respondToWorkHistory(r, status, actor)
+  }
 
   const accommodations = [
     profile?.allowsNoiseCancelingHeadphones && 'Headphones allowed',
@@ -43,7 +57,15 @@ export function CompanyPage() {
               )}
             </div>
           </div>
-          <Button variant="secondary" onClick={() => setEditOpen(true)}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              if (usePreviewStore.getState().requireAccount('Create a free account to edit your company profile.')) {
+                return
+              }
+              setEditOpen(true)
+            }}
+          >
             <Pencil className="h-4 w-4" aria-hidden /> Edit
           </Button>
         </div>
@@ -64,7 +86,11 @@ export function CompanyPage() {
         <Spinner />
       ) : pending.length === 0 ? (
         <Card>
-          <p className="text-sm text-fg-muted">No pending work-history verification requests.</p>
+          <p className="text-sm text-fg-muted">
+            {isGuest
+              ? 'Sign up to receive and respond to work-history verification requests.'
+              : 'No pending work-history verification requests.'}
+          </p>
         </Card>
       ) : (
         <ul className="mb-8 flex flex-col gap-2">
@@ -79,10 +105,10 @@ export function CompanyPage() {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <Button size="sm" onClick={() => respondToWorkHistory(r, 'verified', actor)}>
+                  <Button size="sm" onClick={() => respond(r, 'verified')}>
                     <BadgeCheck className="h-4 w-4" aria-hidden /> Confirm
                   </Button>
-                  <Button size="sm" variant="secondary" onClick={() => respondToWorkHistory(r, 'declined', actor)}>
+                  <Button size="sm" variant="secondary" onClick={() => respond(r, 'declined')}>
                     <X className="h-4 w-4" aria-hidden /> Deny
                   </Button>
                 </div>
@@ -112,6 +138,7 @@ function EditCompanyModal({ onClose }: { onClose: () => void }) {
   const [saving, setSaving] = useState(false)
 
   async function save() {
+    if (usePreviewStore.getState().requireAccount('Create a free account to edit your company profile.')) return
     setSaving(true)
     try {
       await updateUser({

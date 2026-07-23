@@ -13,16 +13,19 @@ import {
   subscribeMessages,
   toggleReaction,
 } from './api'
+import { usePreviewStore } from '@/stores/previewStore'
 
 const REACTIONS = ['👍', '❤️', '🎉', '😂', '🙏']
 
 export function MessagesPage() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const { conversations, ready } = useSocialStore()
   const { conversationId } = useParams()
   const navigate = useNavigate()
 
-  const active = conversations.find((c) => c.id === conversationId) ?? null
+  const listReady = isGuest || ready
+  const list = isGuest ? [] : conversations
+  const active = list.find((c) => c.id === conversationId) ?? null
 
   return (
     <div className="grid h-[calc(100vh-8rem)] grid-cols-1 gap-4 md:grid-cols-[320px_1fr]">
@@ -37,13 +40,21 @@ export function MessagesPage() {
           <h1 className="text-headline text-fg">Messages</h1>
         </div>
         <div className="flex-1 overflow-y-auto">
-          {!ready ? (
+          {!listReady ? (
             <Spinner label="Loading conversations" />
-          ) : conversations.length === 0 ? (
-            <EmptyState icon={Mail} title="No conversations yet" message="Start one from someone’s profile." />
+          ) : list.length === 0 ? (
+            <EmptyState
+              icon={Mail}
+              title={isGuest ? 'Preview mode' : 'No conversations yet'}
+              message={
+                isGuest
+                  ? 'Sign up to message Prospects and Recruiters.'
+                  : 'Start one from someone’s profile.'
+              }
+            />
           ) : (
             <ul>
-              {conversations.map((c) => (
+              {list.map((c) => (
                 <ConversationRow
                   key={c.id}
                   conversation={c}
@@ -154,6 +165,7 @@ function Thread({ conversation }: { conversation: Conversation }) {
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     if (!text.trim() || sending) return
+    if (usePreviewStore.getState().requireAccount('Create a free account to send messages.')) return
     setSending(true)
     const body = text
     setText('')
@@ -266,6 +278,9 @@ function MessageBubble({
                 <button
                   key={emoji}
                   onClick={() => {
+                    if (usePreviewStore.getState().requireAccount('Create a free account to react to messages.')) {
+                      return
+                    }
                     toggleReaction(conversationId, message.id, meUID, emoji, myReaction)
                     setPickerOpen(false)
                   }}

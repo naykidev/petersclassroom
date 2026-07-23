@@ -7,6 +7,7 @@ import type { UserRole } from '@/models'
 import { Badge, Button } from '@/components/ui'
 import { connectionCopy, IN_NETWORK_LABEL, acceptToast } from './labels'
 import { acceptConnectionRequest, removeConnection, sendConnectionRequest } from './api'
+import { usePreviewStore } from '@/stores/previewStore'
 
 interface Target {
   uid: string
@@ -56,6 +57,11 @@ export function ConnectionButton({
   const copy = connectionCopy(me.role, target.role)
 
   async function initiate() {
+    if (
+      usePreviewStore.getState().requireAccount(`Create a free account to ${copy.verb.toLowerCase()}.`)
+    ) {
+      return
+    }
     setBusy(true)
     try {
       await sendConnectionRequest(

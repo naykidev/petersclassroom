@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Heart, MessageCircle, MoreHorizontal, Flag, Trash2, Globe, Users } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { Comment, Post } from '@/models'
 import { Avatar, Button } from '@/components/ui'
 import { ReportModal } from '@/components/ReportModal'
@@ -10,7 +11,7 @@ import { cn } from '@/utils/cn'
 import { addComment, deletePost, subscribeComments, subscribeMyLike, toggleLike } from './api'
 
 export function PostCard({ post }: { post: Post }) {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
   const [liked, setLiked] = useState(false)
@@ -21,7 +22,13 @@ export function PostCard({ post }: { post: Post }) {
   const [reportOpen, setReportOpen] = useState(false)
   const isOwn = post.authorUID === me.uid
 
-  useEffect(() => subscribeMyLike(post.id, me.uid, setLiked), [post.id, me.uid])
+  useEffect(() => {
+    if (isGuest) {
+      setLiked(false)
+      return
+    }
+    return subscribeMyLike(post.id, me.uid, setLiked)
+  }, [post.id, me.uid, isGuest])
   useEffect(() => {
     if (showComments) return subscribeComments(post.id, setComments)
   }, [showComments, post.id])
@@ -29,6 +36,7 @@ export function PostCard({ post }: { post: Post }) {
   async function submitComment(e: React.FormEvent) {
     e.preventDefault()
     if (!commentText.trim()) return
+    if (usePreviewStore.getState().requireAccount('Create a free account to comment.')) return
     const body = commentText
     setCommentText('')
     await addComment(post, { uid: me.uid, name: me.displayName }, body)
@@ -68,6 +76,7 @@ export function PostCard({ post }: { post: Post }) {
                 <button
                   onClick={() => {
                     setMenuOpen(false)
+                    if (usePreviewStore.getState().requireAccount('Create a free account to manage posts.')) return
                     deletePost(post.id)
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-sm text-danger hover:bg-muted"
@@ -78,6 +87,7 @@ export function PostCard({ post }: { post: Post }) {
                 <button
                   onClick={() => {
                     setMenuOpen(false)
+                    if (usePreviewStore.getState().requireAccount('Create a free account to report content.')) return
                     setReportOpen(true)
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-sm text-fg hover:bg-muted"
@@ -94,7 +104,10 @@ export function PostCard({ post }: { post: Post }) {
 
       <div className="mt-3 flex items-center gap-4 border-t border-border pt-3">
         <button
-          onClick={() => toggleLike(post.id, me.uid)}
+          onClick={() => {
+            if (usePreviewStore.getState().requireAccount('Create a free account to like posts.')) return
+            toggleLike(post.id, me.uid)
+          }}
           aria-pressed={liked}
           aria-label={liked ? 'Unlike' : 'Like'}
           className={cn(

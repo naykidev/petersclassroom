@@ -32,8 +32,12 @@ interface AuthState {
   /** true until the first auth state + user doc resolve (drives the splash). */
   loading: boolean
   error: string | null
+  /** Local-only preview user (not written to Firestore). */
+  isGuest: boolean
 
   init: () => void
+  setGuestSession: (guest: AppUser) => void
+  clearGuestSession: () => void
   signUp: (email: string, password: string, displayName: string) => Promise<void>
   logIn: (email: string, password: string, rememberMe?: boolean) => Promise<void>
   logInWithGoogle: () => Promise<void>
@@ -112,6 +116,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   loading: true,
   error: null,
+  isGuest: false,
 
   init: () => {
     onAuthStateChanged(auth, async (fbUser) => {
@@ -119,11 +124,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       userDocUnsub = null
 
       if (!fbUser) {
+        // Keep an in-memory guest preview session if one is active.
+        if (get().isGuest) {
+          set({ firebaseUser: null, loading: false })
+          return
+        }
         set({ firebaseUser: null, user: null, loading: false })
         return
       }
 
-      set({ firebaseUser: fbUser })
+      set({ firebaseUser: fbUser, isGuest: false })
       const ref = userDoc(fbUser.uid)
 
       await ensureUserDoc(fbUser)
@@ -137,11 +147,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           set({
             user: data ? { ...data, email: fbUser.email ?? '' } : null,
             loading: false,
+            isGuest: false,
           })
         },
         () => set({ loading: false, error: 'Could not load your profile.' }),
       )
     })
+  },
+
+  setGuestSession: (guest) => {
+    set({ user: guest, isGuest: true, loading: false, error: null, firebaseUser: null })
+  },
+
+  clearGuestSession: () => {
+    if (!get().isGuest) return
+    set({ user: null, isGuest: false })
   },
 
   signUp: async (email, password, displayName) => {

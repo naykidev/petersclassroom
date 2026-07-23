@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, UsersRound, Flag } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { CommunityGroup } from '@/models'
 import { Button, Card, EmptyState, Spinner } from '@/components/ui'
 import { ReportModal } from '@/components/ReportModal'
@@ -25,7 +26,20 @@ export function GroupDetailPage() {
   if (group === null)
     return <EmptyState icon={UsersRound} title="Group not found" message="This group doesn’t exist." />
 
-  const joined = group.memberUIDs.includes(me.uid)
+  const current = group
+  const joined = current.memberUIDs.includes(me.uid)
+
+  function toggleMembership() {
+    if (
+      usePreviewStore
+        .getState()
+        .requireAccount(joined ? 'Create a free account to leave groups.' : 'Create a free account to join groups.')
+    ) {
+      return
+    }
+    if (joined) leaveGroup(current.id, me.uid)
+    else joinGroup(current.id, me.uid)
+  }
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -46,13 +60,17 @@ export function GroupDetailPage() {
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <Button
-              variant={joined ? 'secondary' : 'primary'}
-              onClick={() => (joined ? leaveGroup(group.id, me.uid) : joinGroup(group.id, me.uid))}
-            >
+            <Button variant={joined ? 'secondary' : 'primary'} onClick={toggleMembership}>
               {joined ? 'Leave' : 'Join'}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => setReportOpen(true)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                if (usePreviewStore.getState().requireAccount('Create a free account to report content.')) return
+                setReportOpen(true)
+              }}
+            >
               <Flag className="h-4 w-4" aria-hidden /> Report
             </Button>
           </div>

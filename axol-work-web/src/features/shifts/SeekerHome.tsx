@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { MapPin, DollarSign, Clock, Search, Sparkles, Check } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { Shift, ShiftApplication } from '@/models'
 import { CITIES } from '@/models'
 import {
@@ -20,7 +21,7 @@ import { accommodationFit, subscribeOpenShifts } from './api'
 import { applyToShift, subscribeSeekerApplications } from '@/features/applications/api'
 
 export function SeekerHome() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const [shifts, setShifts] = useState<Shift[] | null>(null)
   const [apps, setApps] = useState<ShiftApplication[]>([])
@@ -31,12 +32,16 @@ export function SeekerHome() {
   useEffect(() => {
     setError(false)
     const unsub = subscribeOpenShifts(setShifts, () => setError(true))
+    if (isGuest) {
+      setApps([])
+      return () => unsub()
+    }
     const unsubApps = subscribeSeekerApplications(me.uid, setApps)
     return () => {
       unsub()
       unsubApps()
     }
-  }, [me.uid])
+  }, [me.uid, isGuest])
 
   const appliedShiftIDs = useMemo(
     () => new Set(apps.filter((a) => a.status !== 'withdrawn').map((a) => a.shiftID)),
@@ -198,6 +203,11 @@ function ShiftDetailModal({
   const isApplied = applied || justApplied
 
   async function apply() {
+    if (
+      usePreviewStore.getState().requireAccount('Create a free account to apply for shifts.')
+    ) {
+      return
+    }
     setApplying(true)
     try {
       await applyToShift(shift, { uid: me.uid, name: me.displayName })

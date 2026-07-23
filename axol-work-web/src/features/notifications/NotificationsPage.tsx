@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { useSocialStore } from '@/stores/socialStore'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { AppNotification, NotificationKind } from '@/models'
 import { Avatar, Button, EmptyState } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
@@ -49,13 +50,17 @@ function linkFor(n: AppNotification, isEmployer: boolean): string {
 }
 
 export function NotificationsPage() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const { notifications } = useSocialStore()
   const navigate = useNavigate()
-  const unread = notifications.filter((n) => !n.isRead).length
+  const list = isGuest ? [] : notifications
+  const unread = list.filter((n) => !n.isRead).length
 
   function open(n: AppNotification) {
-    if (!n.isRead) markNotificationRead(n.id)
+    if (!n.isRead) {
+      if (usePreviewStore.getState().requireAccount('Create a free account to manage notifications.')) return
+      markNotificationRead(n.id)
+    }
     navigate(linkFor(n, user?.role === 'employer'))
   }
 
@@ -63,21 +68,34 @@ export function NotificationsPage() {
     <div>
       <PageHeader
         title="Notifications"
-        subtitle={unread ? `${unread} unread` : 'You’re all caught up'}
+        subtitle={isGuest ? 'Preview mode' : unread ? `${unread} unread` : 'You’re all caught up'}
         action={
           unread > 0 && (
-            <Button variant="secondary" size="sm" onClick={() => markAllNotificationsRead(notifications)}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                if (usePreviewStore.getState().requireAccount('Create a free account to manage notifications.')) {
+                  return
+                }
+                markAllNotificationsRead(list)
+              }}
+            >
               Mark all read
             </Button>
           )
         }
       />
 
-      {notifications.length === 0 ? (
-        <EmptyState icon={Bell} title="No notifications" message="Activity will show up here." />
+      {list.length === 0 ? (
+        <EmptyState
+          icon={Bell}
+          title={isGuest ? 'Preview mode' : 'No notifications'}
+          message={isGuest ? 'Sign up to receive activity updates here.' : 'Activity will show up here.'}
+        />
       ) : (
         <ul className="flex flex-col gap-2" aria-live="polite">
-          {notifications.map((n) => {
+          {list.map((n) => {
             const Icon = ICONS[n.kind]
             return (
               <li key={n.id}>

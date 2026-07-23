@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Users, MessageSquare, Search } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { AppUser, ConnectionRequest } from '@/models'
 import { Avatar, Button, Card, EmptyState, Input, Modal, Spinner } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
@@ -15,14 +16,20 @@ import {
 import { connectionCopy } from './labels'
 
 export function NetworkPage() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
-  const [records, setRecords] = useState<ConnectionRequest[] | null>(null)
+  const [records, setRecords] = useState<ConnectionRequest[] | null>(isGuest ? [] : null)
   const [profiles, setProfiles] = useState<Record<string, AppUser>>({})
   const [findOpen, setFindOpen] = useState(false)
 
-  useEffect(() => subscribeConnections(me.uid, setRecords), [me.uid])
+  useEffect(() => {
+    if (isGuest) {
+      setRecords([])
+      return
+    }
+    return subscribeConnections(me.uid, setRecords)
+  }, [me.uid, isGuest])
 
   // Resolve the "other" user's profile for every record.
   useEffect(() => {
@@ -56,12 +63,18 @@ export function NetworkPage() {
   )
 
   async function message(uid: string) {
+    if (usePreviewStore.getState().requireAccount('Create a free account to send messages.')) return
     const p = profiles[uid]
     const id = await getOrCreateConversation(
       { uid: me.uid, name: me.displayName },
       { uid, name: p?.displayName ?? 'User' },
     )
     navigate(`/messages/${id}`)
+  }
+
+  function cancelOutgoing(id: string) {
+    if (usePreviewStore.getState().requireAccount('Create a free account to manage network requests.')) return
+    cancelRequest(id)
   }
 
   return (
@@ -124,7 +137,7 @@ export function NetworkPage() {
                         headline={`${copy.sentLabel} · Pending`}
                         onClick={() => navigate(`/u/${r.toUID}`)}
                       />
-                      <Button size="sm" variant="ghost" onClick={() => cancelRequest(r.id)}>
+                      <Button size="sm" variant="ghost" onClick={() => cancelOutgoing(r.id)}>
                         Cancel
                       </Button>
                     </Card>
@@ -141,8 +154,12 @@ export function NetworkPage() {
             {connected.length === 0 ? (
               <EmptyState
                 icon={Users}
-                title="Your network is empty"
-                message="Scout prospects, express interest in recruiters, or reach out to peers."
+                title={isGuest ? 'Preview mode' : 'Your network is empty'}
+                message={
+                  isGuest
+                    ? 'Sign up to Scout, Express interest, and build your network.'
+                    : 'Scout prospects, express interest in recruiters, or reach out to peers.'
+                }
                 action={<Button onClick={() => setFindOpen(true)}>Find people</Button>}
               />
             ) : (

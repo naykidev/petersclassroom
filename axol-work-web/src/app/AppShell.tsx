@@ -1,21 +1,30 @@
 import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { Menu, Moon, Sun, X } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useSocialStore } from '@/stores/socialStore'
 import { useThemeStore } from '@/stores/themeStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import { primaryNav, sharedNav, type NavItem } from './nav'
-import { Avatar, Toaster } from '@/components/ui'
+import { Avatar, Button, Toaster } from '@/components/ui'
+import { SignupPromptModal } from '@/components/SignupPromptModal'
 import { cn } from '@/utils/cn'
 import { roleLabel } from '@/utils/roleLabel'
 
 export function AppShell() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const { theme, toggle } = useThemeStore()
+  const { role, setRole, exit } = usePreviewStore()
+  const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   if (!user) return null
   const primary = primaryNav(user.role)
+
+  function switchPreviewRole(next: 'seeker' | 'employer') {
+    setRole(next)
+    navigate('/', { replace: true })
+  }
 
   const sidebar = (
     <nav aria-label="Main navigation" className="flex h-full flex-col gap-1 p-3">
@@ -70,6 +79,59 @@ export function AppShell() {
       >
         Skip to content
       </a>
+
+      {isGuest && (
+        <div
+          role="status"
+          className="sticky top-0 z-40 border-b border-brand/30 bg-brand-tint px-4 py-2.5"
+        >
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 lg:pl-64">
+            <p className="text-sm font-medium text-fg">
+              You’re previewing Axol Work. Look around freely. Signing up unlocks applying, posting, and messaging.
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <div
+                className="flex rounded-btn bg-card p-1"
+                role="group"
+                aria-label="Preview as role"
+              >
+                <button
+                  type="button"
+                  aria-pressed={role === 'seeker'}
+                  onClick={() => switchPreviewRole('seeker')}
+                  className={cn(
+                    'rounded-btn px-3 py-1.5 text-sm font-semibold',
+                    role === 'seeker' ? 'bg-brand text-brand-fg' : 'text-fg-muted hover:text-fg',
+                  )}
+                >
+                  Prospect
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={role === 'employer'}
+                  onClick={() => switchPreviewRole('employer')}
+                  className={cn(
+                    'rounded-btn px-3 py-1.5 text-sm font-semibold',
+                    role === 'employer' ? 'bg-brand text-brand-fg' : 'text-fg-muted hover:text-fg',
+                  )}
+                >
+                  Recruiter
+                </button>
+              </div>
+              <Button
+                size="sm"
+                onClick={() => {
+                  exit()
+                  window.location.assign(import.meta.env.BASE_URL)
+                }}
+              >
+                Sign up / Log in
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-border bg-card lg:block">
         {sidebar}
@@ -119,15 +181,17 @@ export function AppShell() {
       </main>
 
       <Toaster />
+      <SignupPromptModal />
     </div>
   )
 }
 
 function NavItemLink({ item, onNavigate }: { item: NavItem; onNavigate: () => void }) {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const { unreadNotificationCount, unreadConversationCount } = useSocialStore()
-  const count =
-    item.badge === 'notifications'
+  const count = isGuest
+    ? 0
+    : item.badge === 'notifications'
       ? unreadNotificationCount()
       : item.badge === 'messages' && user
         ? unreadConversationCount(user.uid)

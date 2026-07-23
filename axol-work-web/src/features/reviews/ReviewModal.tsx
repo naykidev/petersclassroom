@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import { EMPLOYER_RATING_TAGS } from '@/models'
 import { Button, Modal, SelectChip, TextArea } from '@/components/ui'
 import { createEmployerReview } from './api'
@@ -25,6 +26,7 @@ export function ReviewModal({
 
   async function save() {
     if (!tags.length) return
+    if (usePreviewStore.getState().requireAccount('Create a free account to leave a review.')) return
     setSaving(true)
     try {
       await createEmployerReview({

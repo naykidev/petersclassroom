@@ -21,13 +21,14 @@ import { MentorshipPage } from '@/features/mentorship/MentorshipPage'
 import { SettingsPage } from '@/features/settings/SettingsPage'
 
 export function MainApp() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const { subscribe, unsubscribe } = useSocialStore()
 
   useEffect(() => {
-    if (user) subscribe(user.uid)
+    if (!user || isGuest) return
+    subscribe(user.uid)
     return () => unsubscribe()
-  }, [user, subscribe, unsubscribe])
+  }, [user, isGuest, subscribe, unsubscribe])
 
   if (!user) return null
   const isEmployer = user.role === 'employer'

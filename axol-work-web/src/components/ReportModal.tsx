@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import { reportContent } from '@/features/users/api'
 import type { ReportTargetType } from '@/models'
 import { Button, Modal, TextArea } from '@/components/ui'
@@ -32,6 +33,7 @@ export function ReportModal({
 
   async function submit() {
     if (!user || !reason) return
+    if (usePreviewStore.getState().requireAccount('Create a free account to report content.')) return
     setSubmitting(true)
     try {
       await reportContent({

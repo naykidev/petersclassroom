@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ClipboardList, Clock, Eye, Check, X, Award, RotateCcw, MessageSquare } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { ApplicationStatus, ShiftApplication } from '@/models'
 import { Badge, Button, Card, EmptyState, Spinner } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
@@ -31,21 +32,31 @@ export function ApplicationStatusBadge({ status }: { status: ApplicationStatus }
 }
 
 export function ApplicationsPage() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
-  const [apps, setApps] = useState<ShiftApplication[] | null>(null)
+  const [apps, setApps] = useState<ShiftApplication[] | null>(isGuest ? [] : null)
 
   useEffect(() => {
+    if (isGuest) {
+      setApps([])
+      return
+    }
     return subscribeSeekerApplications(me.uid, setApps)
-  }, [me.uid])
+  }, [me.uid, isGuest])
 
   async function message(app: ShiftApplication) {
+    if (usePreviewStore.getState().requireAccount('Create a free account to send messages.')) return
     const id = await getOrCreateConversation(
       { uid: me.uid, name: me.displayName },
       { uid: app.employerUID, name: app.employerName },
     )
     navigate(`/messages/${id}`)
+  }
+
+  function withdraw(appId: string) {
+    if (usePreviewStore.getState().requireAccount('Create a free account to manage applications.')) return
+    withdrawApplication(appId)
   }
 
   return (
@@ -56,8 +67,12 @@ export function ApplicationsPage() {
       ) : apps.length === 0 ? (
         <EmptyState
           icon={ClipboardList}
-          title="No applications yet"
-          message="Apply to shifts from the Home tab and track them here."
+          title={isGuest ? 'Preview mode' : 'No applications yet'}
+          message={
+            isGuest
+              ? 'Sign up to apply for shifts and track them here.'
+              : 'Apply to shifts from the Home tab and track them here.'
+          }
           action={<Button onClick={() => navigate('/')}>Browse shifts</Button>}
         />
       ) : (
@@ -82,7 +97,7 @@ export function ApplicationsPage() {
                     <MessageSquare className="h-4 w-4" aria-hidden /> Message
                   </Button>
                   {app.status === 'submitted' && (
-                    <Button variant="secondary" size="sm" onClick={() => withdrawApplication(app.id)}>
+                    <Button variant="secondary" size="sm" onClick={() => withdraw(app.id)}>
                       Withdraw
                     </Button>
                   )}

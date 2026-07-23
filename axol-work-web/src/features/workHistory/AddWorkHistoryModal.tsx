@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Search, Check } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { AppUser } from '@/models'
 import { Avatar, Button, Input, Modal } from '@/components/ui'
 import { searchUsersByName } from '@/features/users/api'
@@ -38,6 +39,7 @@ export function AddWorkHistoryModal({ onClose }: { onClose: () => void }) {
 
   async function submit() {
     if (!employer || !canSubmit) return
+    if (usePreviewStore.getState().requireAccount('Create a free account to add work history.')) return
     setSubmitting(true)
     try {
       await requestWorkHistory({

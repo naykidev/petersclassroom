@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { LogOut, Moon, Sun, Trash2, AlertTriangle, ShieldOff } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import { getUsers, unblockUser } from '@/features/users/api'
 import type { AppUser } from '@/models'
 import { Avatar, Button, Card, Input, Modal, SectionHeader } from '@/components/ui'
@@ -9,10 +10,19 @@ import { PageHeader } from '@/components/PageHeader'
 import { cn } from '@/utils/cn'
 
 export function SettingsPage() {
-  const { user, logOut } = useAuthStore()
+  const { user, logOut, isGuest } = useAuthStore()
   const me = user!
   const { theme, setTheme } = useThemeStore()
   const [deleteOpen, setDeleteOpen] = useState(false)
+
+  function exitOrSignOut() {
+    if (isGuest) {
+      usePreviewStore.getState().exit()
+      window.location.assign(import.meta.env.BASE_URL)
+      return
+    }
+    logOut()
+  }
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -50,16 +60,18 @@ export function SettingsPage() {
           <Avatar name={me.displayName} />
           <div>
             <p className="font-semibold text-fg">{me.displayName}</p>
-            <p className="text-sm text-fg-muted">{me.email}</p>
+            <p className="text-sm text-fg-muted">{isGuest ? 'Preview guest' : me.email}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-2 border-t border-border pt-3">
-          <Button variant="secondary" onClick={() => logOut()}>
-            <LogOut className="h-4 w-4" aria-hidden /> Sign out
+          <Button variant="secondary" onClick={exitOrSignOut}>
+            <LogOut className="h-4 w-4" aria-hidden /> {isGuest ? 'Exit preview' : 'Sign out'}
           </Button>
-          <Button variant="ghost" className="text-danger" onClick={() => setDeleteOpen(true)}>
-            <Trash2 className="h-4 w-4" aria-hidden /> Delete account
-          </Button>
+          {!isGuest && (
+            <Button variant="ghost" className="text-danger" onClick={() => setDeleteOpen(true)}>
+              <Trash2 className="h-4 w-4" aria-hidden /> Delete account
+            </Button>
+          )}
         </div>
       </Card>
 
@@ -82,6 +94,7 @@ function BlockedUsers({ me }: { me: AppUser }) {
   }, [blockedUIDs.join(',')]) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function unblock(uid: string) {
+    if (usePreviewStore.getState().requireAccount('Create a free account to manage blocks.')) return
     await unblockUser(me.uid, uid)
     await updateUser({ blockedUIDs: blockedUIDs.filter((b) => b !== uid) })
   }

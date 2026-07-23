@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Plus, MapPin, DollarSign, Clock, PlusSquare, Pencil } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { Shift, ShiftStatus } from '@/models'
 import { Badge, Button, Card, Chip, EmptyState, Spinner } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
@@ -15,16 +16,34 @@ const STATUS_META: Record<ShiftStatus, { label: string; tone: 'success' | 'info'
 }
 
 export function EmployerShiftsPage() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
-  const [shifts, setShifts] = useState<Shift[] | null>(null)
+  const [shifts, setShifts] = useState<Shift[] | null>(isGuest ? [] : null)
   const [formShift, setFormShift] = useState<Shift | 'new' | null>(null)
 
-  useEffect(() => subscribeEmployerShifts(me.uid, setShifts), [me.uid])
+  useEffect(() => {
+    if (isGuest) {
+      setShifts([])
+      return
+    }
+    return subscribeEmployerShifts(me.uid, setShifts)
+  }, [me.uid, isGuest])
 
   const sorted = (shifts ?? [])
     .slice()
     .sort((a, b) => (b.startTime?.toMillis() ?? 0) - (a.startTime?.toMillis() ?? 0))
+
+  function openForm(shift: Shift | 'new') {
+    if (usePreviewStore.getState().requireAccount('Create a free account to post and manage shifts.')) {
+      return
+    }
+    setFormShift(shift)
+  }
+
+  function changeStatus(id: string, status: ShiftStatus) {
+    if (usePreviewStore.getState().requireAccount('Create a free account to manage shifts.')) return
+    void setShiftStatus(id, status)
+  }
 
   return (
     <div>
@@ -32,7 +51,7 @@ export function EmployerShiftsPage() {
         title="Your shifts"
         subtitle="Post and manage shifts"
         action={
-          <Button onClick={() => setFormShift('new')}>
+          <Button onClick={() => openForm('new')}>
             <Plus className="h-4 w-4" aria-hidden /> Post shift
           </Button>
         }
@@ -44,8 +63,12 @@ export function EmployerShiftsPage() {
         <EmptyState
           icon={PlusSquare}
           title="No shifts yet"
-          message="Post your first shift to start receiving applicants."
-          action={<Button onClick={() => setFormShift('new')}>Post a shift</Button>}
+          message={
+            isGuest
+              ? 'Preview mode. Sign up as a Recruiter to post real shifts.'
+              : 'Post your first shift to start receiving applicants.'
+          }
+          action={<Button onClick={() => openForm('new')}>Post a shift</Button>}
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
@@ -56,7 +79,7 @@ export function EmployerShiftsPage() {
                   <h3 className="font-semibold text-fg">{shift.title}</h3>
                   <Badge tone={STATUS_META[shift.status].tone}>{STATUS_META[shift.status].label}</Badge>
                 </div>
-                <Button variant="ghost" size="sm" aria-label="Edit shift" onClick={() => setFormShift(shift)}>
+                <Button variant="ghost" size="sm" aria-label="Edit shift" onClick={() => openForm(shift)}>
                   <Pencil className="h-4 w-4" aria-hidden />
                 </Button>
               </div>
@@ -75,16 +98,16 @@ export function EmployerShiftsPage() {
               {shift.status !== 'cancelled' && (
                 <div className="flex gap-2">
                   {shift.status === 'open' && (
-                    <Button size="sm" variant="secondary" onClick={() => setShiftStatus(shift.id, 'filled')}>
+                    <Button size="sm" variant="secondary" onClick={() => changeStatus(shift.id, 'filled')}>
                       Mark filled
                     </Button>
                   )}
                   {shift.status === 'filled' && (
-                    <Button size="sm" variant="secondary" onClick={() => setShiftStatus(shift.id, 'open')}>
+                    <Button size="sm" variant="secondary" onClick={() => changeStatus(shift.id, 'open')}>
                       Reopen
                     </Button>
                   )}
-                  <Button size="sm" variant="ghost" onClick={() => setShiftStatus(shift.id, 'cancelled')}>
+                  <Button size="sm" variant="ghost" onClick={() => changeStatus(shift.id, 'cancelled')}>
                     Cancel
                   </Button>
                 </div>

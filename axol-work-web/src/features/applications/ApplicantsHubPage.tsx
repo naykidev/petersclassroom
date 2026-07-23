@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Inbox, Check, X, Award, MessageSquare, ExternalLink } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { ShiftApplication } from '@/models'
 import { Avatar, Badge, Button, Card, EmptyState, Input, Modal, Select, Spinner } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
@@ -17,15 +18,21 @@ import { ApplicationStatusBadge } from './ApplicationsPage'
 import { getOrCreateConversation } from '@/features/messaging/api'
 
 export function ApplicantsHubPage() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
-  const [apps, setApps] = useState<ShiftApplication[] | null>(null)
+  const [apps, setApps] = useState<ShiftApplication[] | null>(isGuest ? [] : null)
   const [shiftFilter, setShiftFilter] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [completeFor, setCompleteFor] = useState<ShiftApplication | null>(null)
 
-  useEffect(() => subscribeEmployerApplications(me.uid, setApps), [me.uid])
+  useEffect(() => {
+    if (isGuest) {
+      setApps([])
+      return
+    }
+    return subscribeEmployerApplications(me.uid, setApps)
+  }, [me.uid, isGuest])
 
   const shiftOptions = useMemo(() => {
     const map = new Map<string, string>()
@@ -38,15 +45,21 @@ export function ApplicantsHubPage() {
 
   function open(app: ShiftApplication) {
     setSelectedId(app.id)
-    markApplicationViewed(app)
+    if (!isGuest) markApplicationViewed(app)
   }
 
   async function message(app: ShiftApplication) {
+    if (usePreviewStore.getState().requireAccount('Create a free account to send messages.')) return
     const id = await getOrCreateConversation(
       { uid: me.uid, name: me.employerProfile?.companyName ?? me.displayName },
       { uid: app.seekerUID, name: app.seekerName },
     )
     navigate(`/messages/${id}`)
+  }
+
+  function respond(app: ShiftApplication, status: 'accepted' | 'declined') {
+    if (usePreviewStore.getState().requireAccount('Create a free account to review applicants.')) return
+    respondToApplication(app, status, { uid: me.uid, name: actorName })
   }
 
   const actorName = me.employerProfile?.companyName ?? me.displayName
@@ -73,7 +86,15 @@ export function ApplicantsHubPage() {
       {!apps ? (
         <Spinner label="Loading applicants" />
       ) : visible.length === 0 ? (
-        <EmptyState icon={Inbox} title="No applicants yet" message="Applicants appear here once Prospects apply." />
+        <EmptyState
+          icon={Inbox}
+          title={isGuest ? 'Preview mode' : 'No applicants yet'}
+          message={
+            isGuest
+              ? 'Sign up to post shifts and review applicants here.'
+              : 'Applicants appear here once Prospects apply.'
+          }
+        />
       ) : (
         <div className="grid gap-4 md:grid-cols-[1fr_1.2fr]">
           <ul className="flex flex-col gap-2">
@@ -125,17 +146,24 @@ export function ApplicantsHubPage() {
 
                 {(selected.status === 'submitted' || selected.status === 'viewed') && (
                   <div className="flex gap-2 border-t border-border pt-4">
-                    <Button onClick={() => respondToApplication(selected, 'accepted', { uid: me.uid, name: actorName })}>
+                    <Button onClick={() => respond(selected, 'accepted')}>
                       <Check className="h-4 w-4" aria-hidden /> Accept
                     </Button>
-                    <Button variant="secondary" onClick={() => respondToApplication(selected, 'declined', { uid: me.uid, name: actorName })}>
+                    <Button variant="secondary" onClick={() => respond(selected, 'declined')}>
                       <X className="h-4 w-4" aria-hidden /> Decline
                     </Button>
                   </div>
                 )}
                 {selected.status === 'accepted' && (
                   <div className="border-t border-border pt-4">
-                    <Button onClick={() => setCompleteFor(selected)}>
+                    <Button
+                      onClick={() => {
+                        if (usePreviewStore.getState().requireAccount('Create a free account to manage applicants.')) {
+                          return
+                        }
+                        setCompleteFor(selected)
+                      }}
+                    >
                       <Award className="h-4 w-4" aria-hidden /> Mark completed
                     </Button>
                   </div>
@@ -168,6 +196,7 @@ function CompleteModal({ app, onClose }: { app: ShiftApplication; onClose: () =>
 
   async function save() {
     if (!valid) return
+    if (usePreviewStore.getState().requireAccount('Create a free account to manage applicants.')) return
     setSaving(true)
     try {
       await completeApplication(app.id, n)

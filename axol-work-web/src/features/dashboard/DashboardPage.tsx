@@ -9,14 +9,20 @@ import { subscribeEmployerShifts } from '@/features/shifts/api'
 import { subscribeEmployerApplications } from '@/features/applications/api'
 
 export function DashboardPage() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const navigate = useNavigate()
   const [shifts, setShifts] = useState<Shift[]>([])
   const [apps, setApps] = useState<ShiftApplication[]>([])
 
-  useEffect(() => subscribeEmployerShifts(me.uid, setShifts), [me.uid])
-  useEffect(() => subscribeEmployerApplications(me.uid, setApps), [me.uid])
+  useEffect(() => {
+    if (isGuest) return
+    return subscribeEmployerShifts(me.uid, setShifts)
+  }, [me.uid, isGuest])
+  useEffect(() => {
+    if (isGuest) return
+    return subscribeEmployerApplications(me.uid, setApps)
+  }, [me.uid, isGuest])
 
   const openShifts = shifts.filter((s) => s.status === 'open').length
   const filledShifts = shifts.filter((s) => s.status === 'filled').length

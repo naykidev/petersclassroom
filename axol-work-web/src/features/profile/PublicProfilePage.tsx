@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { BadgeCheck, MapPin, MessageSquare, Ban, Flag, Building2, Star } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { AppUser } from '@/models'
 import { Avatar, Badge, Button, Card, Chip, EmptyState, Spinner } from '@/components/ui'
 import { ReportModal } from '@/components/ReportModal'
@@ -40,6 +41,7 @@ export function PublicProfilePage() {
     : profile.displayName
 
   async function message() {
+    if (usePreviewStore.getState().requireAccount('Create a free account to send messages.')) return
     const id = await getOrCreateConversation(
       { uid: me.uid, name: me.displayName },
       { uid: profile!.uid, name: displayName },
@@ -48,6 +50,7 @@ export function PublicProfilePage() {
   }
 
   async function toggleBlock() {
+    if (usePreviewStore.getState().requireAccount('Create a free account to manage blocks.')) return
     if (isBlocked) {
       await unblockUser(me.uid, profile!.uid)
       await updateUser({ blockedUIDs: (me.blockedUIDs ?? []).filter((b) => b !== profile!.uid) })
@@ -101,14 +104,26 @@ export function PublicProfilePage() {
           {isEmployer &&
             me.role === 'seeker' &&
             (me.verifiedEmployerUIDs ?? []).includes(profile.uid) && (
-              <Button variant="secondary" onClick={() => setReviewOpen(true)}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  if (usePreviewStore.getState().requireAccount('Create a free account to leave a review.')) return
+                  setReviewOpen(true)
+                }}
+              >
                 <Star className="h-4 w-4" aria-hidden /> Leave a review
               </Button>
             )}
           <Button variant="ghost" onClick={toggleBlock}>
             <Ban className="h-4 w-4" aria-hidden /> {isBlocked ? 'Unblock' : 'Block'}
           </Button>
-          <Button variant="ghost" onClick={() => setReportOpen(true)}>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              if (usePreviewStore.getState().requireAccount('Create a free account to report content.')) return
+              setReportOpen(true)
+            }}
+          >
             <Flag className="h-4 w-4" aria-hidden /> Report
           </Button>
         </div>

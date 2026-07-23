@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { BadgeCheck, MapPin, Pencil, Plus, Briefcase } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useSocialStore } from '@/stores/socialStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { WorkHistoryEntry } from '@/models'
 import {
   ACCOMMODATION_NEEDS,
@@ -26,15 +27,21 @@ import { WorkHistoryStatusBadge } from '@/features/workHistory/WorkHistoryStatus
 import { AddWorkHistoryModal } from '@/features/workHistory/AddWorkHistoryModal'
 
 export function ProfilePage() {
-  const { user } = useAuthStore()
+  const { user, isGuest } = useAuthStore()
   const me = user!
   const { connectedUIDs } = useSocialStore()
   const connectionCount = connectedUIDs(me.uid).size
   const [editOpen, setEditOpen] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
-  const [entries, setEntries] = useState<WorkHistoryEntry[] | null>(null)
+  const [entries, setEntries] = useState<WorkHistoryEntry[] | null>(isGuest ? [] : null)
 
-  useEffect(() => subscribeSeekerWorkHistory(me.uid, setEntries), [me.uid])
+  useEffect(() => {
+    if (isGuest) {
+      setEntries([])
+      return
+    }
+    return subscribeSeekerWorkHistory(me.uid, setEntries)
+  }, [me.uid, isGuest])
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -62,7 +69,13 @@ export function ProfilePage() {
               </div>
             </div>
           </div>
-          <Button variant="secondary" onClick={() => setEditOpen(true)}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              if (usePreviewStore.getState().requireAccount('Create a free account to edit your profile.')) return
+              setEditOpen(true)
+            }}
+          >
             <Pencil className="h-4 w-4" aria-hidden /> Edit profile
           </Button>
         </div>
@@ -95,7 +108,13 @@ export function ProfilePage() {
       <SectionHeader
         title="Work history"
         action={
-          <Button size="sm" onClick={() => setAddOpen(true)}>
+          <Button
+            size="sm"
+            onClick={() => {
+              if (usePreviewStore.getState().requireAccount('Create a free account to add work history.')) return
+              setAddOpen(true)
+            }}
+          >
             <Plus className="h-4 w-4" aria-hidden /> Add
           </Button>
         }
@@ -105,7 +124,9 @@ export function ProfilePage() {
           <div className="flex items-center gap-3 text-fg-muted">
             <Briefcase className="h-5 w-5" aria-hidden />
             <p className="text-sm">
-              Add a job and request verification from the Recruiter to earn a Verified badge.
+              {isGuest
+                ? 'Sign up to add jobs and request verification from Recruiters.'
+                : 'Add a job and request verification from the Recruiter to earn a Verified badge.'}
             </p>
           </div>
         </Card>
@@ -147,6 +168,7 @@ function EditProfileModal({ onClose }: { onClose: () => void }) {
     list.includes(v) ? list.filter((x) => x !== v) : [...list, v]
 
   async function save() {
+    if (usePreviewStore.getState().requireAccount('Create a free account to edit your profile.')) return
     setSaving(true)
     try {
       await updateUser({
