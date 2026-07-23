@@ -20,7 +20,7 @@ import {
   usersCollection,
 } from '@/lib/firestore'
 import type { AppUser, Report, ReportTargetType } from '@/models'
-import { getDemoUser, isDemoUid, searchDemoUsers } from '@/data/demoFixtures'
+import { DEMO_EMPLOYERS, getDemoUser, isDemoUid, searchDemoUsers } from '@/data/demoFixtures'
 import { useAuthStore } from '@/stores/authStore'
 
 /** Hide private accommodation needs from other viewers (client-side redaction). */
@@ -36,6 +36,34 @@ export function redactAccommodationsForViewer(
     ...profile,
     accommodationNeeds: [],
     accommodationTags: [],
+  }
+}
+
+/**
+ * Recruiters who opted into inclusive hiring.
+ * Guest mode uses demo fixtures; signed-in mode queries Firestore.
+ */
+export async function listInclusiveHiringEmployers(max = 12): Promise<AppUser[]> {
+  const viewerUID = useAuthStore.getState().user?.uid
+  if (useAuthStore.getState().isGuest) {
+    return DEMO_EMPLOYERS.filter((u) => u.employerProfile?.inclusiveHiringCommitted).map((u) =>
+      redactAccommodationsForViewer(u, viewerUID),
+    )
+  }
+  try {
+    const snap = await getDocs(
+      query(
+        usersCollection(),
+        where('employerProfile.inclusiveHiringCommitted', '==', true),
+        limit(max),
+      ),
+    )
+    return snap.docs
+      .map((d) => redactAccommodationsForViewer(d.data(), viewerUID))
+      .filter((u) => u.role === 'employer')
+  } catch {
+    // Missing index or rules — fail soft so home still loads.
+    return []
   }
 }
 

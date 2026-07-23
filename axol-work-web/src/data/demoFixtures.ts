@@ -55,6 +55,7 @@ export const DEMO_EMPLOYERS: AppUser[] = [
       allowsNoiseCancelingHeadphones: true,
       offersSeatedWorkstations: true,
       offersStructuredNonverbalTraining: false,
+      inclusiveHiringCommitted: true,
     },
   },
   {
@@ -77,6 +78,7 @@ export const DEMO_EMPLOYERS: AppUser[] = [
       allowsNoiseCancelingHeadphones: true,
       offersSeatedWorkstations: false,
       offersStructuredNonverbalTraining: true,
+      inclusiveHiringCommitted: true,
     },
   },
 ]

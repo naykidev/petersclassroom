@@ -4,7 +4,9 @@ import { useAuthStore } from '@/stores/authStore'
 import { usePreviewStore } from '@/stores/previewStore'
 import type { WorkHistoryEntry } from '@/models'
 import { Avatar, Badge, Button, Card, Chip, Input, Modal, SectionHeader, Spinner } from '@/components/ui'
+import { InclusiveHiringBadge } from '@/components/InclusiveHiringBadge'
 import { fullDate } from '@/utils/format'
+import { isInclusiveHiringEmployer } from '@/utils/inclusiveHiring'
 import { EmployerReviewsList } from '@/features/reviews/EmployerReviewsList'
 import { respondToWorkHistory, subscribeEmployerVerificationRequests } from '@/features/workHistory/api'
 import { DEMO_VERIFICATION_REQUESTS } from '@/data/demoFixtures'
@@ -49,9 +51,10 @@ export function CompanyPage() {
           <div className="flex items-center gap-4">
             <Avatar name={profile?.companyName ?? me.displayName} size="xl" />
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-title-2 text-fg">{profile?.companyName ?? me.displayName}</h1>
                 <Badge tone="brand" icon={Building2}>Recruiter</Badge>
+                {isInclusiveHiringEmployer(me) && <InclusiveHiringBadge />}
               </div>
               {profile?.workplaceAddress && (
                 <p className="mt-1 flex items-center gap-1 text-sm text-fg-muted">
@@ -134,6 +137,7 @@ function EditCompanyModal({ onClose }: { onClose: () => void }) {
   const [headphones, setHeadphones] = useState(p?.allowsNoiseCancelingHeadphones ?? false)
   const [seated, setSeated] = useState(p?.offersSeatedWorkstations ?? false)
   const [training, setTraining] = useState(p?.offersStructuredNonverbalTraining ?? false)
+  const [inclusiveHiring, setInclusiveHiring] = useState(p?.inclusiveHiringCommitted ?? false)
   const [saving, setSaving] = useState(false)
 
   async function save() {
@@ -148,6 +152,7 @@ function EditCompanyModal({ onClose }: { onClose: () => void }) {
           allowsNoiseCancelingHeadphones: headphones,
           offersSeatedWorkstations: seated,
           offersStructuredNonverbalTraining: training,
+          inclusiveHiringCommitted: inclusiveHiring,
         },
       })
       onClose()
@@ -187,6 +192,20 @@ function EditCompanyModal({ onClose }: { onClose: () => void }) {
             </label>
           ))}
         </fieldset>
+        <label className="flex cursor-pointer items-start gap-2 rounded-btn border border-brand/40 bg-brand-tint p-3">
+          <input
+            type="checkbox"
+            className="mt-0.5 h-5 w-5 accent-brand"
+            checked={inclusiveHiring}
+            onChange={(e) => setInclusiveHiring(e.target.checked)}
+          />
+          <span>
+            <span className="block text-sm font-semibold text-fg">We’re committed to inclusive hiring</span>
+            <span className="block text-caption text-fg-muted">
+              Show that you want to hire disabled and neurodivergent workers. Badge appears when you also offer at least one support above.
+            </span>
+          </span>
+        </label>
       </div>
     </Modal>
   )

@@ -27,6 +27,7 @@ export function makeDemoUser(role: Exclude<UserRole, 'unassigned'>): AppUser {
         allowsNoiseCancelingHeadphones: true,
         offersSeatedWorkstations: true,
         offersStructuredNonverbalTraining: true,
+        inclusiveHiringCommitted: true,
       },
     }
   }

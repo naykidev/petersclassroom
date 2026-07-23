@@ -10,6 +10,7 @@ const schema = z.object({
   allowsNoiseCancelingHeadphones: z.boolean(),
   offersSeatedWorkstations: z.boolean(),
   offersStructuredNonverbalTraining: z.boolean(),
+  inclusiveHiringCommitted: z.boolean(),
 })
 type Values = z.infer<typeof schema>
 
@@ -58,6 +59,7 @@ export function EmployerOnboarding() {
       offersSeatedWorkstations: user?.employerProfile?.offersSeatedWorkstations ?? false,
       offersStructuredNonverbalTraining:
         user?.employerProfile?.offersStructuredNonverbalTraining ?? false,
+      inclusiveHiringCommitted: user?.employerProfile?.inclusiveHiringCommitted ?? false,
     },
   })
 
@@ -75,7 +77,7 @@ export function EmployerOnboarding() {
         <div className="mb-6 text-center">
           <h1 className="text-title-2 text-fg">Set up your company</h1>
           <p className="mt-1 text-fg-muted">
-            Tell Prospects what accommodations you offer.
+            Tell Prospects what you offer and whether you’re hiring with disability inclusion in mind.
           </p>
         </div>
 
@@ -120,6 +122,25 @@ export function EmployerOnboarding() {
               )
             })}
           </fieldset>
+
+          <label className="flex cursor-pointer items-start gap-3 rounded-btn border border-brand/40 bg-brand-tint p-3">
+            <input
+              type="checkbox"
+              className="mt-1 h-5 w-5 accent-brand"
+              checked={watch('inclusiveHiringCommitted')}
+              onChange={(e) => setValue('inclusiveHiringCommitted', e.target.checked)}
+            />
+            <span>
+              <span className="block text-sm font-semibold text-fg">
+                We’re committed to inclusive hiring
+              </span>
+              <span className="block text-caption text-fg-muted">
+                Show Prospects that you actively want to hire disabled and neurodivergent workers,
+                not only that you list accommodations. Earns an Inclusive hiring badge when you also
+                offer at least one workplace support above.
+              </span>
+            </span>
+          </label>
 
           <div className="flex items-center justify-between pt-2">
             <Button type="button" variant="ghost" onClick={() => logOut()}>

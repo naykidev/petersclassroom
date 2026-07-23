@@ -30,6 +30,11 @@ export interface EmployerProfile {
   allowsNoiseCancelingHeadphones: boolean
   offersSeatedWorkstations: boolean
   offersStructuredNonverbalTraining: boolean
+  /**
+   * Recruiter opts in: we want to hire disabled and neurodivergent workers,
+   * not only list accommodations. Used for Inclusive hiring badge / showcase.
+   */
+  inclusiveHiringCommitted?: boolean
 }
 
 export interface AppUser {

@@ -5,6 +5,8 @@ import { useAuthStore } from '@/stores/authStore'
 import { usePreviewStore } from '@/stores/previewStore'
 import type { AppUser } from '@/models'
 import { Avatar, Badge, Button, Card, Chip, EmptyState, Spinner } from '@/components/ui'
+import { InclusiveHiringBadge } from '@/components/InclusiveHiringBadge'
+import { isInclusiveHiringEmployer } from '@/utils/inclusiveHiring'
 import { ReportModal } from '@/components/ReportModal'
 import { getUser, blockUser, unblockUser } from '@/features/users/api'
 import { getOrCreateConversation } from '@/features/messaging/api'
@@ -67,7 +69,7 @@ export function PublicProfilePage() {
           <div className="flex items-center gap-4">
             <Avatar name={displayName} size="xl" />
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-title-2 text-fg">{displayName}</h1>
                 {profile.isVerifiedEmployed && (
                   <Badge tone="success" icon={BadgeCheck}>
@@ -79,6 +81,7 @@ export function PublicProfilePage() {
                     Recruiter
                   </Badge>
                 )}
+                {isInclusiveHiringEmployer(profile) && <InclusiveHiringBadge />}
               </div>
               {profile.headline && <p className="text-fg-muted">{profile.headline}</p>}
               <div className="mt-1 flex items-center gap-3 text-sm text-fg-muted">

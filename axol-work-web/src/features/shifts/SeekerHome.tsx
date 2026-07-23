@@ -20,6 +20,7 @@ import { shiftRange } from '@/utils/format'
 import { accommodationFit, subscribeOpenShifts } from './api'
 import { applyToShift, subscribeSeekerApplications } from '@/features/applications/api'
 import { DEMO_OPEN_SHIFTS, DEMO_SEEKER_APPLICATIONS } from '@/data/demoFixtures'
+import { InclusiveEmployersStrip } from './InclusiveEmployersStrip'
 
 export function SeekerHome() {
   const { user, isGuest } = useAuthStore()
@@ -80,6 +81,8 @@ export function SeekerHome() {
           </div>
         }
       />
+
+      <InclusiveEmployersStrip />
 
       {error ? (
         <ErrorState message="Couldn’t load shifts." onRetry={() => window.location.reload()} />

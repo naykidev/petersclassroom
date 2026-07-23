@@ -25,6 +25,17 @@ export default function App() {
     init()
   }, [init])
 
+  const onDemoPath =
+    typeof window !== 'undefined' && pathIsExplore(window.location.pathname)
+
+  // Logged-in users must not stay on /demo: MainApp uses basename /work, so
+  // routes never match and the page looks blank / stuck loading.
+  useEffect(() => {
+    if (!loading && user && !isGuest && onDemoPath) {
+      window.location.replace(`${APP_BASENAME}/`)
+    }
+  }, [loading, user, isGuest, onDemoPath])
+
   // Enter preview when landing on /demo (or legacy /work/explore).
   useEffect(() => {
     if (user && !isGuest) {
@@ -32,11 +43,18 @@ export default function App() {
       return
     }
     // Don't call enter() again once active — that used to reset role to Prospect.
-    if (!active && pathIsExplore(window.location.pathname)) enter()
-  }, [user, isGuest, active, enter, exit])
+    if (!active && onDemoPath) enter()
+  }, [user, isGuest, active, enter, exit, onDemoPath])
 
-  const onDemoPath =
-    typeof window !== 'undefined' && pathIsExplore(window.location.pathname)
+  // Resolve Firebase auth before choosing demo vs real app.
+  if (onDemoPath && loading) {
+    return <SplashPage />
+  }
+
+  if (onDemoPath && user && !isGuest) {
+    return <SplashPage />
+  }
+
   const wantsPreview = (active || onDemoPath) && !(user && !isGuest)
 
   // Guest preview: mount the real app shell under /demo.
