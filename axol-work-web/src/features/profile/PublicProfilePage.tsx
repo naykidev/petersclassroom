@@ -139,6 +139,23 @@ export function PublicProfilePage() {
           </div>
         )}
 
+        {!isEmployer &&
+          (profile.accommodationVisibility ?? 'private') === 'shared' &&
+          profile.accommodationNeeds.length > 0 && (
+            <div className="mt-4">
+              <p className="mb-2 text-caption font-semibold uppercase text-fg-muted">
+                Accommodation needs
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {profile.accommodationNeeds.map((t) => (
+                  <Chip key={t} tone="neutral">
+                    {t}
+                  </Chip>
+                ))}
+              </div>
+            </div>
+          )}
+
         {profile.workHistoryTags.length > 0 && (
           <div className="mt-4">
             <p className="mb-2 text-caption font-semibold uppercase text-fg-muted">Experience</p>

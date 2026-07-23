@@ -65,6 +65,7 @@ function defaultUserDoc(uid: string, _email: string, displayName: string): AppUs
     selectedCity: '',
     accommodationTags: [],
     accommodationNeeds: [],
+    accommodationVisibility: 'private',
     blockedUIDs: [],
   }
 }

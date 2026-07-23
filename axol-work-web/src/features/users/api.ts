@@ -23,23 +23,42 @@ import type { AppUser, Report, ReportTargetType } from '@/models'
 import { getDemoUser, isDemoUid, searchDemoUsers } from '@/data/demoFixtures'
 import { useAuthStore } from '@/stores/authStore'
 
+/** Hide private accommodation needs from other viewers (client-side redaction). */
+export function redactAccommodationsForViewer(
+  profile: AppUser,
+  viewerUID: string | undefined | null,
+): AppUser {
+  if (profile.uid === viewerUID) return profile
+  if (profile.role !== 'seeker') return profile
+  const visibility = profile.accommodationVisibility ?? 'private'
+  if (visibility === 'shared') return profile
+  return {
+    ...profile,
+    accommodationNeeds: [],
+    accommodationTags: [],
+  }
+}
+
 /** Fetch a single public user profile. */
 export async function getUser(uid: string): Promise<AppUser | null> {
+  const viewerUID = useAuthStore.getState().user?.uid
   const demo = getDemoUser(uid)
-  if (demo) return demo
+  if (demo) return redactAccommodationsForViewer(demo, viewerUID)
   if (isDemoUid(uid)) return null
   const snap = await getDoc(userDoc(uid))
-  return snap.exists() ? snap.data() : null
+  if (!snap.exists()) return null
+  return redactAccommodationsForViewer(snap.data(), viewerUID)
 }
 
 /** Fetch many users by uid (chunked to Firestore's 30-item `in` limit). */
 export async function getUsers(uids: string[]): Promise<AppUser[]> {
+  const viewerUID = useAuthStore.getState().user?.uid
   const unique = [...new Set(uids)].filter(Boolean)
   const out: AppUser[] = []
   const remote: string[] = []
   for (const uid of unique) {
     const demo = getDemoUser(uid)
-    if (demo) out.push(demo)
+    if (demo) out.push(redactAccommodationsForViewer(demo, viewerUID))
     else if (!isDemoUid(uid)) remote.push(uid)
   }
   for (let i = 0; i < remote.length; i += 30) {
@@ -48,14 +67,17 @@ export async function getUsers(uids: string[]): Promise<AppUser[]> {
     const snap = await getDocs(
       query(usersCollection(), where(documentId(), 'in', chunk)),
     )
-    out.push(...snap.docs.map((d) => d.data()))
+    out.push(...snap.docs.map((d) => redactAccommodationsForViewer(d.data(), viewerUID)))
   }
   return out
 }
 
 /** Prefix search by display name (case-sensitive on first char, best-effort). */
 export async function searchUsersByName(term: string): Promise<AppUser[]> {
-  if (useAuthStore.getState().isGuest) return searchDemoUsers(term)
+  const viewerUID = useAuthStore.getState().user?.uid
+  if (useAuthStore.getState().isGuest) {
+    return searchDemoUsers(term).map((u) => redactAccommodationsForViewer(u, viewerUID))
+  }
   const t = term.trim()
   if (!t) return []
   const HIGH = String.fromCharCode(0xf8ff) // terminates the prefix range
@@ -68,7 +90,7 @@ export async function searchUsersByName(term: string): Promise<AppUser[]> {
       limit(20),
     ),
   )
-  return snap.docs.map((d) => d.data())
+  return snap.docs.map((d) => redactAccommodationsForViewer(d.data(), viewerUID))
 }
 
 /**
@@ -76,12 +98,13 @@ export async function searchUsersByName(term: string): Promise<AppUser[]> {
  * using `array-contains-any` (max 30 tags). Callers rank/exclude client-side.
  */
 export async function findUsersByTags(tags: string[]): Promise<AppUser[]> {
+  const viewerUID = useAuthStore.getState().user?.uid
   const t = tags.slice(0, 30)
   if (!t.length) return []
   const snap = await getDocs(
     query(usersCollection(), where('workHistoryTags', 'array-contains-any', t), limit(50)),
   )
-  return snap.docs.map((d) => d.data())
+  return snap.docs.map((d) => redactAccommodationsForViewer(d.data(), viewerUID))
 }
 
 /** Block a user — hides their content and profile for the blocker. */

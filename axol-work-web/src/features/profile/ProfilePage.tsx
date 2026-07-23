@@ -26,6 +26,7 @@ import { subscribeSeekerWorkHistory } from '@/features/workHistory/api'
 import { WorkHistoryStatusBadge } from '@/features/workHistory/WorkHistoryStatusBadge'
 import { AddWorkHistoryModal } from '@/features/workHistory/AddWorkHistoryModal'
 import { DEMO_SEEKER_WORK_HISTORY } from '@/data/demoFixtures'
+import { cn } from '@/utils/cn'
 
 export function ProfilePage() {
   const { user, isGuest } = useAuthStore()
@@ -94,7 +95,14 @@ export function ProfilePage() {
 
         {me.accommodationNeeds.length > 0 && (
           <div className="mt-4">
-            <p className="mb-2 text-caption font-semibold uppercase text-fg-muted">Accommodation needs</p>
+            <div className="mb-2 flex flex-wrap items-center gap-2">
+              <p className="text-caption font-semibold uppercase text-fg-muted">Accommodation needs</p>
+              <Badge tone={(me.accommodationVisibility ?? 'private') === 'shared' ? 'info' : 'neutral'}>
+                {(me.accommodationVisibility ?? 'private') === 'shared'
+                  ? 'Visible on profile'
+                  : 'Only you can see these'}
+              </Badge>
+            </div>
             <div className="flex flex-wrap gap-1.5">
               {me.accommodationNeeds.map((t) => (
                 <Chip key={t} tone="neutral">
@@ -102,6 +110,9 @@ export function ProfilePage() {
                 </Chip>
               ))}
             </div>
+            <p className="mt-2 text-caption text-fg-muted">
+              Change visibility anytime in Settings. Fit ranking still uses these either way.
+            </p>
           </div>
         )}
       </Card>
@@ -161,6 +172,7 @@ function EditProfileModal({ onClose }: { onClose: () => void }) {
   const [city, setCity] = useState(me.selectedCity)
   const [tags, setTags] = useState<string[]>(me.workHistoryTags)
   const [needs, setNeeds] = useState<string[]>(me.accommodationNeeds)
+  const [visibility, setVisibility] = useState(me.accommodationVisibility ?? 'private')
   const [saving, setSaving] = useState(false)
 
   const toggle = (list: string[], v: string) =>
@@ -176,6 +188,7 @@ function EditProfileModal({ onClose }: { onClose: () => void }) {
         workHistoryTags: tags,
         accommodationNeeds: needs,
         accommodationTags: needs,
+        accommodationVisibility: visibility,
       })
       onClose()
     } finally {
@@ -216,6 +229,28 @@ function EditProfileModal({ onClose }: { onClose: () => void }) {
           <div className="flex flex-wrap gap-2">
             {ACCOMMODATION_NEEDS.map((t) => (
               <SelectChip key={t} label={t} selected={needs.includes(t)} onToggle={() => setNeeds((l) => toggle(l, t))} />
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="mb-2 text-sm font-semibold text-fg">Who can see your needs?</p>
+          <div className="flex gap-1 rounded-btn bg-muted p-1" role="group" aria-label="Accommodation visibility">
+            {([
+              { value: 'private' as const, label: 'Private' },
+              { value: 'shared' as const, label: 'On my profile' },
+            ]).map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                aria-pressed={visibility === opt.value}
+                onClick={() => setVisibility(opt.value)}
+                className={cn(
+                  'min-h-touch flex-1 rounded-chip px-3 text-sm font-medium',
+                  visibility === opt.value ? 'bg-card text-fg shadow-card' : 'text-fg-muted',
+                )}
+              >
+                {opt.label}
+              </button>
             ))}
           </div>
         </div>

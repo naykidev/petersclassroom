@@ -5,6 +5,13 @@ import type { UserRole } from './enums'
  * Field names are the on-disk contract shared with iOS.
  */
 
+/**
+ * Whether a Prospect’s accommodation needs appear on their public profile.
+ * Fit matching still uses private needs for the logged-in Prospect either way.
+ * Default for new accounts is `private`.
+ */
+export type AccommodationVisibility = 'private' | 'shared'
+
 /** Seeker onboarding draft (persisted between steps). */
 export interface SeekerOnboardingDraft {
   stepIndex: number
@@ -13,6 +20,7 @@ export interface SeekerOnboardingDraft {
   selectedAvailability: string[]
   selectedConstraints: string[]
   otherNotes: string
+  accommodationVisibility?: AccommodationVisibility
 }
 
 /** Employer profile config. */
@@ -45,6 +53,11 @@ export interface AppUser {
   selectedCity: string
   accommodationTags: string[]
   accommodationNeeds: string[]
+  /**
+   * Prospect-only. When `private` (default), accommodation needs stay off the
+   * public profile and are redacted for other viewers in the app.
+   */
+  accommodationVisibility?: AccommodationVisibility
   blockedUIDs: string[]
 
   // Onboarding / role-specific (optional; present once the flow runs)
@@ -69,4 +82,5 @@ export type PublicProfile = Pick<
   | 'selectedCity'
   | 'accommodationTags'
   | 'accommodationNeeds'
+  | 'accommodationVisibility'
 >

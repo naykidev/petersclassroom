@@ -43,15 +43,17 @@ export function makeDemoUser(role: Exclude<UserRole, 'unassigned'>): AppUser {
     selectedCity: 'San Francisco',
     accommodationTags: [ACCOMMODATION_NEEDS[3]!, ACCOMMODATION_NEEDS[1]!, ACCOMMODATION_NEEDS[4]!],
     accommodationNeeds: [ACCOMMODATION_NEEDS[3]!, ACCOMMODATION_NEEDS[1]!, ACCOMMODATION_NEEDS[4]!],
+    accommodationVisibility: 'private',
     blockedUIDs: [],
     hasCompletedSeekerProfile: true,
     seekerOnboarding: {
-      stepIndex: 5,
+      stepIndex: 6,
       selectedWorkTags: [WORK_HISTORY_TAGS[2]!, WORK_HISTORY_TAGS[0]!],
       selectedCity: 'San Francisco',
       selectedAvailability: ['Mornings', 'Afternoons'],
       selectedConstraints: [ACCOMMODATION_NEEDS[3]!, ACCOMMODATION_NEEDS[1]!, ACCOMMODATION_NEEDS[4]!],
       otherNotes: '',
+      accommodationVisibility: 'private',
     },
   }
 }

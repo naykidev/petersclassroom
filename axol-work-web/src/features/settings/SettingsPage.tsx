@@ -9,12 +9,16 @@ import { Avatar, Button, Card, Input, Modal, SectionHeader } from '@/components/
 import { PageHeader } from '@/components/PageHeader'
 import { AccessibilityControls } from '@/components/AccessibilityControls'
 import { cn } from '@/utils/cn'
+import type { AccommodationVisibility } from '@/models'
 
 export function SettingsPage() {
-  const { user, logOut, isGuest } = useAuthStore()
+  const { user, logOut, isGuest, updateUser } = useAuthStore()
   const me = user!
   const { theme, setTheme } = useThemeStore()
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [savingPrivacy, setSavingPrivacy] = useState(false)
+  const visibility = me.accommodationVisibility ?? 'private'
+  const isProspect = me.role === 'seeker'
 
   function exitOrSignOut() {
     if (isGuest) {
@@ -23,6 +27,19 @@ export function SettingsPage() {
       return
     }
     logOut()
+  }
+
+  async function setVisibility(next: AccommodationVisibility) {
+    if (usePreviewStore.getState().requireAccount('Create a free account to change privacy settings.')) {
+      return
+    }
+    if (next === visibility) return
+    setSavingPrivacy(true)
+    try {
+      await updateUser({ accommodationVisibility: next })
+    } finally {
+      setSavingPrivacy(false)
+    }
   }
 
   return (
@@ -59,6 +76,48 @@ export function SettingsPage() {
         </p>
         <AccessibilityControls />
       </Card>
+
+      {isProspect && (
+        <>
+          <SectionHeader title="Privacy" id="privacy" />
+          <Card className="mb-6">
+            <p className="mb-3 text-sm font-semibold text-fg">Accommodation needs on your profile</p>
+            <p className="mb-4 text-sm text-fg-muted">
+              You choose if, when, and how to share. Fit matching still uses your needs privately either way.
+            </p>
+            <div
+              className="flex gap-1 rounded-btn bg-muted p-1"
+              role="group"
+              aria-label="Accommodation privacy"
+            >
+              <button
+                type="button"
+                aria-pressed={visibility === 'private'}
+                disabled={savingPrivacy}
+                onClick={() => setVisibility('private')}
+                className={cn(
+                  'min-h-touch flex-1 rounded-chip px-3 text-sm font-medium',
+                  visibility === 'private' ? 'bg-card text-fg shadow-card' : 'text-fg-muted',
+                )}
+              >
+                Keep private
+              </button>
+              <button
+                type="button"
+                aria-pressed={visibility === 'shared'}
+                disabled={savingPrivacy}
+                onClick={() => setVisibility('shared')}
+                className={cn(
+                  'min-h-touch flex-1 rounded-chip px-3 text-sm font-medium',
+                  visibility === 'shared' ? 'bg-card text-fg shadow-card' : 'text-fg-muted',
+                )}
+              >
+                Share on profile
+              </button>
+            </div>
+          </Card>
+        </>
+      )}
 
       <SectionHeader title="Blocked users" />
       <BlockedUsers me={me} />
