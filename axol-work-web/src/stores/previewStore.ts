@@ -80,7 +80,14 @@ export const usePreviewStore = create<PreviewState>((set, get) => ({
   signupOpen: false,
   signupReason: '',
 
-  enter: (role = 'seeker') => set({ active: true, role, signupOpen: false, signupReason: '' }),
+  // Preserve the current role when enter() is called without one (e.g. auth init).
+  enter: (role) =>
+    set((s) => ({
+      active: true,
+      role: role ?? s.role,
+      signupOpen: false,
+      signupReason: '',
+    })),
   exit: () => set({ active: false, signupOpen: false, signupReason: '' }),
   setRole: (role) => set({ role }),
   requireAccount: (reason = 'Create a free account to continue.') => {

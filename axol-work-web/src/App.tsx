@@ -31,7 +31,8 @@ export default function App() {
       if (active) exit()
       return
     }
-    if (pathIsExplore(window.location.pathname)) enter()
+    // Don't call enter() again once active — that used to reset role to Prospect.
+    if (!active && pathIsExplore(window.location.pathname)) enter()
   }, [user, isGuest, active, enter, exit])
 
   const onDemoPath =

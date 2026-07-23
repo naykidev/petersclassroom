@@ -4,7 +4,7 @@ import { Menu, Moon, Sun, X } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useSocialStore } from '@/stores/socialStore'
 import { useThemeStore } from '@/stores/themeStore'
-import { usePreviewStore } from '@/stores/previewStore'
+import { makeDemoUser, usePreviewStore } from '@/stores/previewStore'
 import { primaryNav, sharedNav, type NavItem } from './nav'
 import { Avatar, Button, Toaster } from '@/components/ui'
 import { SignupPromptModal } from '@/components/SignupPromptModal'
@@ -12,7 +12,7 @@ import { cn } from '@/utils/cn'
 import { roleLabel } from '@/utils/roleLabel'
 
 export function AppShell() {
-  const { user, isGuest } = useAuthStore()
+  const { user, isGuest, setGuestSession } = useAuthStore()
   const { theme, toggle } = useThemeStore()
   const { role, setRole, exit } = usePreviewStore()
   const navigate = useNavigate()
@@ -22,7 +22,13 @@ export function AppShell() {
   const primary = primaryNav(user.role)
 
   function switchPreviewRole(next: 'seeker' | 'employer') {
+    if (!user) return
+    if (next === role && user.role === next) {
+      navigate('/', { replace: true })
+      return
+    }
     setRole(next)
+    setGuestSession(makeDemoUser(next))
     navigate('/', { replace: true })
   }
 
