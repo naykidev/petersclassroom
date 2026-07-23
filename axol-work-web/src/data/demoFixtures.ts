@@ -17,7 +17,7 @@ import { ACCOMMODATION_NEEDS, EMPLOYER_RATING_TAGS, WORK_HISTORY_TAGS } from '@/
 /** Synthetic guest session uid (matches previewStore). */
 export const GUEST_UID = 'guest-preview'
 
-const DEMO_COMPANY = 'Demo Axol Work Company'
+const DEMO_COMPANY = 'Axol Work Company'
 
 function at(msFromNow: number): Timestamp {
   return Timestamp.fromDate(new Date(Date.now() + msFromNow))
@@ -39,7 +39,7 @@ export const DEMO_EMPLOYERS: AppUser[] = [
     uid: 'demo-employer-harbor',
     displayName: 'Maya Chen',
     role: 'employer',
-    headline: 'Harbor Fresh Market',
+    headline: 'Axol Work Factory',
     workHistoryTags: [],
     connectionCount: 12,
     isVerifiedEmployed: false,
@@ -50,7 +50,7 @@ export const DEMO_EMPLOYERS: AppUser[] = [
     blockedUIDs: [],
     hasCompletedEmployerProfile: true,
     employerProfile: {
-      companyName: 'Harbor Fresh Market',
+      companyName: 'Axol Work Factory',
       workplaceAddress: '88 Pier St, San Francisco',
       allowsNoiseCancelingHeadphones: true,
       offersSeatedWorkstations: true,
@@ -61,7 +61,7 @@ export const DEMO_EMPLOYERS: AppUser[] = [
     uid: 'demo-employer-grove',
     displayName: 'Jordan Lee',
     role: 'employer',
-    headline: 'Grove Kitchen Collective',
+    headline: 'Axol Work Kitchen',
     workHistoryTags: [],
     connectionCount: 8,
     isVerifiedEmployed: false,
@@ -72,7 +72,7 @@ export const DEMO_EMPLOYERS: AppUser[] = [
     blockedUIDs: [],
     hasCompletedEmployerProfile: true,
     employerProfile: {
-      companyName: 'Grove Kitchen Collective',
+      companyName: 'Axol Work Kitchen',
       workplaceAddress: '210 Grove Ave, Oakland',
       allowsNoiseCancelingHeadphones: true,
       offersSeatedWorkstations: false,
@@ -160,7 +160,7 @@ export const DEMO_OPEN_SHIFTS: Shift[] = [
   {
     id: 'demo-shift-harbor-1',
     employerUID: 'demo-employer-harbor',
-    employerName: 'Harbor Fresh Market',
+    employerName: 'Axol Work Factory',
     title: 'Morning stock associate',
     description:
       'Restock produce and dry goods before open. Written checklist provided. Quiet early shift with clear routine.',
@@ -175,7 +175,7 @@ export const DEMO_OPEN_SHIFTS: Shift[] = [
   {
     id: 'demo-shift-grove-1',
     employerUID: 'demo-employer-grove',
-    employerName: 'Grove Kitchen Collective',
+    employerName: 'Axol Work Kitchen',
     title: 'Prep cook - afternoon',
     description:
       'Veg prep and station setup. Structured nonverbal training available. Seated breaks are fine.',
@@ -205,7 +205,7 @@ export const DEMO_OPEN_SHIFTS: Shift[] = [
   {
     id: 'demo-shift-harbor-2',
     employerUID: 'demo-employer-harbor',
-    employerName: 'Harbor Fresh Market',
+    employerName: 'Axol Work Factory',
     title: 'Evening shelf reset',
     description: 'Light lifting under 20 lbs. Predictable aisle-by-aisle checklist.',
     address: '88 Pier St',
@@ -258,7 +258,7 @@ export const DEMO_SEEKER_APPLICATIONS: ShiftApplication[] = [
     shiftID: 'demo-shift-harbor-1',
     shiftTitle: 'Morning stock associate',
     employerUID: 'demo-employer-harbor',
-    employerName: 'Harbor Fresh Market',
+    employerName: 'Axol Work Factory',
     seekerUID: GUEST_UID,
     seekerName: 'Guest Prospect',
     status: 'viewed',
@@ -269,7 +269,7 @@ export const DEMO_SEEKER_APPLICATIONS: ShiftApplication[] = [
     shiftID: 'demo-shift-grove-1',
     shiftTitle: 'Prep cook - afternoon',
     employerUID: 'demo-employer-grove',
-    employerName: 'Grove Kitchen Collective',
+    employerName: 'Axol Work Kitchen',
     seekerUID: GUEST_UID,
     seekerName: 'Guest Prospect',
     status: 'submitted',
@@ -280,7 +280,7 @@ export const DEMO_SEEKER_APPLICATIONS: ShiftApplication[] = [
     shiftID: 'demo-shift-axol-past',
     shiftTitle: 'Event setup helper',
     employerUID: 'demo-employer-harbor',
-    employerName: 'Harbor Fresh Market',
+    employerName: 'Axol Work Factory',
     seekerUID: GUEST_UID,
     seekerName: 'Guest Prospect',
     status: 'accepted',
@@ -334,7 +334,7 @@ export function demoConnectionsFor(role: 'seeker' | 'employer'): ConnectionReque
         id: `${GUEST_UID}_demo-employer-harbor`,
         fromUID: GUEST_UID,
         toUID: 'demo-employer-harbor',
-        otherUserName: 'Harbor Fresh Market',
+        otherUserName: 'Axol Work Factory',
         status: 'accepted',
       },
       {
@@ -348,7 +348,7 @@ export function demoConnectionsFor(role: 'seeker' | 'employer'): ConnectionReque
         id: `${GUEST_UID}_demo-employer-grove`,
         fromUID: GUEST_UID,
         toUID: 'demo-employer-grove',
-        otherUserName: 'Grove Kitchen Collective',
+        otherUserName: 'Axol Work Kitchen',
         status: 'pending',
       },
       {
@@ -390,7 +390,7 @@ export const DEMO_POSTS: Post[] = [
     id: 'demo-post-1',
     authorUID: 'demo-seeker-alex',
     authorName: 'Alex Rivera',
-    text: 'Anyone else prefer written shift checklists? Harbor Fresh had a great one today.',
+    text: 'Anyone else prefer written shift checklists? Axol Work Factory had a great one today.',
     createdAt: at(-hours(5)),
     visibility: 'everyone',
     likeCount: 4,
@@ -399,7 +399,7 @@ export const DEMO_POSTS: Post[] = [
   {
     id: 'demo-post-2',
     authorUID: 'demo-employer-grove',
-    authorName: 'Grove Kitchen Collective',
+    authorName: 'Axol Work Kitchen',
     text: 'We’re hiring afternoon prep cooks in Oakland. Structured training and seated breaks available.',
     createdAt: at(-days(1)),
     visibility: 'everyone',
@@ -434,7 +434,7 @@ export const DEMO_GROUPS: CommunityGroup[] = [
     name: 'Inclusive hiring practices',
     groupDescription: 'Recruiters comparing accommodation wording that actually works.',
     creatorUID: 'demo-employer-harbor',
-    creatorName: 'Harbor Fresh Market',
+    creatorName: 'Axol Work Factory',
     memberUIDs: ['demo-employer-harbor', 'demo-employer-grove'],
     memberCount: 2,
     createdAt: at(-days(14)),
@@ -448,9 +448,9 @@ export function demoNotificationsFor(role: 'seeker' | 'employer'): AppNotificati
         id: 'demo-notif-1',
         recipientUID: GUEST_UID,
         actorUID: 'demo-employer-harbor',
-        actorName: 'Harbor Fresh Market',
+        actorName: 'Axol Work Factory',
         kind: 'applicationAccepted',
-        message: 'Harbor Fresh Market accepted your application for Event setup helper.',
+        message: 'Axol Work Factory accepted your application for Event setup helper.',
         targetID: 'demo-app-seeker-3',
         isRead: false,
         createdAt: at(-hours(3)),
@@ -469,9 +469,9 @@ export function demoNotificationsFor(role: 'seeker' | 'employer'): AppNotificati
         id: 'demo-notif-3',
         recipientUID: GUEST_UID,
         actorUID: 'demo-employer-grove',
-        actorName: 'Grove Kitchen Collective',
+        actorName: 'Axol Work Kitchen',
         kind: 'message',
-        message: 'Grove Kitchen Collective sent you a message.',
+        message: 'Axol Work Kitchen sent you a message.',
         targetID: convId(GUEST_UID, 'demo-employer-grove'),
         isRead: true,
         createdAt: at(-days(1)),
@@ -523,7 +523,7 @@ export function demoConversationsFor(role: 'seeker' | 'employer'): Conversation[
         participantUIDs: [GUEST_UID, other],
         participantNames: {
           [GUEST_UID]: 'Guest Prospect',
-          [other]: 'Grove Kitchen Collective',
+          [other]: 'Axol Work Kitchen',
         },
         lastMessage: 'Happy to answer questions about the prep cook shift.',
         lastMessageAt: at(-hours(4)),
@@ -578,7 +578,7 @@ export const DEMO_MESSAGES: Record<string, Message[]> = {
     {
       id: 'demo-msg-1',
       senderUID: 'demo-employer-grove',
-      senderName: 'Grove Kitchen Collective',
+      senderName: 'Axol Work Kitchen',
       text: 'Thanks for applying to afternoon prep. Any questions about the kitchen?',
       createdAt: at(-hours(6)),
       reactions: {},
@@ -594,7 +594,7 @@ export const DEMO_MESSAGES: Record<string, Message[]> = {
     {
       id: 'demo-msg-3',
       senderUID: 'demo-employer-grove',
-      senderName: 'Grove Kitchen Collective',
+      senderName: 'Axol Work Kitchen',
       text: 'Happy to answer questions about the prep cook shift.',
       createdAt: at(-hours(4)),
       reactions: {},
@@ -628,7 +628,7 @@ export const DEMO_SEEKER_WORK_HISTORY: WorkHistoryEntry[] = [
     seekerUID: GUEST_UID,
     seekerName: 'Guest Prospect',
     employerUID: 'demo-employer-harbor',
-    employerName: 'Harbor Fresh Market',
+    employerName: 'Axol Work Factory',
     jobTitle: 'Stock associate',
     startDate: at(-days(120)),
     endDate: at(-days(30)),
@@ -641,7 +641,7 @@ export const DEMO_SEEKER_WORK_HISTORY: WorkHistoryEntry[] = [
     seekerUID: GUEST_UID,
     seekerName: 'Guest Prospect',
     employerUID: 'demo-employer-grove',
-    employerName: 'Grove Kitchen Collective',
+    employerName: 'Axol Work Kitchen',
     jobTitle: 'Prep cook',
     startDate: at(-days(20)),
     endDate: null,

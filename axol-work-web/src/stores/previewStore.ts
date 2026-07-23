@@ -22,7 +22,7 @@ export function makeDemoUser(role: Exclude<UserRole, 'unassigned'>): AppUser {
       blockedUIDs: [],
       hasCompletedEmployerProfile: true,
       employerProfile: {
-        companyName: 'Demo Axol Work Company',
+        companyName: 'Axol Work Company',
         workplaceAddress: '123 Market St, San Francisco',
         allowsNoiseCancelingHeadphones: true,
         offersSeatedWorkstations: true,
