@@ -22,7 +22,7 @@ interface Draft {
 
 const STEPS = [
   { key: 'work', title: 'Your experience', help: 'Pick any kind of work you’ve done before.' },
-  { key: 'city', title: 'Where you work', help: 'Choose the area you can work in.' },
+  { key: 'city', title: 'Where you work', help: 'Choose a metro area anywhere in the US, or Other if yours isn’t listed.' },
   { key: 'availability', title: 'When you’re free', help: 'Select all that apply.' },
   {
     key: 'needs',

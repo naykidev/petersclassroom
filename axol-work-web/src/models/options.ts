@@ -1,7 +1,6 @@
 /**
- * Reference option lists — hardcoded to match the iOS app exactly.
- * These are user-facing display strings AND the stored raw values, so keep
- * them verbatim.
+ * Reference option lists — tags/needs match the iOS app.
+ * Cities are major US metros nationwide, plus a catch-all.
  */
 
 export const WORK_HISTORY_TAGS = [
@@ -16,14 +15,49 @@ export const WORK_HISTORY_TAGS = [
 ] as const
 
 export const CITIES = [
+  // West
+  'Seattle',
+  'Portland',
   'San Francisco',
   'Oakland',
   'San Jose',
-  'Berkeley',
+  'Sacramento',
   'Los Angeles',
   'San Diego',
-  'Sacramento',
-  'Other nearby area',
+  'Las Vegas',
+  'Phoenix',
+  'Denver',
+  'Salt Lake City',
+  // Midwest
+  'Minneapolis',
+  'Chicago',
+  'Detroit',
+  'Indianapolis',
+  'Columbus',
+  'Kansas City',
+  'St. Louis',
+  // South
+  'Dallas',
+  'Houston',
+  'Austin',
+  'San Antonio',
+  'New Orleans',
+  'Nashville',
+  'Atlanta',
+  'Charlotte',
+  'Raleigh',
+  'Miami',
+  'Tampa',
+  'Orlando',
+  // Northeast / Mid-Atlantic
+  'Boston',
+  'New York City',
+  'Philadelphia',
+  'Pittsburgh',
+  'Washington, DC',
+  'Baltimore',
+  // Catch-all
+  'Other / not listed',
 ] as const
 
 export const AVAILABILITY_OPTIONS = [
