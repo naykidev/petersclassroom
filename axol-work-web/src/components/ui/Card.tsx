@@ -21,13 +21,17 @@ export function Card({ elevated, className, ...props }: CardProps) {
 export function SectionHeader({
   title,
   action,
+  id,
 }: {
   title: string
   action?: React.ReactNode
+  id?: string
 }) {
   return (
-    <div className="flex items-center justify-between mb-3">
-      <h2 className="text-headline text-fg">{title}</h2>
+    <div className="mb-3 flex items-center justify-between">
+      <h2 id={id} className="text-headline text-fg">
+        {title}
+      </h2>
       {action}
     </div>
   )

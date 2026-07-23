@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { Menu, Moon, Sun, X } from 'lucide-react'
+import { Menu, Moon, Sun, Type, X } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useSocialStore } from '@/stores/socialStore'
 import { useThemeStore } from '@/stores/themeStore'
 import { makeDemoUser, usePreviewStore } from '@/stores/previewStore'
 import { primaryNav, sharedNav, type NavItem } from './nav'
-import { Avatar, Button, Toaster } from '@/components/ui'
+import { Avatar, Button, Modal, Toaster } from '@/components/ui'
 import { SignupPromptModal } from '@/components/SignupPromptModal'
+import { AccessibilityControls } from '@/components/AccessibilityControls'
 import { cn } from '@/utils/cn'
 import { roleLabel } from '@/utils/roleLabel'
 
@@ -17,6 +18,7 @@ export function AppShell() {
   const { role, setRole, exit } = usePreviewStore()
   const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [a11yOpen, setA11yOpen] = useState(false)
 
   if (!user) return null
   const primary = primaryNav(user.role)
@@ -31,6 +33,20 @@ export function AppShell() {
     setGuestSession(makeDemoUser(next))
     navigate('/', { replace: true })
   }
+
+  const a11yButton = (
+    <button
+      type="button"
+      onClick={() => setA11yOpen(true)}
+      aria-haspopup="dialog"
+      aria-expanded={a11yOpen}
+      aria-label="Accessibility settings"
+      className="flex h-9 items-center gap-1.5 rounded-btn px-2.5 text-sm font-semibold text-fg-muted hover:bg-muted hover:text-fg"
+    >
+      <Type className="h-4 w-4" aria-hidden />
+      <span>Aa</span>
+    </button>
+  )
 
   const sidebar = (
     <nav aria-label="Main navigation" className="flex h-full flex-col gap-1 p-3">
@@ -66,6 +82,7 @@ export function AppShell() {
           <p className="truncate text-sm font-semibold text-fg">{user.displayName}</p>
           <p className="truncate text-caption text-fg-muted">{roleLabel(user.role)}</p>
         </div>
+        {a11yButton}
         <button
           onClick={toggle}
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -124,6 +141,7 @@ export function AppShell() {
                   Recruiter
                 </button>
               </div>
+              {a11yButton}
               <Button
                 size="sm"
                 onClick={() => {
@@ -160,7 +178,8 @@ export function AppShell() {
           className="h-7 w-7 rounded-full"
           aria-hidden="true"
         />
-        <span className="text-headline">Axol Work</span>
+        <span className="text-headline flex-1">Axol Work</span>
+        {a11yButton}
       </header>
 
       {/* Mobile drawer */}
@@ -180,7 +199,7 @@ export function AppShell() {
         </div>
       )}
 
-      <main id="main-content" className="lg:pl-64">
+      <main id="main-content" className="lg:pl-64" tabIndex={-1}>
         <div className="mx-auto max-w-6xl p-4 sm:p-6">
           <Outlet />
         </div>
@@ -188,6 +207,22 @@ export function AppShell() {
 
       <Toaster />
       <SignupPromptModal />
+      <Modal
+        open={a11yOpen}
+        onClose={() => setA11yOpen(false)}
+        title="Accessibility"
+        size="lg"
+        footer={
+          <Button variant="secondary" onClick={() => setA11yOpen(false)}>
+            Done
+          </Button>
+        }
+      >
+        <p className="mb-4 text-sm text-fg-muted">
+          Try readable fonts, larger text, spacing, and contrast. Changes apply instantly and stay on this device.
+        </p>
+        <AccessibilityControls compact />
+      </Modal>
     </div>
   )
 }

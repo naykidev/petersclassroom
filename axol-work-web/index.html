@@ -7,13 +7,23 @@
     <meta name="description" content="Axol Work: accessibility-focused shift-work marketplace and professional network for neurodivergent and disability-inclusive hiring." />
     <title>Axol Work</title>
     <script>
-      // Apply theme before paint to avoid flash. Manual override wins over OS preference.
+      // Apply theme + accessibility prefs before paint to avoid flash.
       (function () {
         try {
           var stored = localStorage.getItem('axol-theme');
           var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           var dark = stored ? stored === 'dark' : prefersDark;
           document.documentElement.classList.toggle('dark', dark);
+        } catch (e) {}
+        try {
+          var raw = localStorage.getItem('axol-a11y');
+          if (!raw) return;
+          var p = JSON.parse(raw);
+          var root = document.documentElement;
+          if (p.textScale) root.style.fontSize = p.textScale + '%';
+          if (p.highContrast) root.dataset.a11yContrast = 'high';
+          if (p.reduceMotion) root.dataset.a11yMotion = 'reduce';
+          if (p.underlineLinks) root.dataset.a11yLinks = 'underline';
         } catch (e) {}
       })();
     </script>

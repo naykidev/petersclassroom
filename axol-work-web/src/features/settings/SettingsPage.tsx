@@ -7,6 +7,7 @@ import { getUsers, unblockUser } from '@/features/users/api'
 import type { AppUser } from '@/models'
 import { Avatar, Button, Card, Input, Modal, SectionHeader } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
+import { AccessibilityControls } from '@/components/AccessibilityControls'
 import { cn } from '@/utils/cn'
 
 export function SettingsPage() {
@@ -49,6 +50,14 @@ export function SettingsPage() {
             ))}
           </div>
         </div>
+      </Card>
+
+      <SectionHeader title="Accessibility" id="accessibility" />
+      <Card className="mb-6">
+        <p className="mb-4 text-sm text-fg-muted">
+          Adjust text and motion to make Axol Work easier to read. Preferences stay on this device.
+        </p>
+        <AccessibilityControls />
       </Card>
 
       <SectionHeader title="Blocked users" />

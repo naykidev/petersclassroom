@@ -4,8 +4,8 @@ import { cn } from '@/utils/cn'
 import { Button } from './Button'
 
 /**
- * Centered modal dialog. Esc closes, focus moves in on open and is restored on
- * close, clicking the backdrop closes. Rendered with role=dialog + aria-modal.
+ * Centered modal dialog. Esc closes, focus is trapped inside, restored on close,
+ * backdrop click closes. Rendered with role=dialog + aria-modal.
  */
 export function Modal({
   open,
@@ -24,16 +24,51 @@ export function Modal({
 }) {
   const panelRef = useRef<HTMLDivElement>(null)
   const restoreRef = useRef<HTMLElement | null>(null)
+  const titleId = useRef(`modal-title-${Math.random().toString(36).slice(2, 9)}`).current
 
   useEffect(() => {
     if (!open) return
     restoreRef.current = document.activeElement as HTMLElement
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+
+    const focusables = () => {
+      const root = panelRef.current
+      if (!root) return [] as HTMLElement[]
+      return Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true')
     }
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation()
+        onClose()
+        return
+      }
+      if (e.key !== 'Tab') return
+      const nodes = focusables()
+      if (!nodes.length) {
+        e.preventDefault()
+        panelRef.current?.focus()
+        return
+      }
+      const first = nodes[0]!
+      const last = nodes[nodes.length - 1]!
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+
     document.addEventListener('keydown', onKey)
-    // Move focus into the dialog.
-    const t = window.setTimeout(() => panelRef.current?.focus(), 0)
+    const t = window.setTimeout(() => {
+      const nodes = focusables()
+      ;(nodes[0] ?? panelRef.current)?.focus()
+    }, 0)
     document.body.style.overflow = 'hidden'
     return () => {
       document.removeEventListener('keydown', onKey)
@@ -49,7 +84,7 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fade-in"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
@@ -58,15 +93,17 @@ export function Modal({
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-label={title}
+        aria-labelledby={titleId}
         tabIndex={-1}
         className={cn(
-          'w-full rounded-card bg-card shadow-elevated border border-border outline-none animate-scale-in',
+          'w-full rounded-card border border-border bg-card shadow-elevated outline-none animate-scale-in',
           widths[size],
         )}
       >
         <div className="flex items-center justify-between border-b border-border p-4">
-          <h2 className="text-headline text-fg">{title}</h2>
+          <h2 id={titleId} className="text-headline text-fg">
+            {title}
+          </h2>
           <Button
             variant="ghost"
             size="sm"
@@ -77,11 +114,9 @@ export function Modal({
             <X className="h-5 w-5" aria-hidden />
           </Button>
         </div>
-        <div className="p-4 max-h-[70vh] overflow-y-auto">{children}</div>
+        <div className="max-h-[70vh] overflow-y-auto p-4">{children}</div>
         {footer && (
-          <div className="flex justify-end gap-2 border-t border-border p-4">
-            {footer}
-          </div>
+          <div className="flex justify-end gap-2 border-t border-border p-4">{footer}</div>
         )}
       </div>
     </div>

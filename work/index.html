@@ -7,7 +7,7 @@
     <meta name="description" content="Axol Work: accessibility-focused shift-work marketplace and professional network for neurodivergent and disability-inclusive hiring." />
     <title>Axol Work</title>
     <script>
-      // Apply theme before paint to avoid flash. Manual override wins over OS preference.
+      // Apply theme + accessibility prefs before paint to avoid flash.
       (function () {
         try {
           var stored = localStorage.getItem('axol-theme');
@@ -15,12 +15,22 @@
           var dark = stored ? stored === 'dark' : prefersDark;
           document.documentElement.classList.toggle('dark', dark);
         } catch (e) {}
+        try {
+          var raw = localStorage.getItem('axol-a11y');
+          if (!raw) return;
+          var p = JSON.parse(raw);
+          var root = document.documentElement;
+          if (p.textScale) root.style.fontSize = p.textScale + '%';
+          if (p.highContrast) root.dataset.a11yContrast = 'high';
+          if (p.reduceMotion) root.dataset.a11yMotion = 'reduce';
+          if (p.underlineLinks) root.dataset.a11yLinks = 'underline';
+        } catch (e) {}
       })();
     </script>
-    <script type="module" crossorigin src="/work/assets/index-DJNvXqNX.js"></script>
+    <script type="module" crossorigin src="/work/assets/index-CBZfrdTy.js"></script>
     <link rel="modulepreload" crossorigin href="/work/assets/react-CXqknbcP.js">
     <link rel="modulepreload" crossorigin href="/work/assets/firebase-Dm_xKUxC.js">
-    <link rel="stylesheet" crossorigin href="/work/assets/index-CRHnhqsT.css">
+    <link rel="stylesheet" crossorigin href="/work/assets/index-CTYuiug2.css">
   </head>
   <body>
     <div id="root"></div>
