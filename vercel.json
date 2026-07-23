@@ -1,5 +1,11 @@
 {
+  "redirects": [
+    { "source": "/work/explore", "destination": "/demo", "permanent": false },
+    { "source": "/work/explore/", "destination": "/demo", "permanent": false }
+  ],
   "rewrites": [
+    { "source": "/demo", "destination": "/work/index.html" },
+    { "source": "/demo/:path*", "destination": "/work/index.html" },
     { "source": "/work/:path*", "destination": "/work/index.html" }
   ]
 }

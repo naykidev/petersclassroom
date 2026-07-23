@@ -90,11 +90,15 @@ export const usePreviewStore = create<PreviewState>((set, get) => ({
   closeSignup: () => set({ signupOpen: false, signupReason: '' }),
 }))
 
-/** True when the path is the public explore/preview entry. */
+/** True when the path is the public demo/preview entry (`/demo`). */
+export function pathIsDemo(pathname: string): boolean {
+  return pathname === '/demo' || pathname.startsWith('/demo/')
+}
+
+/** @deprecated Use pathIsDemo — kept for older /work/explore bookmarks. */
 export function pathIsExplore(pathname: string): boolean {
-  // basename is /work, so inside the router pathname is /explore
-  // Outside the router (window), full path is /work/explore
   return (
+    pathIsDemo(pathname) ||
     pathname === '/explore' ||
     pathname.endsWith('/explore') ||
     pathname.includes('/explore/')
