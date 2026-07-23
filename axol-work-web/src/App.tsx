@@ -31,10 +31,10 @@ export default function App() {
   // Logged-in users must not stay on /demo: MainApp uses basename /work, so
   // routes never match and the page looks blank / stuck loading.
   useEffect(() => {
-    if (!loading && user && !isGuest && onDemoPath) {
+    if (user && !isGuest && onDemoPath) {
       window.location.replace(`${APP_BASENAME}/`)
     }
-  }, [loading, user, isGuest, onDemoPath])
+  }, [user, isGuest, onDemoPath])
 
   // Enter preview when landing on /demo (or legacy /work/explore).
   useEffect(() => {
@@ -46,18 +46,15 @@ export default function App() {
     if (!active && onDemoPath) enter()
   }, [user, isGuest, active, enter, exit, onDemoPath])
 
-  // Resolve Firebase auth before choosing demo vs real app.
-  if (onDemoPath && loading) {
-    return <SplashPage />
-  }
-
+  // Real account on /demo → splash while redirecting to /work/.
   if (onDemoPath && user && !isGuest) {
     return <SplashPage />
   }
 
   const wantsPreview = (active || onDemoPath) && !(user && !isGuest)
 
-  // Guest preview: mount the real app shell under /demo.
+  // Guest preview: mount immediately (don't wait on Firebase — Auth can hang
+  // behind ad blockers / slow networks and would leave /demo on "Loading…").
   if (wantsPreview) {
     // Legacy /work/explore bookmarks → /demo
     if (typeof window !== 'undefined' && !pathIsDemo(window.location.pathname)) {
