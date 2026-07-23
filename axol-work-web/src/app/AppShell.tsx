@@ -83,9 +83,9 @@ export function AppShell() {
       {isGuest && (
         <div
           role="status"
-          className="sticky top-0 z-40 border-b border-brand/30 bg-brand-tint px-4 py-2.5"
+          className="sticky top-0 z-40 border-b border-brand/30 bg-brand-tint px-4 py-2.5 lg:ml-64"
         >
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 lg:pl-64">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
             <p className="text-sm font-medium text-fg">
               You’re previewing Axol Work. Look around freely. Signing up unlocks applying, posting, and messaging.
             </p>
@@ -132,8 +132,8 @@ export function AppShell() {
         </div>
       )}
 
-      {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-border bg-card lg:block">
+      {/* Desktop sidebar — above the preview banner so it never gets covered */}
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 border-r border-border bg-card lg:block">
         {sidebar}
       </aside>
 
