@@ -1,0 +1,279 @@
+rules_version = '2';
+
+// Axol Work — full Firestore security rules
+// Paste into Firebase Console → Firestore → Rules, or deploy via CLI.
+// Includes owner-only userPrivate/{uid} for private accommodation PII.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+    function signedIn() {
+      return request.auth != null;
+    }
+    function uid() {
+      return request.auth.uid;
+    }
+    function isSelf(userId) {
+      return signedIn() && uid() == userId;
+    }
+    function pairId(a, b) {
+      return a < b ? a + '_' + b : b + '_' + a;
+    }
+    function verificationDoc(employerUID, seekerUID) {
+      return /databases/$(database)/documents/employmentVerifications/$(employerUID + '_' + seekerUID);
+    }
+    function noEmail() {
+      return !('email' in request.resource.data);
+    }
+    function onlyKeys(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+    function conversationDoc(id) {
+      return get(/databases/$(database)/documents/conversations/$(id)).data;
+    }
+    function isConversationParticipant(id) {
+      return signedIn() && uid() in conversationDoc(id).participantUIDs;
+    }
+
+    // ── users/{uid} — public profile (signed-in readable) ─────────────────
+    // Never store email. Private accommodation needs belong in userPrivate.
+    match /users/{userId} {
+      allow read: if signedIn();
+
+      allow create: if isSelf(userId) && noEmail();
+
+      allow update: if noEmail() && (
+        // Owner may update their own profile
+        isSelf(userId)
+        // Employer may flip verification flags only after verification doc exists
+        || (
+          signedIn()
+          && onlyKeys(['isVerifiedEmployed', 'verifiedEmployerUIDs'])
+          && exists(verificationDoc(uid(), userId))
+        )
+      );
+
+      allow delete: if isSelf(userId);
+    }
+
+    // ── userPrivate/{uid} — owner-only accommodation PII ──────────────────
+    match /userPrivate/{userId} {
+      allow read, write: if isSelf(userId);
+    }
+
+    // ── shifts/{id} ───────────────────────────────────────────────────────
+    match /shifts/{id} {
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.employerUID == uid();
+
+      allow update, delete: if signedIn()
+        && resource.data.employerUID == uid();
+    }
+
+    // ── shiftApplications/{id} ────────────────────────────────────────────
+    match /shiftApplications/{id} {
+      allow read: if signedIn()
+        && (resource.data.seekerUID == uid()
+            || resource.data.employerUID == uid());
+
+      allow create: if signedIn()
+        && request.resource.data.seekerUID == uid()
+        && request.resource.data.status == 'submitted';
+
+      allow update: if signedIn()
+        && (
+          // Seeker withdraws
+          (resource.data.seekerUID == uid()
+            && request.resource.data.status == 'withdrawn')
+          // Employer reviews / accepts / declines / completes
+          || (resource.data.employerUID == uid())
+        );
+
+      allow delete: if false;
+    }
+
+    // ── connectionRequests/{id} — id = sorted pair ────────────────────────
+    match /connectionRequests/{id} {
+      allow read: if signedIn()
+        && (resource.data.fromUID == uid() || resource.data.toUID == uid());
+
+      allow create: if signedIn()
+        && request.resource.data.fromUID == uid()
+        && request.resource.data.fromUID != request.resource.data.toUID
+        && request.resource.data.status == 'pending'
+        && id == pairId(request.resource.data.fromUID, request.resource.data.toUID);
+
+      // Recipient may change only `status` (accept)
+      allow update: if signedIn()
+        && resource.data.toUID == uid()
+        && onlyKeys(['status']);
+
+      // Either party may cancel / remove
+      allow delete: if signedIn()
+        && (resource.data.fromUID == uid() || resource.data.toUID == uid());
+    }
+
+    // ── conversations/{id} + messages ─────────────────────────────────────
+    match /conversations/{id} {
+      allow read: if signedIn()
+        && uid() in resource.data.participantUIDs;
+
+      allow create: if signedIn()
+        && uid() in request.resource.data.participantUIDs
+        && request.resource.data.participantUIDs.size() == 2
+        && id == pairId(
+             request.resource.data.participantUIDs[0],
+             request.resource.data.participantUIDs[1]
+           );
+
+      allow update: if signedIn()
+        && uid() in resource.data.participantUIDs;
+
+      allow delete: if false;
+
+      match /messages/{msgId} {
+        allow read: if isConversationParticipant(id);
+
+        allow create: if isConversationParticipant(id)
+          && request.resource.data.senderUID == uid();
+
+        // Reactions map: reactions.{uid}
+        allow update: if isConversationParticipant(id);
+
+        allow delete: if false;
+      }
+    }
+
+    // ── posts/{id} + comments + likes ─────────────────────────────────────
+    match /posts/{id} {
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.authorUID == uid();
+
+      allow update: if signedIn() && (
+        resource.data.authorUID == uid()
+        || onlyKeys(['likeCount', 'commentCount'])
+      );
+
+      allow delete: if signedIn()
+        && resource.data.authorUID == uid();
+
+      match /comments/{cid} {
+        allow read: if signedIn();
+
+        allow create: if signedIn()
+          && request.resource.data.authorUID == uid()
+          && request.resource.data.postID == id;
+
+        allow update, delete: if signedIn()
+          && resource.data.authorUID == uid();
+      }
+
+      match /likes/{likeUid} {
+        allow read: if signedIn();
+        allow create, delete: if isSelf(likeUid);
+      }
+    }
+
+    // ── communityGroups/{id} ──────────────────────────────────────────────
+    match /communityGroups/{id} {
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.creatorUID == uid()
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 3
+        && request.resource.data.name.size() <= 60
+        && request.resource.data.groupDescription is string
+        && request.resource.data.groupDescription.size() >= 10
+        && request.resource.data.groupDescription.size() <= 280
+        && uid() in request.resource.data.memberUIDs;
+
+      // Join / leave: only membership fields
+      allow update: if signedIn()
+        && onlyKeys(['memberUIDs', 'memberCount']);
+
+      allow delete: if signedIn()
+        && resource.data.creatorUID == uid();
+    }
+
+    // ── workHistoryEntries/{id} ───────────────────────────────────────────
+    match /workHistoryEntries/{id} {
+      allow read: if signedIn()
+        && (resource.data.seekerUID == uid()
+            || resource.data.employerUID == uid());
+
+      allow create: if signedIn()
+        && request.resource.data.seekerUID == uid()
+        && request.resource.data.status == 'pending';
+
+      // Employer responds (status / respondedAt)
+      allow update: if signedIn()
+        && resource.data.employerUID == uid();
+
+      allow delete: if signedIn()
+        && resource.data.seekerUID == uid()
+        && resource.data.status == 'pending';
+    }
+
+    // ── employmentVerifications/{id} — id = employerUID_seekerUID ─────────
+    match /employmentVerifications/{id} {
+      allow read: if signedIn()
+        && (resource.data.employerUID == uid()
+            || resource.data.seekerUID == uid());
+
+      allow create: if signedIn()
+        && request.resource.data.employerUID == uid()
+        && request.resource.data.confirmedByUID == uid()
+        && id == request.resource.data.employerUID + '_' + request.resource.data.seekerUID;
+
+      allow update, delete: if false;
+    }
+
+    // ── employerReviews/{id} — id = employerUID_reviewerUID ───────────────
+    match /employerReviews/{id} {
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.reviewerUID == uid()
+        && id == request.resource.data.employerUID + '_' + uid()
+        && request.resource.data.optionalNote is string
+        && request.resource.data.optionalNote.size() <= 280
+        && exists(verificationDoc(request.resource.data.employerUID, uid()));
+
+      allow update, delete: if false;
+    }
+
+    // ── notifications/{id} ────────────────────────────────────────────────
+    match /notifications/{id} {
+      allow read: if signedIn()
+        && resource.data.recipientUID == uid();
+
+      allow create: if signedIn()
+        && request.resource.data.actorUID == uid()
+        && request.resource.data.recipientUID != uid()
+        && request.resource.data.isRead == false;
+
+      allow update: if signedIn()
+        && resource.data.recipientUID == uid()
+        && onlyKeys(['isRead']);
+
+      allow delete: if signedIn()
+        && resource.data.recipientUID == uid();
+    }
+
+    // ── reports/{id} ──────────────────────────────────────────────────────
+    match /reports/{id} {
+      allow create: if signedIn()
+        && request.resource.data.reporterUID == uid()
+        && request.resource.data.status == 'pending';
+
+      // No client read/update — handle in Console / admin tooling
+      allow read, update, delete: if false;
+    }
+  }
+}
