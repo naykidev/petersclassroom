@@ -8,6 +8,7 @@ import type { AppUser } from '@/models'
 import { Avatar, Button, Card, Input, Modal, SectionHeader } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
 import { AccessibilityControls } from '@/components/AccessibilityControls'
+import { PRIVACY_POLICY_URL } from '@/constants/legal'
 import { cn } from '@/utils/cn'
 import type { AccommodationVisibility } from '@/models'
 
@@ -141,6 +142,16 @@ export function SettingsPage() {
             </Button>
           )}
         </div>
+        <p className="border-t border-border pt-3 text-sm text-fg-muted">
+          <a
+            href={PRIVACY_POLICY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-brand underline-offset-2 hover:underline"
+          >
+            Privacy Policy
+          </a>
+        </p>
       </Card>
 
       {deleteOpen && <DeleteAccountModal onClose={() => setDeleteOpen(false)} />}

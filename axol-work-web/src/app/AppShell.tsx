@@ -9,6 +9,7 @@ import { primaryNav, sharedNav, type NavItem } from './nav'
 import { Avatar, Button, Modal, Toaster } from '@/components/ui'
 import { SignupPromptModal } from '@/components/SignupPromptModal'
 import { AccessibilityControls } from '@/components/AccessibilityControls'
+import { PRIVACY_POLICY_URL } from '@/constants/legal'
 import { cn } from '@/utils/cn'
 import { roleLabel } from '@/utils/roleLabel'
 
@@ -76,20 +77,30 @@ export function AppShell() {
         ))}
       </div>
 
-      <div className="mt-auto flex items-center gap-2 rounded-btn p-2">
-        <Avatar name={user.displayName} size="sm" />
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-fg">{user.displayName}</p>
-          <p className="truncate text-caption text-fg-muted">{roleLabel(user.role)}</p>
-        </div>
-        {a11yButton}
-        <button
-          onClick={toggle}
-          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          className="flex h-9 w-9 items-center justify-center rounded-btn text-fg-muted hover:bg-muted hover:text-fg"
+      <div className="mt-auto flex flex-col gap-2">
+        <a
+          href={PRIVACY_POLICY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-3 text-caption font-semibold text-fg-muted underline-offset-2 hover:text-brand hover:underline"
         >
-          {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-        </button>
+          Privacy Policy
+        </a>
+        <div className="flex items-center gap-2 rounded-btn p-2">
+          <Avatar name={user.displayName} size="sm" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-fg">{user.displayName}</p>
+            <p className="truncate text-caption text-fg-muted">{roleLabel(user.role)}</p>
+          </div>
+          {a11yButton}
+          <button
+            onClick={toggle}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="flex h-9 w-9 items-center justify-center rounded-btn text-fg-muted hover:bg-muted hover:text-fg"
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
     </nav>
   )

@@ -6,6 +6,7 @@ import { Moon, Sun } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
 import { Button, Input, PasswordInput } from '@/components/ui'
+import { PRIVACY_POLICY_URL } from '@/constants/legal'
 import { cn } from '@/utils/cn'
 
 type Mode = 'login' | 'signup' | 'reset'
@@ -326,6 +327,16 @@ export function AuthPage() {
                 Back to log in
               </button>
             )}
+            <p className="pt-2">
+              <a
+                href={PRIVACY_POLICY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={linkBtn}
+              >
+                Privacy Policy
+              </a>
+            </p>
           </div>
         </div>
       </div>

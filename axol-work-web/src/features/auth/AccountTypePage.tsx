@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Briefcase, Search } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui'
+import { PRIVACY_POLICY_URL } from '@/constants/legal'
 import type { UserRole } from '@/models'
 
 const CHOICES: {
@@ -71,10 +72,18 @@ export function AccountTypePage() {
           ))}
         </div>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 flex flex-col items-center gap-2 text-center">
           <Button variant="ghost" size="sm" onClick={() => logOut()}>
             Log out
           </Button>
+          <a
+            href={PRIVACY_POLICY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-semibold text-brand underline-offset-2 hover:underline"
+          >
+            Privacy Policy
+          </a>
         </div>
       </div>
     </main>
