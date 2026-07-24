@@ -58,4 +58,6 @@ See `store/SUBMISSION.md` for the Dev Console steps.
 
 ## Privacy Policy
 
-Privacy policy page is available at `privacy.html` (and linked from both site footers and the extension popup).
+Privacy policy for all products is at `privacy.html`
+(https://axolassist.com/privacy.html): website, Accessibility Surfer, AccessFlow, and Axol Work.
+Linked from site footers and the extension popup.
