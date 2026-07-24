@@ -47,8 +47,8 @@ function writeRememberPreference(value: boolean) {
 export function AuthPage() {
   const [mode, setMode] = useState<Mode>('login')
   const [resetSent, setResetSent] = useState(false)
-  const [oauthBusy, setOauthBusy] = useState(false)
-  const { signUp, logIn, logInWithGoogle, resetPassword, error, clearError } =
+  const [oauthBusy, setOauthBusy] = useState<'google' | 'linkedin' | null>(null)
+  const { signUp, logIn, logInWithGoogle, logInWithLinkedIn, resetPassword, error, clearError } =
     useAuthStore()
   const { theme, toggle, setTheme } = useThemeStore()
   const formErrorId = useId()
@@ -87,7 +87,7 @@ export function AuthPage() {
   function switchMode(next: Mode) {
     clearError()
     setResetSent(false)
-    setOauthBusy(false)
+    setOauthBusy(null)
     reset({
       displayName: '',
       email: '',
@@ -116,13 +116,25 @@ export function AuthPage() {
 
   async function continueWithGoogle() {
     clearError()
-    setOauthBusy(true)
+    setOauthBusy('google')
     try {
       await logInWithGoogle()
     } catch {
       /* error surfaced via store */
     } finally {
-      setOauthBusy(false)
+      setOauthBusy(null)
+    }
+  }
+
+  async function continueWithLinkedIn() {
+    clearError()
+    setOauthBusy('linkedin')
+    try {
+      await logInWithLinkedIn()
+    } catch {
+      /* error surfaced via store */
+    } finally {
+      setOauthBusy(null)
     }
   }
 
@@ -266,18 +278,32 @@ export function AuthPage() {
                 <div className="h-px flex-1 bg-border" />
               </div>
 
-              <Button
-                type="button"
-                variant="secondary"
-                fullWidth
-                loading={oauthBusy}
-                disabled={oauthBusy || isSubmitting}
-                onClick={continueWithGoogle}
-                aria-label="Continue with Google"
-              >
-                <GoogleIcon />
-                Google
-              </Button>
+              <div className="flex flex-col gap-3">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  fullWidth
+                  loading={oauthBusy === 'google'}
+                  disabled={!!oauthBusy || isSubmitting}
+                  onClick={continueWithGoogle}
+                  aria-label="Continue with Google"
+                >
+                  <GoogleIcon />
+                  Google
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  fullWidth
+                  loading={oauthBusy === 'linkedin'}
+                  disabled={!!oauthBusy || isSubmitting}
+                  onClick={continueWithLinkedIn}
+                  aria-label="Continue with LinkedIn"
+                >
+                  <LinkedInIcon />
+                  LinkedIn
+                </Button>
+              </div>
             </>
           )}
 
@@ -325,6 +351,17 @@ function GoogleIcon() {
       <path
         fill="#FBBC05"
         d="M12 6c1.5 0 2.8.5 3.8 1.5l2.8-2.8C16.9 2.9 14.7 2 12 2 8.2 2 4.9 4.3 3.2 7.1l3.4 2.6C7 8 9.2 6 12 6z"
+      />
+    </svg>
+  )
+}
+
+function LinkedInIcon() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="#0A66C2"
+        d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22 0H2C.9 0 0 .9 0 2v20c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V2c0-1.1-.9-2-2-2z"
       />
     </svg>
   )
