@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Sparkles, MessageSquare, BadgeCheck } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { usePreviewStore } from '@/stores/previewStore'
 import type { AppUser } from '@/models'
 import { Avatar, Button, Card, Chip, EmptyState, Spinner } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
@@ -43,6 +44,9 @@ export function MentorshipPage() {
   }, [candidates, me.uid, blocked, myTags])
 
   async function message(u: AppUser) {
+    if (usePreviewStore.getState().requireAccount('Create a free account to send messages.')) {
+      return
+    }
     const id = await getOrCreateConversation(
       { uid: me.uid, name: me.displayName },
       { uid: u.uid, name: u.displayName },

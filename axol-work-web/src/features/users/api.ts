@@ -20,24 +20,17 @@ import {
   usersCollection,
 } from '@/lib/firestore'
 import type { AppUser, Report, ReportTargetType } from '@/models'
-import { DEMO_EMPLOYERS, getDemoUser, isDemoUid, searchDemoUsers } from '@/data/demoFixtures'
+import {
+  DEMO_EMPLOYERS,
+  DEMO_PROSPECTS,
+  getDemoUser,
+  isDemoUid,
+  searchDemoUsers,
+} from '@/data/demoFixtures'
 import { useAuthStore } from '@/stores/authStore'
+import { redactAccommodationsForViewer } from '@/features/users/privacy'
 
-/** Hide private accommodation needs from other viewers (client-side redaction). */
-export function redactAccommodationsForViewer(
-  profile: AppUser,
-  viewerUID: string | undefined | null,
-): AppUser {
-  if (profile.uid === viewerUID) return profile
-  if (profile.role !== 'seeker') return profile
-  const visibility = profile.accommodationVisibility ?? 'private'
-  if (visibility === 'shared') return profile
-  return {
-    ...profile,
-    accommodationNeeds: [],
-    accommodationTags: [],
-  }
-}
+export { redactAccommodationsForViewer } from '@/features/users/privacy'
 
 /**
  * Recruiters who opted into inclusive hiring.
@@ -73,6 +66,8 @@ export async function getUser(uid: string): Promise<AppUser | null> {
   const demo = getDemoUser(uid)
   if (demo) return redactAccommodationsForViewer(demo, viewerUID)
   if (isDemoUid(uid)) return null
+  // Guests must not probe production profiles.
+  if (useAuthStore.getState().isGuest) return null
   const snap = await getDoc(userDoc(uid))
   if (!snap.exists()) return null
   return redactAccommodationsForViewer(snap.data(), viewerUID)
@@ -84,10 +79,11 @@ export async function getUsers(uids: string[]): Promise<AppUser[]> {
   const unique = [...new Set(uids)].filter(Boolean)
   const out: AppUser[] = []
   const remote: string[] = []
+  const guest = useAuthStore.getState().isGuest
   for (const uid of unique) {
     const demo = getDemoUser(uid)
     if (demo) out.push(redactAccommodationsForViewer(demo, viewerUID))
-    else if (!isDemoUid(uid)) remote.push(uid)
+    else if (!isDemoUid(uid) && !guest) remote.push(uid)
   }
   for (let i = 0; i < remote.length; i += 30) {
     const chunk = remote.slice(i, i + 30)
@@ -129,6 +125,12 @@ export async function findUsersByTags(tags: string[]): Promise<AppUser[]> {
   const viewerUID = useAuthStore.getState().user?.uid
   const t = tags.slice(0, 30)
   if (!t.length) return []
+  if (useAuthStore.getState().isGuest) {
+    const tagSet = new Set(t)
+    return [...DEMO_EMPLOYERS, ...DEMO_PROSPECTS]
+      .filter((u) => u.workHistoryTags.some((tag) => tagSet.has(tag)))
+      .map((u) => redactAccommodationsForViewer(u, viewerUID))
+  }
   const snap = await getDocs(
     query(usersCollection(), where('workHistoryTags', 'array-contains-any', t), limit(50)),
   )

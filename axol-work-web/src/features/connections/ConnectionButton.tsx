@@ -78,6 +78,9 @@ export function ConnectionButton({
 
   async function accept() {
     if (!record) return
+    if (usePreviewStore.getState().requireAccount('Create a free account to accept network requests.')) {
+      return
+    }
     setBusy(true)
     try {
       await acceptConnectionRequest(record, { uid: me.uid, name: me.displayName })
@@ -91,6 +94,9 @@ export function ConnectionButton({
 
   async function decline() {
     if (!record) return
+    if (usePreviewStore.getState().requireAccount('Create a free account to manage network requests.')) {
+      return
+    }
     try {
       await removeConnection(record)
     } catch {

@@ -121,6 +121,8 @@ export const COL = {
   employmentVerifications: 'employmentVerifications',
   notifications: 'notifications',
   reports: 'reports',
+  /** Owner-only Prospect accommodation PII — never world-readable. */
+  userPrivate: 'userPrivate',
 } as const
 
 /** A typed document reference in a top-level collection. */

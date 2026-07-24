@@ -59,13 +59,15 @@ export interface AppUser {
   accommodationTags: string[]
   accommodationNeeds: string[]
   /**
-   * Prospect-only. When `private` (default), accommodation needs stay off the
-   * public profile and are redacted for other viewers in the app.
+   * Prospect-only. When `private` (default), accommodation needs are stored in
+   * owner-only `userPrivate/{uid}` and cleared from the world-readable profile.
+   * When `shared`, needs also appear on the public profile.
    */
   accommodationVisibility?: AccommodationVisibility
   blockedUIDs: string[]
 
   // Onboarding / role-specific (optional; present once the flow runs)
+  /** Draft progress only — free-text notes / constraints are not kept here. */
   seekerOnboarding?: SeekerOnboardingDraft
   employerProfile?: EmployerProfile
 

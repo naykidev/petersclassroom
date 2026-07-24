@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Owner-only Prospect accommodation PII ─────────────────────────────
+    // Required for Axol Work privacy: private needs must NOT live on users/{uid}.
+    // Deploy this match (merge into your existing rules) before relying on
+    // accommodationVisibility: 'private' as a security boundary.
+    match /userPrivate/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Reminder: users/{uid} is treated as a public profile. Do not store email
+    // or private accommodationNeeds on that document when visibility is private.
+    // Field-level hiding on read is not possible — keep sensitive data here only.
+  }
+}

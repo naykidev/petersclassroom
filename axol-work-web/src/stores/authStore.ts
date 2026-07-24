@@ -20,6 +20,13 @@ import { deleteDoc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/fires
 import { auth } from '@/lib/firebase'
 import { userDoc } from '@/lib/firestore'
 import type { AppUser, UserRole } from '@/models'
+import {
+  deleteUserPrivate,
+  loadUserPrivate,
+  mergePrivateIntoUser,
+  migratePrivateNeedsOffPublicProfile,
+  splitAccommodationWrite,
+} from '@/features/users/privacy'
 
 /**
  * Auth + session store. Owns the Firebase auth session and a live snapshot of
@@ -141,15 +148,33 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       // Subscribe to live user-doc updates so role/onboarding stay in sync.
       // Email isn't stored on the doc. Merge it in from the auth session.
+      // Private accommodation needs live in userPrivate/{uid} and are merged here.
       userDocUnsub = onSnapshot(
         ref,
         (docSnap) => {
-          const data = docSnap.data()
-          set({
-            user: data ? { ...data, email: fbUser.email ?? '' } : null,
-            loading: false,
-            isGuest: false,
-          })
+          void (async () => {
+            const data = docSnap.data()
+            if (!data) {
+              set({ user: null, loading: false, isGuest: false })
+              return
+            }
+            let merged: AppUser = { ...data, email: fbUser.email ?? '' }
+            try {
+              const priv = await loadUserPrivate(fbUser.uid)
+              merged = mergePrivateIntoUser(merged, priv)
+              const clearPublic = await migratePrivateNeedsOffPublicProfile(fbUser.uid, data)
+              if (clearPublic) {
+                await updateDoc(userDoc(fbUser.uid), clearPublic)
+              }
+            } catch {
+              // Private doc missing or rules not deployed yet — keep public fields.
+            }
+            set({
+              user: merged,
+              loading: false,
+              isGuest: false,
+            })
+          })()
         },
         () => set({ loading: false, error: 'Could not load your profile.' }),
       )
@@ -227,7 +252,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (!uid) return
     const { uid: _uid, ...rest } = patch
     void _uid
-    await updateDoc(userDoc(uid), rest)
+    const sanitized = await splitAccommodationWrite(uid, get().user, rest)
+    await updateDoc(userDoc(uid), sanitized)
+    // Optimistic merge so fit ranking / settings update before snapshot round-trip.
+    const current = get().user
+    if (current) {
+      try {
+        const priv = await loadUserPrivate(uid)
+        set({ user: mergePrivateIntoUser({ ...current, ...sanitized, uid }, priv) })
+      } catch {
+        set({ user: { ...current, ...sanitized, uid } })
+      }
+    }
   },
 
   deleteAccount: async (password) => {
@@ -237,6 +273,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const cred = EmailAuthProvider.credential(fbUser.email, password)
       await reauthenticateWithCredential(fbUser, cred)
+      await deleteUserPrivate(fbUser.uid)
       await deleteDoc(userDoc(fbUser.uid))
       await deleteUser(fbUser)
     } catch (e) {
