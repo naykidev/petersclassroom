@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BadgeCheck, MapPin, Pencil, Plus, Briefcase } from 'lucide-react'
+import { BadgeCheck, MapPin, Pencil, Plus, Briefcase, ShieldCheck, Eye } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useSocialStore } from '@/stores/socialStore'
 import { usePreviewStore } from '@/stores/previewStore'
@@ -95,24 +95,59 @@ export function ProfilePage() {
 
         {me.accommodationNeeds.length > 0 && (
           <div className="mt-4">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <p className="text-caption font-semibold uppercase text-fg-muted">Accommodation needs</p>
-              <Badge tone={(me.accommodationVisibility ?? 'private') === 'shared' ? 'info' : 'neutral'}>
-                {(me.accommodationVisibility ?? 'private') === 'shared'
-                  ? 'Visible on profile'
-                  : 'Only you can see these'}
-              </Badge>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {me.accommodationNeeds.map((t) => (
-                <Chip key={t} tone="neutral">
-                  {t}
-                </Chip>
-              ))}
-            </div>
-            <p className="mt-2 text-caption text-fg-muted">
-              Change visibility anytime in Settings. Fit ranking still uses these either way.
-            </p>
+            {(() => {
+              const shared = (me.accommodationVisibility ?? 'private') === 'shared'
+              return (
+                <>
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <p className="text-caption font-semibold uppercase text-fg-muted">
+                      Accommodation needs
+                    </p>
+                    <Badge tone={shared ? 'info' : 'success'} icon={shared ? Eye : ShieldCheck}>
+                      {shared ? 'Shared on your profile' : 'Private — only you'}
+                    </Badge>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {me.accommodationNeeds.map((t) => (
+                      <Chip key={t} tone="neutral">
+                        {t}
+                      </Chip>
+                    ))}
+                  </div>
+                  {/* Privacy guarantee, stated plainly where the sensitive data lives. */}
+                  <div
+                    className={
+                      'mt-3 flex items-start gap-2.5 rounded-btn border p-3 ' +
+                      (shared
+                        ? 'border-info/30 bg-info/10'
+                        : 'border-success/30 bg-success/10')
+                    }
+                  >
+                    {shared ? (
+                      <Eye className="mt-0.5 h-4 w-4 shrink-0 text-info" aria-hidden />
+                    ) : (
+                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" aria-hidden />
+                    )}
+                    <p className="text-caption text-fg">
+                      {shared ? (
+                        <>
+                          <span className="font-semibold">Shared.</span> Recruiters and other
+                          members can see these on your profile. Switch back to private anytime
+                          in Settings.
+                        </>
+                      ) : (
+                        <>
+                          <span className="font-semibold">Private by default.</span> Your needs
+                          are stored so only you can see them — Recruiters and other members
+                          cannot. Fit matching still ranks shifts for you privately. You decide
+                          if and when to share, in Settings.
+                        </>
+                      )}
+                    </p>
+                  </div>
+                </>
+              )
+            })()}
           </div>
         )}
       </Card>
