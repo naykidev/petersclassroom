@@ -6,7 +6,6 @@ import {
   deleteUser,
   EmailAuthProvider,
   GoogleAuthProvider,
-  OAuthProvider,
   onAuthStateChanged,
   reauthenticateWithCredential,
   sendPasswordResetEmail,
@@ -49,7 +48,6 @@ interface AuthState {
   signUp: (email: string, password: string, displayName: string) => Promise<void>
   logIn: (email: string, password: string, rememberMe?: boolean) => Promise<void>
   logInWithGoogle: () => Promise<void>
-  logInWithLinkedIn: () => Promise<void>
   logOut: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
   setRole: (role: UserRole) => Promise<void>
@@ -96,7 +94,7 @@ function toMessage(e: unknown): string {
     'auth/account-exists-with-different-credential':
       'An account already exists with this email using a different sign-in method.',
     'auth/operation-not-allowed':
-      'That sign-in method is not enabled yet. Enable LinkedIn (OIDC) or Google in Firebase Authentication → Sign-in method.',
+      'That sign-in method is not enabled yet. Enable Google in Firebase Authentication → Sign-in method.',
   }
   return map[code] ?? (e as Error)?.message ?? 'Something went wrong.'
 }
@@ -112,24 +110,10 @@ async function ensureUserDoc(fbUser: FirebaseUser): Promise<void> {
   }
 }
 
-async function signInWithPopupProvider(
-  provider: GoogleAuthProvider | OAuthProvider,
-): Promise<void> {
+async function signInWithPopupProvider(provider: GoogleAuthProvider): Promise<void> {
   await setPersistence(auth, browserLocalPersistence)
   const cred = await signInWithPopup(auth, provider)
   await ensureUserDoc(cred.user)
-}
-
-/** LinkedIn via Firebase OIDC provider (default provider id: oidc.linkedin). */
-function linkedInProvider(): OAuthProvider {
-  const providerId =
-    (import.meta.env.VITE_LINKEDIN_PROVIDER_ID as string | undefined)?.trim() ||
-    'oidc.linkedin'
-  const provider = new OAuthProvider(providerId)
-  provider.addScope('openid')
-  provider.addScope('profile')
-  provider.addScope('email')
-  return provider
 }
 
 // Live unsubscribe for the current user doc snapshot.
@@ -237,16 +221,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ error: null })
     try {
       await signInWithPopupProvider(new GoogleAuthProvider())
-    } catch (e) {
-      set({ error: toMessage(e) })
-      throw e
-    }
-  },
-
-  logInWithLinkedIn: async () => {
-    set({ error: null })
-    try {
-      await signInWithPopupProvider(linkedInProvider())
     } catch (e) {
       set({ error: toMessage(e) })
       throw e

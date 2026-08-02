@@ -36,14 +36,32 @@ service cloud.firestore {
       return signedIn() && uid() in conversationDoc(id).participantUIDs;
     }
 
+    // A Prospect's accommodation needs are sensitive. On the world-readable
+    // users/{uid} profile they may appear ONLY when the owner has explicitly
+    // set accommodationVisibility to 'shared'. Otherwise they MUST be empty
+    // here (they live in owner-only userPrivate/{uid}). This makes "private"
+    // a server-enforced invariant, not something the client is trusted to do —
+    // so no bug, old client, or hand-crafted request can put a disabled
+    // person's needs onto a doc every signed-in user can read.
+    // Employers' offered supports (role != seeker) are intentionally public.
+    function accommodationPrivacyRespected() {
+      return request.resource.data.get('role', '') != 'seeker'
+        || request.resource.data.get('accommodationVisibility', 'private') == 'shared'
+        || (
+          request.resource.data.get('accommodationNeeds', []).size() == 0
+          && request.resource.data.get('accommodationTags', []).size() == 0
+        );
+    }
+
     // ── users/{uid} — public profile (signed-in readable) ─────────────────
     // Never store email. Private accommodation needs belong in userPrivate.
     match /users/{userId} {
       allow read: if signedIn();
 
-      allow create: if isSelf(userId) && noEmail();
+      allow create: if isSelf(userId) && noEmail()
+        && accommodationPrivacyRespected();
 
-      allow update: if noEmail() && (
+      allow update: if noEmail() && accommodationPrivacyRespected() && (
         // Owner may update their own profile
         isSelf(userId)
         // Employer may flip verification flags only after verification doc exists
