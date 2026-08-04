@@ -34,7 +34,7 @@
     "name": "Axol Assist",
     "url": "https://axolassist.com",
     "logo": "https://axolassist.com/logo.png",
-    "description": "Accessibility Surfer, AccessFlow, and Axol Work — tools for browsing, embedding site a11y, and accommodation-first hiring",
+    "description": "Accessibility Surfer, AccessFlow, and Axol Work: tools for browsing, embedding site a11y, and accommodation-first hiring",
     "email": "axolassist.business@gmail.com",
     "sameAs": []
   }
@@ -114,7 +114,7 @@
             </article>
 
             <div class="dwell-playground" id="dwellPlayground" hidden>
-              <p class="dwell-playground-hint">Hover a target below. The real Surfer ring counts down from 3, then clicks—no press needed.</p>
+              <p class="dwell-playground-hint">Hover a target below. The real Surfer ring counts down from 3, then clicks. No press needed.</p>
               <div class="dwell-playground-targets">
                 <button type="button" class="dwell-target-btn" id="dwellDemoBtn">Open listing</button>
                 <a href="#dwell-feedback" class="dwell-target-link" id="dwellDemoLink">Read more</a>
@@ -145,23 +145,23 @@
           <div class="sec-head">
             <span class="eyebrow">Product showcase</span>
             <h2 id="demo-work-h">Try <span class="accent">Axol Work.</span></h2>
-            <p>Four surfaces from the live app. Pick a pillar below—description on the left, website preview on the right.</p>
+            <p>Four surfaces from the live app. Pick a pillar below: description on the left, website preview on the right.</p>
           </div>
-          <p class="demo-showcase-note">Prospects browse fit-ranked shifts, find mentorship by shared experience, keep accommodation needs private by default, and look for Inclusive hiring Recruiters before they apply.</p>
+          <p class="demo-showcase-note">Prospects browse fit-ranked shifts, find mentorship by shared experience, keep accommodation needs private by default, and trust Recruiters Axol Assist has verified.</p>
         </div>
 
         <div class="demo-controls reveal" role="tablist" aria-label="Axol Work previews" data-demo="work">
           <button class="demo-chip" type="button" role="tab" id="work-tab-shifts" data-feature="shifts" aria-selected="true" aria-controls="work-panel">Fit-ranked shifts</button>
           <button class="demo-chip" type="button" role="tab" id="work-tab-mentorship" data-feature="mentorship" aria-selected="false" aria-controls="work-panel">Mentorship</button>
           <button class="demo-chip" type="button" role="tab" id="work-tab-privacy" data-feature="privacy" aria-selected="false" aria-controls="work-panel">Private accommodations</button>
-          <button class="demo-chip" type="button" role="tab" id="work-tab-inclusive" data-feature="inclusive" aria-selected="false" aria-controls="work-panel">Inclusive hiring</button>
+          <button class="demo-chip" type="button" role="tab" id="work-tab-inclusive" data-feature="inclusive" aria-selected="false" aria-controls="work-panel">Verified Recruiters</button>
         </div>
 
         <div class="work-preview reveal" id="work-panel" role="tabpanel" aria-labelledby="work-tab-shifts">
           <div class="work-preview-copy">
             <p class="work-preview-kicker" id="workPreviewKicker">Find work</p>
             <h3 class="work-preview-title" id="workPreviewTitle">Shifts sorted by how well they fit your needs.</h3>
-            <p class="work-preview-body" id="workPreviewBody">Prospects set accommodations once. Each listing shows how many needs it meets—like “3 of 3 needs met”—before you open it or apply.</p>
+            <p class="work-preview-body" id="workPreviewBody">Prospects set accommodations once. Each listing shows how many needs it meets, like “3 of 3 needs met,” before you open it or apply.</p>
           </div>
 
           <div class="work-preview-frame" aria-hidden="true">
@@ -490,7 +490,7 @@
         if (!window.SurferDemo) return;
         if (on) {
           if (result) {
-            result.textContent = 'Ready — hold still on a target';
+            result.textContent = 'Ready. Hold still on a target';
             result.classList.add('is-empty');
           }
           window.SurferDemo.setDwellRoot(playground);
@@ -575,7 +575,7 @@
       shifts: {
         kicker: 'Find work',
         title: 'Shifts sorted by how well they fit your needs.',
-        body: 'Prospects set accommodations once. Each listing shows how many needs it meets—like “3 of 3 needs met”—before you open it or apply.',
+        body: 'Prospects set accommodations once. Each listing shows how many needs it meets, like “3 of 3 needs met,” before you open it or apply.',
         url: 'axolassist.com/demo · Find work',
         screen:
           '<div class="work-ui">' +
@@ -588,7 +588,7 @@
       mentorship: {
         kicker: 'Mentorship',
         title: 'People who share your work background.',
-        body: 'Add experience tags once. Mentorship surfaces people with overlapping history so you can Reach out—or Message—without cold networking.',
+        body: 'Add experience tags once. Mentorship surfaces people with overlapping history so you can Reach out or Message without cold networking.',
         url: 'axolassist.com/demo · Mentorship',
         screen:
           '<div class="work-ui">' +
@@ -601,27 +601,27 @@
       privacy: {
         kicker: 'Accommodation privacy',
         title: 'You control if, when, and how you share.',
-        body: 'Needs stay Private — only you by default. Fit matching still ranks shifts for you privately. Share on your profile only when you choose.',
+        body: 'Needs stay Private (only you) by default. Fit matching still ranks shifts for you privately. Share on your profile only when you choose.',
         url: 'axolassist.com/demo · Profile',
         screen:
           '<div class="work-ui">' +
             '<p class="work-ui-sub">Who can see your needs?</p>' +
-            '<article class="work-ui-card is-selected"><span class="work-fit-badge is-strong">Private — only you</span><strong>Keep private</strong><span class="work-shift-site">Use needs only to rank shifts for you</span><span class="work-shift-tags">Off your public profile until you choose otherwise</span></article>' +
+            '<article class="work-ui-card is-selected"><span class="work-fit-badge is-strong">Private (only you)</span><strong>Keep private</strong><span class="work-shift-site">Use needs only to rank shifts for you</span><span class="work-shift-tags">Off your public profile until you choose otherwise</span></article>' +
             '<article class="work-ui-card"><span class="work-fit-badge">Shared on your profile</span><strong>Share on my profile</strong><span class="work-shift-site">Recruiters can see supports you listed</span><span class="work-shift-tags">Change anytime in Settings</span></article>' +
             '<p class="work-ui-note">Fit matching still uses your needs privately either way.</p>' +
           '</div>'
       },
       inclusive: {
-        kicker: 'Inclusive employers',
-        title: 'Recruiters who tag workplace supports up front.',
-        body: 'Look for the Inclusive hiring badge and support chips—headphones allowed, seated workstations, structured training—before you spend energy applying.',
-        url: 'axolassist.com/demo · Inclusive hiring',
+        kicker: 'Verified by Axol Assist',
+        title: 'Recruiters Axol Assist has verified.',
+        body: 'Axol Assist reviews Recruiters before they post shifts. Prospects see a Verified Recruiter mark plus Inclusive hiring supports, so trust is earned with Axol Assist, not assumed from a company logo.',
+        url: 'axolassist.com/demo · Verified Recruiters',
         screen:
           '<div class="work-ui">' +
-            '<p class="work-ui-sub">Recruiters who offer workplace supports</p>' +
-            '<article class="work-ui-card"><span class="work-fit-badge is-strong">Inclusive hiring</span><strong>Axol Work Kitchen</strong><span class="work-shift-site">3 workplace supports</span><span class="work-shift-tags">Headphones allowed · Seated workstations · Structured training</span></article>' +
-            '<article class="work-ui-card"><span class="work-fit-badge is-strong">Inclusive hiring</span><strong>Axol Work Factory</strong><span class="work-shift-site">2 workplace supports</span><span class="work-shift-tags">Predictable routines · Written checklists</span></article>' +
-            '<article class="work-ui-card"><span class="work-fit-badge">Open shifts</span><strong>Harbor Clinic</strong><span class="work-shift-site">Supports listed per shift</span><span class="work-shift-tags">View &amp; apply</span></article>' +
+            '<p class="work-ui-sub">Trust signals set by Axol Assist</p>' +
+            '<article class="work-ui-card"><span class="work-fit-badge is-strong">Verified Recruiter</span><strong>Axol Work Kitchen</strong><span class="work-shift-site">Reviewed by Axol Assist · can post shifts</span><span class="work-shift-tags">Inclusive hiring · Headphones allowed · Seated workstations</span></article>' +
+            '<article class="work-ui-card"><span class="work-fit-badge is-strong">Verified Recruiter</span><strong>Axol Work Factory</strong><span class="work-shift-site">Reviewed by Axol Assist · can post shifts</span><span class="work-shift-tags">Inclusive hiring · Written checklists</span></article>' +
+            '<article class="work-ui-card"><span class="work-fit-badge">Pending review</span><strong>North Market Ops</strong><span class="work-shift-site">Cannot post until Axol Assist verifies</span><span class="work-shift-tags">Unverified</span></article>' +
           '</div>'
       }
     };
