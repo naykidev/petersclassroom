@@ -364,89 +364,20 @@ footer a:focus-visible,
 .hero-trust b { color: var(--ink-soft); font-weight: 600; }
 .hero-trust .dot-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--line-strong); align-self: center; }
 
-/* Hero dwell preview — bordered square stage, not floating orb alone */
+/* Hero logo — plain mascot, no dwell animation */
 .hero-stage {
-  position: relative; width: 100%; max-width: 380px; margin-left: auto;
-  display: flex; flex-direction: column; align-items: stretch; gap: .85rem;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  padding: 1.25rem;
-}
-.hero-dwell {
   position: relative;
   width: 100%;
+  max-width: 340px;
+  margin-left: auto;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
-  background: #EEEBE8;
 }
-.hero-dwell-ring {
-  position: absolute;
-  inset: 8%;
-  width: 84%;
-  height: 84%;
-  z-index: 3;
-  pointer-events: none;
-  transform: rotate(-90deg);
-}
-.hero-dwell-track {
-  fill: none;
-  stroke: rgba(176, 48, 96, .2);
-  stroke-width: 2.5;
-}
-.hero-dwell-progress {
-  fill: none;
-  stroke: var(--coral);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-dasharray: 339.3;
-  stroke-dashoffset: 339.3;
-  animation: hero-dwell-fill 2.8s var(--ease) infinite;
-}
-.hero-dwell .axol-mark {
-  width: 68%;
-  height: 68%;
+.hero-stage .axol-mark {
+  width: 88%;
+  height: 88%;
   border-radius: 50%;
-  position: relative;
-  z-index: 2;
-  filter: none;
-}
-.hero-dwell-cursor {
-  position: absolute;
-  z-index: 4;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--coral);
-  box-shadow: 0 0 0 2px rgba(176, 48, 96, .22);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: hero-dwell-cursor 2.8s var(--ease) infinite;
-}
-.hero-dwell-caption {
-  font-family: var(--font-ui);
-  font-size: .78rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  color: var(--muted);
-  text-align: left;
-  margin: 0;
-}
-@keyframes hero-dwell-fill {
-  0%, 12% { stroke-dashoffset: 339.3; opacity: .85; }
-  70%, 78% { stroke-dashoffset: 0; opacity: 1; }
-  88%, 100% { stroke-dashoffset: 0; opacity: 0; }
-}
-@keyframes hero-dwell-cursor {
-  0%, 12% { transform: translate(-50%, -50%) scale(1); opacity: .9; }
-  70%, 78% { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
-  82% { transform: translate(-50%, -50%) scale(.75); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(1); opacity: .9; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-dwell-progress { animation: none; stroke-dashoffset: 85; }
-  .hero-dwell-cursor { animation: none; }
 }
 
 /* ════════════════ Section heading block ════════════════ */
