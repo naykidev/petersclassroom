@@ -352,11 +352,11 @@ footer a:focus-visible,
   max-width: 36rem;
 }
 .hero-tagline {
-  margin-top: .75rem;
-  font-size: 1rem;
+  margin-top: 1rem;
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
   color: var(--muted);
-  max-width: 32rem;
-  line-height: 1.65;
+  max-width: 42rem;
+  line-height: 1.7;
   font-weight: 400;
 }
 .hero-links {
@@ -373,32 +373,26 @@ footer a:focus-visible,
   justify-content: center;
   font-family: var(--font-ui);
   font-weight: 600;
-  font-size: .95rem;
+  font-size: .875rem;
   line-height: 1;
-  padding: .85rem 1.25rem;
+  padding: .7rem 1rem;
   border-radius: 8px;
   text-decoration: none;
+  white-space: nowrap;
   transition: background .16s var(--ease), border-color .16s var(--ease), color .16s var(--ease);
 }
-.hero-cta-primary {
-  background: var(--coral-deep);
+.hero-cta-primary,
+.hero-cta-secondary {
+  background: #4a1730;
   color: #fff !important;
-  border: 1px solid var(--coral-deep);
+  border: 1px solid rgba(74, 23, 48, .85);
   box-shadow: 0 1px 2px rgba(20, 18, 26, .06);
 }
-.hero-cta-primary:hover {
-  background: var(--coral-press);
-  border-color: var(--coral-press);
-  color: #fff !important;
-}
-.hero-cta-secondary {
-  background: transparent;
-  color: var(--ink) !important;
-  border: 1px solid var(--line-strong);
-}
+.hero-cta-primary:hover,
 .hero-cta-secondary:hover {
-  border-color: var(--ink-soft);
-  color: var(--ink) !important;
+  background: #6e1c40;
+  border-color: #6e1c40;
+  color: #fff !important;
 }
 /* Shared CTA styles used on product pages */
 .hero-cta-link {
@@ -419,9 +413,15 @@ footer a:focus-visible,
 .hero-link:hover { color: var(--coral-deep); }
 .hero-link:hover::after { transform: translateX(3px); }
 
-.hero-trust { margin-top: 1.75rem; display: flex; align-items: baseline; gap: 1.25rem; flex-wrap: wrap; color: var(--faint); font-size: .86rem; }
+.hero-trust {
+  margin-top: 1.25rem;
+  color: var(--faint);
+  font-size: .875rem;
+  line-height: 1.5;
+  max-width: 42rem;
+}
 .hero-trust b { color: var(--ink-soft); font-weight: 600; }
-.hero-trust .dot-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--line-strong); align-self: center; }
+.hero-trust .dot-sep { display: none; }
 
 .hero-stage {
   display: flex;
