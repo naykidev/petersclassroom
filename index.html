@@ -519,6 +519,15 @@
         else window.SurferDemo.closeReadingMode();
       }
 
+      function syncReadingChip(on) {
+        var readingChip = group.querySelector('.demo-chip[data-opt="reading"]');
+        if (readingChip) readingChip.setAttribute('aria-pressed', on ? 'true' : 'false');
+        if (after) after.classList.toggle('opt-reading', on);
+      }
+
+      window.addEventListener('easepass-rm-opened', function () { syncReadingChip(true); });
+      window.addEventListener('easepass-rm-closed', function () { syncReadingChip(false); });
+
       group.querySelectorAll('.demo-chip[data-opt]').forEach(function (chip) {
         chip.addEventListener('click', function () {
           var on = chip.getAttribute('aria-pressed') !== 'true';

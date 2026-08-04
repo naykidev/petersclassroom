@@ -508,7 +508,11 @@
     const closeBtn = el('button', 'easepass-rm-close', '✕');
     closeBtn.type = 'button';
     closeBtn.setAttribute('aria-label', STRINGS.close);
-    closeBtn.addEventListener('click', disable);
+    closeBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      disable();
+    });
     columnEl.appendChild(closeBtn);
 
     // Scrollable reading region. Everything except the pinned bottom toolbar
@@ -1229,7 +1233,12 @@
     box.appendChild(el('p', 'easepass-rm-empty-text', STRINGS.noContent));
     const closeBtn = el('button', 'easepass-rm-tool', STRINGS.close);
     closeBtn.type = 'button';
-    closeBtn.addEventListener('click', disable);
+    closeBtn.setAttribute('aria-label', STRINGS.close);
+    closeBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      disable();
+    });
     box.appendChild(closeBtn);
     overlayEl.appendChild(box);
     try { document.documentElement.appendChild(overlayEl); } catch (_) {}
