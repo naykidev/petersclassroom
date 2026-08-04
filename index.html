@@ -3,28 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Axol Assist: accessibility technology for the web</title>
-  <meta name="description" content="Axol Assist builds practical accessibility software for browsers and websites. Tools that adapt to people, not the other way around." />
+  <title>Axol Assist: dwell click, text controls, and accessible shift work</title>
+  <meta name="description" content="Axol Assist builds Accessibility Surfer (Chrome dwell-click &amp; reading tools), AccessFlow (embeddable site toolbar), and Axol Work (shift marketplace ranked by accommodation fit)." />
 
   <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Axol Assist" />
-  <meta property="og:title" content="Axol Assist: The web should adapt to you" />
-  <meta property="og:description" content="Practical accessibility tools for browsers and websites. Built for real people, tested with real feedback." />
+  <meta property="og:title" content="Axol Assist: dwell click, text controls, accessible shift work" />
+  <meta property="og:description" content="Chrome extension for dwell clicking and reading. Embeddable toolbar for any site. Shift marketplace sorted by accommodation fit." />
   <meta property="og:url" content="https://axolassist.com/" />
   <meta property="og:image" content="https://axolassist.com/logo.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Axol Assist" />
-  <meta name="twitter:description" content="Practical accessibility tools for browsers and websites." />
+  <meta name="twitter:description" content="Dwell click, on-page text controls, and accommodation-first shift hiring." />
   <meta name="twitter:image" content="https://axolassist.com/logo.png" />
-  <meta name="theme-color" content="#FBFAF8" />
+  <meta name="theme-color" content="#F7F6F4" />
 
   <link rel="preload" as="image" href="logo.png">
   <link rel="icon" type="image/png" href="accessibility.png">
   <link rel="canonical" href="https://axolassist.com/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>document.documentElement.classList.add('js');</script>
   <script type="application/ld+json">
@@ -34,7 +34,7 @@
     "name": "Axol Assist",
     "url": "https://axolassist.com",
     "logo": "https://axolassist.com/logo.png",
-    "description": "Accessibility technology company building browser and website tools",
+    "description": "Accessibility Surfer, AccessFlow, and Axol Work — tools for browsing, embedding site a11y, and accommodation-first hiring",
     "email": "axolassist.business@gmail.com",
     "sameAs": []
   }
@@ -64,27 +64,27 @@
 
   <main id="main" tabindex="-1">
 
-    <!-- HERO (structure preserved) -->
+    <!-- HERO -->
     <header class="hero">
       <div class="wrap hero-inner">
         <div class="hero-copy">
-          <span class="eyebrow hero-eyebrow">Axol Assist</span>
-          <h1 class="hero-headline">The web should <span class="accent">adapt to you.</span></h1>
-          <p class="hero-tagline">Axol Assist is an accessibility technology company building software that helps people read, navigate, and interact with the web on their own terms. For individuals who browse differently, and for teams who want their sites to work for everyone.</p>
+          <h1 class="hero-headline"><span class="brand-axolo">Axol</span> <span class="brand-assist">Assist</span></h1>
+          <p class="hero-deck">Dwell click any page. Ship a site toolbar. Hire by accommodation fit.</p>
+          <p class="hero-tagline">We make Accessibility Surfer for Chrome, AccessFlow for any website, and Axol Work for shift hiring where “3 of 4 needs met” shows up before you apply.</p>
           <div class="hero-links">
-            <a href="#products" class="hero-cta-link">
-              Explore products
+            <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="hero-cta-link" data-chrome-install rel="noopener noreferrer">
+              Add Surfer to Chrome
               <svg viewBox="0 0 24 24" fill="none" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
-            <a href="#why" class="hero-link">Why we exist</a>
+            <a href="toolbar.html#install" class="hero-link">Install AccessFlow</a>
           </div>
-          <div class="hero-trust">
-            <span><b>Browser</b> and <b>website</b> tools</span>
+          <p class="hero-trust">
+            <span><b>Preferences stay in the browser</b></span>
             <span class="dot-sep" aria-hidden="true"></span>
-            <span>Built with <b>user feedback</b></span>
+            <span>Works with mouse, trackpad, head tracker, or eye gaze</span>
             <span class="dot-sep" aria-hidden="true"></span>
-            <span><b>Privacy-conscious</b></span>
-          </div>
+            <span>Chrome Web Store + script/npm + web app</span>
+          </p>
         </div>
 
         <div class="hero-stage" aria-hidden="true">
@@ -99,10 +99,10 @@
         <div class="problem-grid reveal">
           <div class="problem-copy">
             <span class="eyebrow">The problem</span>
-            <h2>Most websites weren't built with <span class="accent">everyone in mind.</span></h2>
+            <h2>Most sites were built for <span class="accent">steady hands and perfect eyesight.</span></h2>
             <div class="problem-body">
-              <p>Tiny click targets. Gray text on gray backgrounds. Dense pages with nowhere for your eyes to rest. Expensive overlays that hide behind a paywall. Most accessibility products assume you will change how you work to fit the tool.</p>
-              <p><strong>We think it should be the opposite.</strong> Software should meet people where they already are: in the browser, on the sites they use every day.</p>
+              <p>Tiny tap targets. Gray on gray. Pages with no place for your eyes to rest. Enterprise overlays that cost more than a small team’s whole tooling budget. Plenty of products ask you to change how you browse so the tool can work.</p>
+              <p><strong>We build the other way around.</strong> Controls that sit in your Chrome browser or on the sites people already visit, so reading, clicking, and applying for work don’t require a different workflow.</p>
             </div>
           </div>
 
@@ -135,8 +135,8 @@
             </ul>
 
             <div class="problem-insight-card">
-              <p class="problem-insight-kicker">The gap we close</p>
-              <p class="problem-insight-text">Practical controls on the sites people already visit. No platform switch. No six-figure overlay contract.</p>
+              <p class="problem-insight-kicker">What we ship instead</p>
+              <p class="problem-insight-text">Hover-to-click and reading mode in Chrome. A 15+ control toolbar you embed with one script. A shift feed that ranks listings by accommodation overlap.</p>
             </div>
           </aside>
         </div>
@@ -148,8 +148,8 @@
       <div class="wrap">
         <div class="sec-head reveal">
           <span class="eyebrow">Who it's for</span>
-          <h2>When the default web <span class="accent">doesn't fit.</span></h2>
-          <p>Accessibility is not a niche. It is anyone whose body, vision, focus, or energy level makes the standard interface harder than it should be.</p>
+          <h2>If the default UI <span class="accent">costs you energy.</span></h2>
+          <p>Accessibility Surfer and AccessFlow are for people managing tremors, RSI, low vision, dyslexia, eye gaze, or plain screen fatigue after a long day. Axol Work is for Prospects and Recruiters who treat accommodations as first-class data.</p>
         </div>
 
         <div class="audience-grid">
@@ -185,8 +185,8 @@
       <div class="wrap">
         <div class="sec-head sec-head--center reveal">
           <span class="eyebrow">What we build</span>
-          <h2>Accessibility software across <span class="accent">two surfaces.</span></h2>
-          <p>Axol Assist builds tools for people who browse the web and for teams who publish to it. One company, multiple products, one mission.</p>
+          <h2>Three products, <span class="accent">three install paths.</span></h2>
+          <p>Chrome Web Store for individuals. One script tag or npm import for site owners. A signed-in web app for Prospects and Recruiters.</p>
         </div>
 
         <div class="build-grid">
@@ -194,25 +194,25 @@
             <span class="build-card-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 20h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
             </span>
-            <h3>Browser accessibility</h3>
-            <p>Adaptive browsing tools that help users navigate, read, and interact with websites more comfortably. Extensions and in-browser controls that work on the sites people already visit.</p>
+            <h3>Browser: Accessibility Surfer</h3>
+            <p>Free Chrome extension with dwell clicking, font/size/spacing/contrast controls, and reading mode. Preferences stay local. Works on YouTube thumbnails, marketplace listings, and everyday sites.</p>
           </article>
 
           <article class="build-card reveal">
             <span class="build-card-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="1.7"/><path d="M4 10h16M9 15h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
             </span>
-            <h3>Website accessibility</h3>
-            <p>Accessibility solutions for website owners and developers, including AccessFlow. Embed visitor-controlled toolbars without rebuilding your entire stack.</p>
+            <h3>Sites: AccessFlow</h3>
+            <p>Visitor-controlled toolbar via CDN, npm, or React. No backend. Settings persist in the visitor’s browser so every page on your site can be adjusted without a rebuild.</p>
           </article>
 
           <article class="build-card build-card--future reveal">
             <span class="build-card-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v4M12 17v4M3 12h4M17 12h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/></svg>
             </span>
-            <h3>Future products</h3>
-            <p>We are actively building new accessibility technologies. Reading tools, smarter adaptation, and deeper integration with how people actually use the web.</p>
-            <span class="build-card-tag">In development</span>
+            <h3>Work: Axol Work</h3>
+            <p>Shift marketplace and professional network. Prospects set needs once; Recruiters tag supports per listing; feed sorts by fit and Inclusive hiring badges.</p>
+            <span class="build-card-tag">Live preview</span>
           </article>
         </div>
       </div>
@@ -222,12 +222,12 @@
     <section class="credibility-section" aria-label="Our approach">
       <div class="wrap">
         <ul class="cred-badge-row reveal">
-          <li class="cred-badge">Works on existing websites</li>
-          <li class="cred-badge">Built with user feedback</li>
-          <li class="cred-badge">Privacy-conscious</li>
-          <li class="cred-badge">No account required</li>
-          <li class="cred-badge">WCAG-aligned</li>
-          <li class="cred-badge">Lightweight and fast</li>
+          <li class="cred-badge">Settings stored in the browser, not our servers</li>
+          <li class="cred-badge">No account needed for Surfer or AccessFlow</li>
+          <li class="cred-badge">Keyboard paths and :focus-visible on this site</li>
+          <li class="cred-badge">WCAG-oriented contrast on marketing pages</li>
+          <li class="cred-badge">Respects prefers-reduced-motion</li>
+          <li class="cred-badge">Chrome MV3 extension + CDN/npm packages</li>
         </ul>
       </div>
     </section>
@@ -237,8 +237,8 @@
       <div class="wrap">
         <div class="sec-head sec-head--center reveal">
           <span class="eyebrow">Products</span>
-          <h2>Three products. <span class="accent">One standard.</span></h2>
-          <p>Practical accessibility tools you can install today. No enterprise sales call required.</p>
+          <h2>Install today. <span class="accent">No sales call.</span></h2>
+          <p>Pick the surface you need: your browser, your website, or inclusive shift hiring.</p>
         </div>
 
         <div class="product-grid">
@@ -340,10 +340,10 @@
         <div class="why-grid">
           <div class="why-copy reveal">
             <span class="eyebrow">Why Axol Assist exists</span>
-            <h2>Software that adapts to <span class="accent">people.</span></h2>
-            <p>Accessibility tools should be practical, not performative. Too many solutions are expensive, buried in settings, or hidden behind overlays that site owners never enable. Real users are left to fight the default web on their own.</p>
-            <p>Axol Assist exists to build software that meets people where they are. We ship browser tools for individuals and embeddable tools for site owners. We test with real users, keep data in the browser, and charge fairly so more people can actually use what we make.</p>
-            <p class="why-commitment"><strong>Our commitment:</strong> build accessibility technology that is usable on day one, respectful of privacy, and honest about what it can and cannot fix.</p>
+            <h2>Meet people in the <span class="accent">tabs they already have open.</span></h2>
+            <p>Too many accessibility products are priced for procurement teams, buried three menus deep, or shipped as overlays site owners never turn on. People still fight 11px gray text and 24px click targets alone.</p>
+            <p>We ship Accessibility Surfer for individuals, AccessFlow for developers who can paste a script, and Axol Work for hiring where accommodations are structured fields instead of a buried “other” box.</p>
+            <p class="why-commitment"><strong>What we won’t promise:</strong> that any toolbar replaces building accessible HTML. Surfer and AccessFlow help visitors adapt the page in front of them. Sites still owe WCAG work underneath.</p>
           </div>
           <div class="why-principles reveal">
             <div class="why-principle">
@@ -376,15 +376,15 @@
       <div class="wrap">
         <div class="sec-head reveal">
           <span class="eyebrow">Accessibility</span>
-          <h2 id="a11y-statement-heading">Built for <span class="accent">everyone who visits.</span></h2>
-          <p>This site follows semantic HTML, keyboard navigation, visible focus states, and screen reader-friendly landmarks. Motion is reduced automatically when your system prefers it. Use the accessibility button in the corner to adjust text, contrast, spacing, and motion on any page.</p>
+          <h2 id="a11y-statement-heading">This marketing site is built to be <span class="accent">usable with a keyboard.</span></h2>
+          <p>Landmarks, visible focus, and reduced motion when your OS asks for it. Use the corner control to try the same font, contrast, spacing, and motion levers AccessFlow exposes to site visitors.</p>
         </div>
-        <ul class="contact-list reveal" style="max-width: 42rem; margin-top: 1.5rem;">
+        <ul class="contact-list reveal contact-list--statement">
           <li>Full keyboard navigation and logical tab order</li>
           <li>ARIA labels on interactive controls, dialogs, and toggles</li>
           <li>WCAG-oriented color contrast on body text and controls</li>
           <li>Respects <code>prefers-reduced-motion</code> with no autoplay animations</li>
-          <li>Contact us at <a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a> to report barriers</li>
+          <li>Report barriers to <a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a></li>
         </ul>
       </div>
     </section>
@@ -394,22 +394,22 @@
       <div class="wrap">
         <div class="sec-head reveal">
           <span class="eyebrow">Get in touch</span>
-          <h2>Say <span class="accent">hello.</span></h2>
-          <p>Early access, feedback, partnerships, or just a question. We read everything.</p>
+          <h2>Email the people who <span class="accent">ship these tools.</span></h2>
+          <p>Bug reports, AccessFlow installs, Axol Work hiring questions, partnerships, or press. We usually reply within two business days.</p>
         </div>
 
         <div class="contact-grid">
           <div class="contact-info reveal">
-            <h3>Reach us directly</h3>
+            <h3>Direct</h3>
             <p><a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a></p>
-            <p class="contact-note">We typically respond within 2 business days.</p>
+            <p class="contact-note">Typically within 2 business days.</p>
 
-            <h3 style="margin-top: 1.8rem;">Who we hear from</h3>
+            <h3 class="contact-info-subhead">Who writes in</h3>
             <ul class="contact-list">
-              <li>People using assistive tech day to day</li>
+              <li>People using dwell click or eye gaze day to day</li>
               <li>Family members and caregivers</li>
               <li>Accessibility and AT professionals</li>
-              <li>Developers and potential partners</li>
+              <li>Developers embedding AccessFlow or hiring on Axol Work</li>
             </ul>
           </div>
 
@@ -435,9 +435,9 @@
             </div>
             <div class="form-row">
               <label for="cf-message">Message</label>
-              <textarea id="cf-message" name="message" rows="4" required placeholder="Tell us a bit about your interest or question."></textarea>
+              <textarea id="cf-message" name="message" rows="4" required placeholder="Which product, what broke, or what you want to try."></textarea>
             </div>
-            <div style="display:none" aria-hidden="true">
+            <div class="contact-honeypot" aria-hidden="true">
               <label for="cf-website">Website (leave blank)</label>
               <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
             </div>
@@ -458,7 +458,7 @@
           <span class="axol-mark" aria-hidden="true"></span>
           Axol Assist
         </a>
-        <p class="footer-tagline">Accessibility technology for browsers and websites.</p>
+        <p class="footer-tagline">Accessibility Surfer, AccessFlow, and Axol Work.</p>
         <span class="footer-colors" aria-hidden="true">
           <svg viewBox="0 0 240 24" fill="none" preserveAspectRatio="none"><path d="M0,14 C40,4 80,22 120,12 C160,2 200,20 240,10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
         </span>

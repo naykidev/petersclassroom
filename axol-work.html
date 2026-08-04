@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Axol Work · Accessible work &amp; community</title>
-  <meta name="description" content="Axol Work helps Prospects find shifts that fit their accommodation needs, and highlights Recruiters who are committed to inclusive hiring—not just open roles. Scout, message, verify work history, and grow a network." />
+  <meta name="description" content="Axol Work helps Prospects find shifts ranked by accommodation fit, and highlights Recruiters who offer workplace supports and want to hire disabled and neurodivergent workers. Scout, message, verify work history, and join groups." />
 
   <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website" />
@@ -17,23 +17,23 @@
   <meta name="twitter:title" content="Axol Work · Accessible work &amp; community" />
   <meta name="twitter:description" content="Find shifts that fit how you work, or hire people who are ready to do theirs." />
   <meta name="twitter:image" content="https://axolassist.com/axol-work.png" />
-  <meta name="theme-color" content="#FBFAF8" />
+  <meta name="theme-color" content="#F7F6F4" />
 
   <link rel="icon" type="image/png" href="axol-work.png">
   <link rel="canonical" href="https://axolassist.com/axol-work.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>document.documentElement.classList.add('js');</script>
   <style>
     /* ── Axol Work product page ── */
-    .aw-hero { background: radial-gradient(120% 80% at 85% -10%, var(--coral-tint) 0%, transparent 55%), var(--paper); }
+    .aw-hero { background: linear-gradient(180deg, #EFEAF3 0%, var(--paper) 70%); }
     .aw-hero .wrap { max-width: 880px; }
     .page-label {
       display: inline-flex; align-items: center; gap: .5rem;
       font-family: var(--font-display); font-size: .78rem; font-weight: 600; letter-spacing: .04em;
-      color: var(--coral-deep); background: var(--coral-tint); padding: .45rem 1rem; border-radius: 999px;
+      color: var(--coral-deep); background: var(--coral-tint); padding: .45rem 1rem; border-radius: var(--r-sm);
       margin-bottom: 1.6rem;
     }
     .page-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--coral); }
@@ -75,7 +75,11 @@
       display: inline-flex; align-items: center; gap: .4rem;
       background: rgba(31,122,82,.12); color: #1f7a52;
       font-family: var(--font-display); font-weight: 600; font-size: .8rem;
-      padding: .35rem .8rem; border-radius: 999px;
+      padding: .35rem .8rem; border-radius: var(--r-sm);
+    }
+    .aw-cta-wrap { margin-bottom: 1rem; }
+    .aw-cta-wrap .btn { display: inline-flex; }
+    .aw-cta-secondary { margin-top: 0.75rem;
     }
   </style>
 </head>
@@ -109,7 +113,7 @@
           <img src="axol-work.png" alt="" class="product-hero-logo" aria-hidden="true" />
           <span class="product-hero-wordmark">Axol <span class="accent">Work.</span></span>
         </h1>
-        <p class="hero-tagline">Shift work that starts with how you actually work. Tell us what you need once. Browse open shifts sorted by fit. Apply, message, and build a network without the usual guessing game.</p>
+        <p class="hero-tagline">Prospects set accommodations once and browse shifts sorted by overlap. Recruiters tag what each listing can support and can earn an Inclusive hiring badge. Scout, Express interest, message, and verify work history in one app.</p>
         <div class="hero-links">
           <a href="/demo" class="hero-cta-link">
             Explore Axol Work
@@ -133,7 +137,7 @@
     <section class="mission">
       <div class="wrap reveal">
         <h2>Stop guessing what a job <span class="accent">will support.</span></h2>
-        <p>On most boards, accommodations are buried, if they show up at all. Here, Prospects pick their needs during onboarding and choose whether to keep them private or share them on their profile. Recruiters tag each shift with what they can offer—and can earn an Inclusive hiring badge when they both offer workplace supports and commit to hiring disabled and neurodivergent workers. Your home feed sorts by overlap either way, so you see a badge like <span class="aw-fit">3 of 4 needs met</span> before you even open the listing.</p>
+        <p>On most boards, accommodations are buried if they show up at all. Here, Prospects pick needs during onboarding and choose private or profile-visible. Recruiters tag each shift with supports, and can earn Inclusive hiring when they both offer workplace supports and commit to hiring disabled and neurodivergent workers. Your feed sorts by overlap so you see a badge like <span class="aw-fit">3 of 4 needs met</span> before opening the listing.</p>
       </div>
     </section>
 
@@ -175,7 +179,7 @@
         </div>
         <div class="principles-grid">
           <div class="principle reveal"><span class="principle-num">1</span><h3>Tell us how you work</h3><p>Pick your experience, city, availability, and needs: quiet space, seated breaks, written instructions, flexible starts, predictable routines, lifting limits. Your needs drive the fit ranking.</p></div>
-          <div class="principle reveal"><span class="principle-num">2</span><h3>Browse by fit</h3><p>Open shifts rise to the top when they cover more of your needs. You’ll see badges like <span class="aw-fit">3 of 4 needs met</span>. Above the feed, Inclusive employers highlight Recruiters who offer supports and want to hire you—not only companies with open listings.</p></div>
+          <div class="principle reveal"><span class="principle-num">2</span><h3>Browse by fit</h3><p>Open shifts rise to the top when they cover more of your needs. You’ll see badges like <span class="aw-fit">3 of 4 needs met</span>. Above the feed, Inclusive employers highlight Recruiters who offer supports and want to hire you, not only companies with open listings.</p></div>
           <div class="principle reveal"><span class="principle-num">3</span><h3>Apply and follow up</h3><p>Open a shift, read it, apply. Watch status move from submitted to viewed, accepted, or declined. Pull an application while it’s still submitted, or message the Recruiter anytime.</p></div>
           <div class="principle reveal"><span class="principle-num">4</span><h3>Get verified</h3><p>Add a past job and ask that Recruiter to confirm it. Once they do, you get a Verified badge, and you can leave a short, tag-based review of the workplace.</p></div>
         </div>
@@ -191,7 +195,7 @@
           <p>Company page, shifts, applicants, and verification, all in the browser.</p>
         </div>
         <div class="principles-grid">
-          <div class="principle reveal"><span class="principle-num">01</span><h3>Set up, then post</h3><p>Add your company name, address, and workplace supports (headphones, seated stations, structured training). Opt in to inclusive hiring if you actively want to hire disabled and neurodivergent workers. Each shift also gets its own accommodation tags—those are what Prospects match on.</p></div>
+          <div class="principle reveal"><span class="principle-num">01</span><h3>Set up, then post</h3><p>Add your company name, address, and workplace supports (headphones, seated stations, structured training). Opt in to inclusive hiring if you actively want to hire disabled and neurodivergent workers. Each shift also gets its own accommodation tags; those drive Prospect match badges.</p></div>
           <div class="principle reveal"><span class="principle-num">02</span><h3>Review applicants</h3><p>See who applied across all your shifts. Open a profile, Scout them, message them, accept or decline. Accepting fills the shift; marking it complete logs hours.</p></div>
           <div class="principle reveal"><span class="principle-num">03</span><h3>Confirm work history</h3><p>When a Prospect asks you to verify a job, you’ll see it on the Company page. Confirming gives them a Verified badge and lets them review you.</p></div>
           <div class="principle reveal"><span class="principle-num">04</span><h3>Collect real reviews</h3><p>Verified workers leave tags like “accommodations honored” or “pay was on time,” plus an optional note. Reviews show on your public profile and Company page.</p></div>
@@ -245,20 +249,20 @@
     <section class="notify" id="get-started">
       <div class="wrap">
         <div class="sec-head reveal">
-          <span class="eyebrow">Get started</span>
-          <h2>Join <span class="accent">Axol Work.</span></h2>
-          <p>It’s free. Sign up with email and password, pick Prospect or Recruiter (you only choose once), finish a short onboarding, and you’re in.</p>
+          <span class="eyebrow">Axol Work</span>
+          <h2>Open the preview or <span class="accent">create an account.</span></h2>
+          <p>Free email signup. Choose Prospect or Recruiter once, finish short onboarding, then browse by fit or post tagged shifts.</p>
         </div>
         <div class="contact-grid">
           <div class="contact-info reveal">
             <h3>Try it first</h3>
-            <p><a href="/demo" class="btn btn-primary" style="display:inline-flex;margin-bottom:1rem;">Explore without signing up</a></p>
-            <p class="contact-note">Browse the full app as a Prospect or Recruiter. Applying, posting, and messaging need a free account.</p>
-            <p style="margin-top:0.75rem;"><a href="/work/" class="hero-link">Already ready? Join / Log in</a></p>
-            <h3 style="margin-top: 1.8rem;">Questions or partnerships</h3>
+            <p class="aw-cta-wrap"><a href="/demo" class="btn btn-primary">Open live preview</a></p>
+            <p class="contact-note">Browse as a Prospect or Recruiter. Applying, posting, and messaging need a free account.</p>
+            <p class="aw-cta-secondary"><a href="/work/" class="hero-link">Join / Log in</a></p>
+            <h3 class="contact-info-subhead">Questions or partnerships</h3>
             <p><a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a></p>
-            <p class="contact-note">We usually reply within a couple of business days.</p>
-            <h3 style="margin-top: 1.8rem;">Who it’s for</h3>
+            <p class="contact-note">Usually within a couple of business days.</p>
+            <h3 class="contact-info-subhead">Who it’s for</h3>
             <ul class="contact-list">
               <li>Neurodivergent and disabled shift workers (Prospects)</li>
               <li>Hiring teams that want accommodations out in the open (Recruiters)</li>
