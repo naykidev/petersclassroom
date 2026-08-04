@@ -100,7 +100,7 @@ revealTargets.forEach(el => {
       `<div class="af-launcher" role="group" aria-label="AccessFlow toolbar">
         <a class="af-bubble" id="af-bubble" href="toolbar.html#install">
           <span class="af-bubble-kicker">Add to your code</span>
-          <span class="af-bubble-text">How AccessFlow will look on your website.</span>
+          <span class="af-bubble-text">How <em class="af-bubble-accent">AccessFlow</em> will look on your website.</span>
         </a>
         <button class="a11y-toggle" id="a11yToggle" aria-label="Open AccessFlow accessibility toolbar" aria-expanded="false" aria-controls="a11yPanel" aria-describedby="af-bubble">
           <img src="accessibility.png" alt="" width="60" height="60" aria-hidden="true" />
