@@ -771,9 +771,16 @@ footer a:focus-visible,
 .demo-showcase {
   position: relative;
   background: var(--ink);
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
 }
 .demo-showcase::before { display: none; }
 .demo-showcase .wrap { position: relative; z-index: 1; }
+.demo-showcase--accessflow {
+  background: #16120e;
+}
+.demo-showcase--work {
+  background: #12100e;
+}
 .demo-showcase-intro {
   display: grid;
   grid-template-columns: 1.2fr .8fr;
@@ -792,6 +799,63 @@ footer a:focus-visible,
   margin: 0;
   align-self: end;
 }
+
+.work-demo-pane { min-height: 320px; }
+.work-demo-lede {
+  font-size: .88rem;
+  line-height: 1.45;
+  margin: 0 0 1rem;
+  color: inherit;
+  opacity: .75;
+}
+.demo-pane.is-after .work-demo-lede { opacity: .7; color: var(--muted); }
+.work-shift-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  margin: 0;
+  padding: 0;
+}
+.work-shift {
+  display: grid;
+  gap: .2rem;
+  padding: .75rem .85rem;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, .03);
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.demo-pane.is-after .work-shift {
+  border-color: var(--line);
+  background: var(--paper-2, #f7f4ef);
+}
+.work-shift strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.work-shift-meta,
+.work-shift-site,
+.work-shift-tags {
+  font-size: .78rem;
+  line-height: 1.35;
+  opacity: .7;
+}
+.work-shift-tags { opacity: .85; }
+.work-fit-badge {
+  font-family: var(--font-display);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  margin-bottom: .15rem;
+}
+.work-fit-badge.is-strong { color: #0f6b4c; }
+.work-fit-badge.is-mid { color: var(--coral-deep); }
+.work-fit-badge.is-low { color: #8a6a2f; }
 
 
 /* ════════════════ MISSION (asymmetrical statement) ════════════════ */
