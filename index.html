@@ -518,24 +518,27 @@
       function setReadingDemo(on) {
         var readingChip = group.querySelector('.demo-chip[data-opt="reading"]');
         if (readingChip) readingChip.setAttribute('aria-pressed', on ? 'true' : 'false');
-        if (after) after.classList.toggle('opt-reading', on);
-        // In-pane Before/After preview only. Full-page reading mode stays on
-        // the floating Surfer panel so closing X isn't fighting two UIs.
-        if (window.SurferDemo && window.SurferDemo.readingModeActive && window.SurferDemo.readingModeActive()) {
-          window.SurferDemo.closeReadingMode();
-        }
+        if (after) after.classList.remove('opt-reading');
+        if (!window.SurferDemo) return;
+        if (on) window.SurferDemo.launchReadingMode();
+        else window.SurferDemo.closeReadingMode();
       }
 
-      function turnOffReadingDemo() {
-        setReadingDemo(false);
+      function syncReadingChip(on) {
+        var readingChip = group.querySelector('.demo-chip[data-opt="reading"]');
+        if (readingChip) readingChip.setAttribute('aria-pressed', on ? 'true' : 'false');
+        if (after) after.classList.remove('opt-reading');
       }
+
+      window.addEventListener('easepass-rm-opened', function () { syncReadingChip(true); });
+      window.addEventListener('easepass-rm-closed', function () { syncReadingChip(false); });
 
       var readingClose = document.getElementById('demoReadingClose');
       if (readingClose) {
         readingClose.addEventListener('click', function (e) {
           e.preventDefault();
           e.stopPropagation();
-          turnOffReadingDemo();
+          setReadingDemo(false);
         });
       }
 
