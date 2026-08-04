@@ -383,15 +383,15 @@ footer a:focus-visible,
 }
 .hero-cta-primary,
 .hero-cta-secondary {
-  background: #4a1730;
+  background: var(--coral);
   color: #fff !important;
-  border: 1px solid rgba(74, 23, 48, .85);
-  box-shadow: 0 1px 2px rgba(20, 18, 26, .06);
+  border: 1px solid var(--coral);
+  box-shadow: none;
 }
 .hero-cta-primary:hover,
 .hero-cta-secondary:hover {
-  background: #6e1c40;
-  border-color: #6e1c40;
+  background: var(--coral);
+  border-color: var(--coral);
   color: #fff !important;
 }
 /* Shared CTA styles used on product pages */
