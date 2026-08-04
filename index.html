@@ -87,8 +87,16 @@
           </p>
         </div>
 
-        <div class="hero-stage" aria-hidden="true">
-          <span class="axol-mark"></span>
+        <div class="hero-stage">
+          <div class="hero-dwell" aria-hidden="true">
+            <svg class="hero-dwell-ring" viewBox="0 0 120 120" fill="none">
+              <circle class="hero-dwell-track" cx="60" cy="60" r="54" />
+              <circle class="hero-dwell-progress" cx="60" cy="60" r="54" />
+            </svg>
+            <span class="axol-mark"></span>
+            <span class="hero-dwell-cursor"></span>
+          </div>
+          <p class="hero-dwell-caption">Dwell click: hold still, ring fills, click fires</p>
         </div>
       </div>
     </header>
@@ -96,49 +104,42 @@
     <!-- PROBLEM -->
     <section class="problem-section" id="problem">
       <div class="wrap">
-        <div class="problem-grid reveal">
-          <div class="problem-copy">
-            <span class="eyebrow">The problem</span>
-            <h2>Most sites were built for <span class="accent">steady hands and perfect eyesight.</span></h2>
-            <div class="problem-body">
-              <p>Tiny tap targets. Gray on gray. Pages with no place for your eyes to rest. Enterprise overlays that cost more than a small team’s whole tooling budget. Plenty of products ask you to change how you browse so the tool can work.</p>
-              <p><strong>We build the other way around.</strong> Controls that sit in your Chrome browser or on the sites people already visit, so reading, clicking, and applying for work don’t require a different workflow.</p>
+        <div class="problem-panel reveal">
+          <div class="problem-grid">
+            <div class="problem-copy">
+              <span class="eyebrow">The problem</span>
+              <h2>Most sites were built for <span class="accent">steady hands and perfect eyesight.</span></h2>
+              <div class="problem-body">
+                <p>Tiny tap targets. Gray on gray. Pages with no place for your eyes to rest. Enterprise overlays that cost more than a small team’s whole tooling budget. Plenty of products ask you to change how you browse so the tool can work.</p>
+                <p><strong>We build the other way around.</strong> Controls that sit in your Chrome browser or on the sites people already visit, so reading, clicking, and applying for work don’t require a different workflow.</p>
+              </div>
             </div>
+
+            <aside class="problem-aside" aria-label="Barriers people face on the web today">
+              <div class="problem-stat-card">
+                <p class="problem-stat-value">1 in 4</p>
+                <p class="problem-stat-label">US adults has a disability that can affect how they use the web.</p>
+                <p class="problem-stat-source">CDC disability prevalence data</p>
+              </div>
+
+              <ul class="problem-signals">
+                <li>
+                  <span><strong>Unreadable layouts</strong> Low contrast, tight spacing, walls of text.</span>
+                </li>
+                <li>
+                  <span><strong>Hard-to-hit controls</strong> Buttons and links sized for ideal conditions only.</span>
+                </li>
+                <li>
+                  <span><strong>Locked-out tooling</strong> Enterprise widgets priced out of reach for most sites.</span>
+                </li>
+              </ul>
+
+              <div class="problem-insight-card">
+                <p class="problem-insight-kicker">What we ship instead</p>
+                <p class="problem-insight-text">Hover-to-click and reading mode in Chrome. A 15+ control toolbar you embed with one script. A shift feed that ranks listings by accommodation overlap.</p>
+              </div>
+            </aside>
           </div>
-
-          <aside class="problem-aside" aria-label="Barriers people face on the web today">
-            <div class="problem-stat-card">
-              <p class="problem-stat-value">1 in 4</p>
-              <p class="problem-stat-label">US adults has a disability that can affect how they use the web.</p>
-              <p class="problem-stat-source">CDC disability prevalence data</p>
-            </div>
-
-            <ul class="problem-signals">
-              <li>
-                <span class="problem-signal-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h10M4 17h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-                </span>
-                <span><strong>Unreadable layouts</strong> Low contrast, tight spacing, walls of text.</span>
-              </li>
-              <li>
-                <span class="problem-signal-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-                </span>
-                <span><strong>Hard-to-hit controls</strong> Buttons and links sized for ideal conditions only.</span>
-              </li>
-              <li>
-                <span class="problem-signal-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
-                </span>
-                <span><strong>Locked-out tooling</strong> Enterprise widgets priced out of reach for most sites.</span>
-              </li>
-            </ul>
-
-            <div class="problem-insight-card">
-              <p class="problem-insight-kicker">What we ship instead</p>
-              <p class="problem-insight-text">Hover-to-click and reading mode in Chrome. A 15+ control toolbar you embed with one script. A shift feed that ranks listings by accommodation overlap.</p>
-            </div>
-          </aside>
         </div>
       </div>
     </section>
@@ -153,28 +154,22 @@
         </div>
 
         <div class="audience-grid">
-          <article class="audience-card reveal">
-            <span class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
-            </span>
-            <h3>Mobility, pain &amp; repetitive strain</h3>
-            <p>Tremors, chronic pain, RSI, spinal cord injury, MS, ALS, a wrist in a cast. When every click costs effort, hover-to-click and larger targets can mean getting through your day without burning out.</p>
+          <article class="audience-card audience-card--featured reveal">
+            <p class="audience-kicker">Motor · pain · RSI</p>
+            <h3>When every click costs effort</h3>
+            <p>Tremors, chronic pain, RSI, spinal cord injury, MS, ALS, a wrist in a cast. Hover-to-click and larger effective targets mean getting through a day of YouTube, forms, and shopping without burning out your hands.</p>
           </article>
 
           <article class="audience-card reveal">
-            <span class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
-            </span>
-            <h3>Low vision, dyslexia &amp; focus</h3>
-            <p>Blurry type, harsh contrast, lines that swim on the page, tabs that won't stay still. Adjust fonts, spacing, and contrast on any site, or strip a page down to what you actually came to read.</p>
+            <p class="audience-kicker">Vision · dyslexia · focus</p>
+            <h3>When type fights you</h3>
+            <p>Blurry type, harsh contrast, lines that swim, tabs that won’t stay still. Surfer and AccessFlow retune fonts, spacing, and contrast on the page you’re already on, or strip it to reading mode.</p>
           </article>
 
-          <article class="audience-card reveal">
-            <span class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2 2 0 016 4h5v15H6a2 2 0 00-2 1.2V5.5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M20 5.5A2 2 0 0018 4h-5v15h5a2 2 0 012 1.2V5.5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
-            </span>
-            <h3>Eye tracking, head pointers &amp; fatigue</h3>
-            <p>Eye gaze, head trackers, mouth sticks, joysticks, and plain old screen fatigue after hours online. If moving a cursor is easier than clicking one, or reading one more dense page feels impossible, you're who we build for.</p>
+          <article class="audience-card audience-card--plain reveal">
+            <p class="audience-kicker">Gaze · head pointer · fatigue</p>
+            <h3>When press is the hard part</h3>
+            <p>Eye gaze, head trackers, mouth sticks, joysticks, or screen fatigue after hours online. If moving the cursor is easier than clicking, dwell clicking is built for that gap.</p>
           </article>
         </div>
       </div>
@@ -190,26 +185,34 @@
         </div>
 
         <div class="build-grid">
-          <article class="build-card reveal">
-            <span class="build-card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 20h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-            </span>
+          <article class="build-card build-card--surfer reveal">
+            <div class="build-preview build-preview--dwell" aria-hidden="true">
+              <span class="build-preview-url">chrome://extensions · Accessibility Surfer</span>
+              <div class="build-preview-scene">
+                <span class="build-preview-target">Play</span>
+                <svg class="build-preview-ring" viewBox="0 0 64 64" fill="none">
+                  <circle cx="32" cy="32" r="28" class="build-preview-track" />
+                  <circle cx="32" cy="32" r="28" class="build-preview-progress" />
+                </svg>
+              </div>
+            </div>
             <h3>Browser: Accessibility Surfer</h3>
             <p>Free Chrome extension with dwell clicking, font/size/spacing/contrast controls, and reading mode. Preferences stay local. Works on YouTube thumbnails, marketplace listings, and everyday sites.</p>
           </article>
 
-          <article class="build-card reveal">
-            <span class="build-card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="1.7"/><path d="M4 10h16M9 15h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-            </span>
+          <article class="build-card build-card--accessflow reveal">
+            <pre class="build-code" tabindex="0"><code>&lt;script src="https://axolassist.com/cdn/accessflow.js"&gt;&lt;/script&gt;</code></pre>
+            <p class="build-code-alt">or <code>npm i @axolassist/accessflow</code></p>
             <h3>Sites: AccessFlow</h3>
             <p>Visitor-controlled toolbar via CDN, npm, or React. No backend. Settings persist in the visitor’s browser so every page on your site can be adjusted without a rebuild.</p>
           </article>
 
-          <article class="build-card build-card--future reveal">
-            <span class="build-card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v4M12 17v4M3 12h4M17 12h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/></svg>
-            </span>
+          <article class="build-card build-card--work reveal">
+            <div class="build-shift" aria-hidden="true">
+              <p class="build-shift-role">Barista · weekend AM</p>
+              <p class="build-shift-meta">Quiet floor · seated ok · structured training</p>
+              <span class="build-shift-fit">3 of 4 needs met</span>
+            </div>
             <h3>Work: Axol Work</h3>
             <p>Shift marketplace and professional network. Prospects set needs once; Recruiters tag supports per listing; feed sorts by fit and Inclusive hiring badges.</p>
             <span class="build-card-tag">Live preview</span>
