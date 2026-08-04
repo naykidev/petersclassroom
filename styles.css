@@ -1051,61 +1051,89 @@ footer a:focus-visible,
   line-height: 1.8;
 }
 
-/* Dwell clicking: animated ring on the sample link */
-.demo-dwell-target {
-  position: relative;
-  display: inline;
-  padding: .1em .15em;
+/* Live dwell playground (real SurferDemo ring) */
+.demo-pane.opt-dwell {
+  min-height: 340px;
 }
-.demo-dwell-ring {
+.demo-pane.opt-dwell .demo-article {
   display: none;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 2.1rem;
-  height: 2.1rem;
-  margin: -1.05rem 0 0 -1.05rem;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  box-sizing: border-box;
-  pointer-events: none;
-  z-index: 1;
 }
-.demo-pane.opt-dwell .demo-dwell-target {
-  display: inline-block;
+.dwell-playground[hidden] { display: none !important; }
+.dwell-playground {
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+  margin-top: .25rem;
+}
+.dwell-playground-hint {
+  margin: 0;
+  font-size: .88rem;
+  line-height: 1.45;
+  color: #57534e;
+}
+.dwell-playground-targets {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+}
+.dwell-target-btn {
+  align-self: flex-start;
+  font-family: var(--font-ui);
   font-weight: 700;
+  font-size: .95rem;
+  padding: .85rem 1.25rem;
+  min-height: 48px;
+  border: none;
+  border-radius: .55rem;
+  background: #4c0519;
+  color: #fff;
+  cursor: pointer;
+}
+.dwell-target-btn:hover { background: #881337; }
+.dwell-target-link {
+  align-self: flex-start;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--coral-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
   text-underline-offset: 3px;
+  padding: .35rem .15rem;
 }
-.demo-pane.opt-dwell .demo-dwell-ring {
+.dwell-target-card {
   display: block;
-  border-color: var(--coral);
-  box-shadow: 0 0 0 3px rgba(176, 48, 96, .16);
-  animation: demo-dwell-pulse 3s linear infinite;
+  padding: .9rem 1rem;
+  border: 1px solid #e7e5e4;
+  border-radius: .65rem;
+  background: #fafaf9;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s var(--ease), background .15s var(--ease);
 }
-@keyframes demo-dwell-pulse {
-  0% {
-    transform: scale(.55);
-    opacity: .35;
-    border-width: 2px;
-  }
-  70% {
-    transform: scale(1);
-    opacity: 1;
-    border-width: 3px;
-  }
-  100% {
-    transform: scale(1.08);
-    opacity: 0;
-    border-width: 3px;
-  }
+.dwell-target-card:hover {
+  border-color: rgba(136, 19, 55, .28);
+  background: #fff1f2;
 }
-@media (prefers-reduced-motion: reduce) {
-  .demo-pane.opt-dwell .demo-dwell-ring {
-    animation: none;
-    transform: scale(1);
-    opacity: 1;
-  }
+.dwell-target-card strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .2rem;
 }
+.dwell-target-card span {
+  font-size: .85rem;
+  color: #78716c;
+}
+.dwell-playground-result {
+  min-height: 1.3em;
+  margin: 0;
+  font-size: .88rem;
+  font-weight: 600;
+  color: #0f6b4c;
+}
+.dwell-playground-result.is-empty { color: #a8a29e; font-weight: 500; }
 
 .demo-controls { margin-top: 3rem; display: flex; gap: .6rem; flex-wrap: wrap; justify-content: center; }
 .demo-chip {

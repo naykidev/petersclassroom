@@ -92,7 +92,7 @@
           <div class="sec-head">
             <span class="eyebrow">Product showcase</span>
             <h2 id="demo-surfer-h">Try <span class="accent">Accessibility Surfer.</span></h2>
-            <p>Same article, two ways to read it. Toggle text controls, dwell clicking, or reading mode below—or open the floating preview in the corner for the full extension panel.</p>
+            <p>Same article, two ways to read it. Toggle text controls below. Turn on Dwell clicking to hover real targets with Surfer’s 3s countdown ring, or Reading mode for the focus overlay.</p>
           </div>
           <p class="demo-showcase-note">Surfer adapts any page in Chrome: dwell click, reading mode, and text levers. AccessFlow ships the text, spacing, and contrast controls to every visitor on your site with one script.</p>
         </div>
@@ -107,8 +107,21 @@
             <div class="demo-reading-bar" aria-hidden="true">Reading mode · focus on the article</div>
             <article class="demo-article">
               <h4 class="demo-article-title">How to rest your eyes online</h4>
-              <p class="demo-body-text">Larger type. Breathing room between lines. Contrast that doesn't fight you. The same article, adjusted to how you actually read, with <span class="demo-sample-link demo-dwell-target" role="text">links you can hit<span class="demo-dwell-ring" aria-hidden="true"></span></span> without squinting or overshooting.</p>
+              <p class="demo-body-text">Larger type. Breathing room between lines. Contrast that doesn't fight you. The same article, adjusted to how you actually read, with links you can hit without squinting or overshooting.</p>
             </article>
+
+            <div class="dwell-playground" id="dwellPlayground" hidden>
+              <p class="dwell-playground-hint">Hover a target below. The real Surfer ring counts down from 3, then clicks—no press needed.</p>
+              <div class="dwell-playground-targets">
+                <button type="button" class="dwell-target-btn" id="dwellDemoBtn">Open listing</button>
+                <a href="#dwell-feedback" class="dwell-target-link" id="dwellDemoLink">Read more</a>
+                <a href="#dwell-feedback" class="dwell-target-card" id="dwellDemoCard">
+                  <strong>Weekend barista shift</strong>
+                  <span>Harbor Cafe · tomorrow 9am</span>
+                </a>
+              </div>
+              <p class="dwell-playground-result" id="dwellDemoResult" aria-live="polite"></p>
+            </div>
           </div>
         </div>
 
@@ -474,12 +487,65 @@
       var targetId = group.getAttribute('data-demo-target');
       if (!targetId) return;
       var after = document.getElementById(targetId);
+      var playground = document.getElementById('dwellPlayground');
+      var result = document.getElementById('dwellDemoResult');
+
+      function setDwellDemo(on) {
+        if (playground) playground.hidden = !on;
+        if (after) after.classList.toggle('opt-dwell', on);
+        if (!window.SurferDemo) return;
+        if (on) {
+          if (result) {
+            result.textContent = 'Ready — hold still on a target';
+            result.classList.add('is-empty');
+          }
+          window.SurferDemo.setDwellRoot(playground);
+          window.SurferDemo.setDwellTime(3000);
+          window.SurferDemo.setDwellEnabled(true);
+        } else {
+          window.SurferDemo.setDwellEnabled(false);
+          window.SurferDemo.setDwellRoot(null);
+          if (result) {
+            result.textContent = '';
+            result.classList.remove('is-empty');
+          }
+        }
+      }
+
+      function setReadingDemo(on) {
+        if (after) after.classList.toggle('opt-reading', on);
+        if (!window.SurferDemo) return;
+        if (on) window.SurferDemo.launchReadingMode();
+        else window.SurferDemo.closeReadingMode();
+      }
+
       group.querySelectorAll('.demo-chip[data-opt]').forEach(function (chip) {
         chip.addEventListener('click', function () {
           var on = chip.getAttribute('aria-pressed') !== 'true';
           chip.setAttribute('aria-pressed', on ? 'true' : 'false');
-          if (after) after.classList.toggle('opt-' + chip.dataset.opt, on);
+          var opt = chip.dataset.opt;
+          if (opt === 'dwell') { setDwellDemo(on); return; }
+          if (opt === 'reading') { setReadingDemo(on); return; }
+          if (after) after.classList.toggle('opt-' + opt, on);
         });
+      });
+
+      function markClicked(label) {
+        if (!result) return;
+        result.textContent = 'Clicked: ' + label;
+        result.classList.remove('is-empty');
+      }
+      var btn = document.getElementById('dwellDemoBtn');
+      var link = document.getElementById('dwellDemoLink');
+      var card = document.getElementById('dwellDemoCard');
+      if (btn) btn.addEventListener('click', function () { markClicked('Open listing'); });
+      if (link) link.addEventListener('click', function (e) {
+        e.preventDefault();
+        markClicked('Read more');
+      });
+      if (card) card.addEventListener('click', function (e) {
+        e.preventDefault();
+        markClicked('Weekend barista shift');
       });
     });
 

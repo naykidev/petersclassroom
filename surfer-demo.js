@@ -63,6 +63,15 @@
   var statusEl = null;
   var statusState = null;
 
+  // Optional root: when set, only elements inside this node are dwell targets.
+  // Used by the homepage showcase playground so nav/CTAs don't fire by accident.
+  var dwellRoot = null;
+
+  function setDwellRoot(el) {
+    dwellRoot = el || null;
+    if (active && dwellRoot && !dwellRoot.contains(active.el)) cancelDwell();
+  }
+
   // True when the real extension is running on this page — detected by the
   // panel buttons it injects. Checked lazily so a late-injecting extension
   // still wins. When present, this demo never starts a dwell of its own.
@@ -216,8 +225,10 @@
 
   function findUniversalTarget(el) {
     if (!el || !el.closest) return null;
+    if (dwellRoot && !dwellRoot.contains(el)) return null;
     var hit = el.closest(UNIVERSAL_SELECTOR);
     if (!hit) return null;
+    if (dwellRoot && !dwellRoot.contains(hit)) return null;
     var r = hit.getBoundingClientRect();
     if (r.width < UNIVERSAL_MIN_W || r.height < UNIVERSAL_MIN_H) return null;
     return { el: hit, clickTarget: hit, type: 'universal' };
@@ -505,6 +516,7 @@
   window.SurferDemo = {
     setDwellEnabled: setDwellEnabled,
     setDwellTime: setDwellTime,
+    setDwellRoot: setDwellRoot,
     isDwellEnabled: function () { return enabled; },
     launchReadingMode: launchReadingMode,
     closeReadingMode: closeReadingMode,

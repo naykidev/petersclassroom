@@ -438,6 +438,7 @@ revealTargets.forEach(el => {
       }
       // Live-demo wiring: drive the real engine for the two functional toggles.
       if (sw.id === 'epd-universal-toggle' && window.SurferDemo) {
+        if (on && window.SurferDemo.setDwellRoot) window.SurferDemo.setDwellRoot(null);
         window.SurferDemo.setDwellEnabled(on);
       } else if (sw.id === 'epd-rm-toggle' && window.SurferDemo) {
         if (on) { close(); window.SurferDemo.launchReadingMode(); }
