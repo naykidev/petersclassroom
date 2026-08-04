@@ -800,13 +800,133 @@ footer a:focus-visible,
 }
 
 .work-demo-pane { min-height: 320px; }
+.work-preview {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+  gap: clamp(1.5rem, 4vw, 2.75rem);
+  align-items: center;
+  margin-top: 2rem;
+}
+.work-preview-copy {
+  max-width: 34ch;
+}
+.work-preview-kicker {
+  font-family: var(--font-ui);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  margin: 0 0 .75rem;
+}
+.work-preview-title {
+  font-size: clamp(1.45rem, 2.6vw, 1.9rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin: 0 0 1rem;
+  color: var(--ink);
+}
+.work-preview-body {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #57534e;
+}
+.work-preview-frame {
+  background: #fff;
+  border: 1px solid #e7e5e4;
+  border-radius: .85rem;
+  box-shadow: 0 10px 28px rgba(28, 25, 23, .06);
+  overflow: hidden;
+  min-height: 320px;
+}
+.work-preview-chrome {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem .85rem;
+  background: #f5f5f4;
+  border-bottom: 1px solid #e7e5e4;
+}
+.work-preview-dots {
+  display: inline-flex;
+  gap: .3rem;
+}
+.work-preview-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d6d3d1;
+  display: block;
+}
+.work-preview-url {
+  font-size: .72rem;
+  font-weight: 600;
+  color: #78716c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.work-preview-screen {
+  padding: 1rem;
+  background: #fafaf9;
+  min-height: 280px;
+}
+.work-ui {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+}
+.work-ui-sub {
+  margin: 0 0 .15rem;
+  font-size: .78rem;
+  font-weight: 600;
+  color: #78716c;
+}
+.work-ui-note {
+  margin: .15rem 0 0;
+  font-size: .8rem;
+  line-height: 1.45;
+  color: #78716c;
+}
+.work-ui-card {
+  display: grid;
+  gap: .2rem;
+  padding: .85rem .9rem;
+  border: 1px solid #e7e5e4;
+  border-radius: .55rem;
+  background: #fff;
+}
+.work-ui-card.is-selected {
+  border-color: rgba(136, 19, 55, .28);
+  background: #fff1f2;
+}
+.work-ui-card strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.demo-showcase--work .demo-controls {
+  margin-top: 2rem;
+  margin-bottom: 0;
+  justify-content: flex-start;
+}
+.demo-showcase--work .demo-chip[aria-selected="true"],
+.demo-showcase--work .demo-chip[aria-pressed="true"] {
+  background: #4c0519;
+  border-color: #4c0519;
+  color: #fff;
+}
+
 .work-demo-lede {
   font-size: .88rem;
   line-height: 1.45;
   margin: 0 0 1rem;
   color: #78716c;
 }
-.demo-pane.is-after .work-demo-lede { color: #57534e; }
 .work-shift-list {
   list-style: none;
   display: flex;
@@ -822,15 +942,6 @@ footer a:focus-visible,
   border: 1px solid #e7e5e4;
   border-radius: .55rem;
   background: #fff;
-  transition: border-color .2s var(--ease), background .2s var(--ease);
-}
-.demo-pane.is-before .work-shift {
-  background: #f5f5f4;
-  border-color: #e7e5e4;
-}
-.demo-pane.is-after .work-shift {
-  border-color: #e7e5e4;
-  background: #fff;
 }
 .work-shift strong {
   font-family: var(--font-display);
@@ -839,7 +950,6 @@ footer a:focus-visible,
   letter-spacing: -0.02em;
   color: var(--ink);
 }
-.demo-pane.is-before .work-shift strong { color: #57534e; }
 .work-shift-meta,
 .work-shift-site,
 .work-shift-tags {
@@ -857,16 +967,6 @@ footer a:focus-visible,
   margin-bottom: .15rem;
 }
 .work-fit-badge.is-strong { color: #0f6b4c; }
-.work-shift.is-dimmed {
-  opacity: .38;
-}
-.work-shift.is-active {
-  border-color: rgba(136, 19, 55, .28);
-  background: #fff1f2;
-}
-.demo-pane.is-after .work-shift.is-active {
-  background: #fff1f2;
-}
 
 
 /* ════════════════ MISSION (asymmetrical statement) ════════════════ */
@@ -1784,7 +1884,8 @@ html.js.reveal-static .reveal { opacity: 1; transform: none; transition: none; }
   .contact-grid { grid-template-columns: 1fr; }
   .product-grid { grid-template-columns: 1fr; }
   .compare-grid,
-  .product-split { grid-template-columns: 1fr; }
+  .product-split,
+  .work-preview { grid-template-columns: 1fr; }
   .surfer-chrome { max-width: none; }
 }
 @media (max-width: 720px) {
