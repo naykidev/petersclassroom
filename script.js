@@ -97,14 +97,21 @@ revealTargets.forEach(el => {
       </div>`;
 
     const html =
-      `<button class="a11y-toggle" id="a11yToggle" aria-label="Open accessibility settings" aria-expanded="false" aria-controls="a11yPanel">
-        <img src="accessibility.png" alt="" width="60" height="60" aria-hidden="true" />
-      </button>
+      `<div class="af-launcher" role="group" aria-label="AccessFlow toolbar">
+        <a class="af-bubble" id="af-bubble" href="toolbar.html#install">
+          <span class="af-bubble-kicker">AccessFlow</span>
+          <span class="af-bubble-text">This is how <em class="af-bubble-accent">AccessFlow</em> will look on your website!</span>
+          <span class="af-bubble-cta">Add AccessFlow to your code</span>
+        </a>
+        <button class="a11y-toggle" id="a11yToggle" aria-label="Open AccessFlow accessibility toolbar" aria-expanded="false" aria-controls="a11yPanel" aria-describedby="af-bubble">
+          <img src="accessibility.png" alt="" width="60" height="60" aria-hidden="true" />
+        </button>
+      </div>
       <div class="a11y-overlay" id="a11yOverlay" aria-hidden="true"></div>
       <aside class="a11y-panel" id="a11yPanel" role="dialog" aria-labelledby="a11yTitle" aria-modal="true" tabindex="-1">
         <div class="a11y-panel-header">
-          <h2 id="a11yTitle">Accessibility</h2>
-          <button class="a11y-close" id="a11yClose" aria-label="Close accessibility settings">✕</button>
+          <h2 id="a11yTitle">AccessFlow</h2>
+          <button class="a11y-close" id="a11yClose" aria-label="Close AccessFlow">✕</button>
         </div>
         ${group('Text Size', 'Text size',
           btn('text-size', 'default', 'A', true) +
