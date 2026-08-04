@@ -1,7 +1,7 @@
 /* ════════════════════════════════════════════════════════════════════
    AXOL ASSIST — design system
-   Editorial: Instrument Serif for display, Lexend for readable body.
-   Sharp borders, whitespace, no floating dark panels or soft card chrome.
+   Accessibility-first type: Arvo (slab) for display, Verdana stack for
+   body. Prefer common, unambiguous letterforms over exotic webfonts.
    ════════════════════════════════════════════════════════════════════ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,7 +43,6 @@
   --white:      #FFFEFC;
   --yellow: #E0A100; --green-d: #1f7a52; --pink: var(--coral); --blue-d: var(--coral-deep);
 
-  /* Sharp geometry — almost no radius, almost no elevation */
   --r-xs: 2px; --r-sm: 4px; --r: 4px; --r-lg: 6px; --r-xl: 8px; --r-pill: 999px;
   --shadow-sm: none;
   --shadow:    none;
@@ -54,9 +53,11 @@
   --nav-h: 68px;
   --ease: cubic-bezier(.22,.61,.36,1);
 
-  --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
-  --font-body: 'Lexend', system-ui, sans-serif;
-  --font-ui: 'Lexend', system-ui, sans-serif;
+  /* Headings: Arvo slab (accessibly recommended for display).
+     Body/UI: Verdana → Tahoma → Arial — wide system coverage, clear glyphs. */
+  --font-display: 'Arvo', Georgia, 'Times New Roman', Times, serif;
+  --font-body: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+  --font-ui: Verdana, Tahoma, Arial, Helvetica, sans-serif;
 }
 
 html {
@@ -81,8 +82,8 @@ body {
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
   color: var(--ink);
 }
 a { color: var(--coral-deep); }
@@ -316,8 +317,8 @@ footer a:focus-visible,
 }
 .hero-eyebrow { margin-bottom: 1rem; }
 .hero-headline {
-  font-size: clamp(3.4rem, 8vw, 6rem);
-  font-weight: 400; letter-spacing: -0.045em; line-height: .92;
+  font-size: clamp(3.2rem, 7.5vw, 5.6rem);
+  font-weight: 400; letter-spacing: -0.025em; line-height: 1.05;
   color: var(--ink); max-width: 10ch;
 }
 .hero-headline .brand-axolo { color: var(--purple); }
@@ -326,13 +327,13 @@ footer a:focus-visible,
 .hero-deck {
   margin-top: 1.4rem;
   font-family: var(--font-display);
-  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
   font-weight: 400;
   font-style: italic;
-  letter-spacing: -0.03em;
-  line-height: 1.25;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
   color: var(--ink);
-  max-width: 22ch;
+  max-width: 24ch;
 }
 .hero-tagline {
   margin-top: 1.15rem; font-size: 1.05rem;
@@ -451,7 +452,7 @@ footer a:focus-visible,
 /* ════════════════ Section heading block ════════════════ */
 .sec-head { max-width: 60ch; }
 .sec-head h2 {
-  font-size: clamp(2.4rem, 5vw, 3.75rem); font-weight: 400; letter-spacing: -0.04em;
+  font-size: clamp(2.4rem, 5vw, 3.75rem); font-weight: 400; letter-spacing: -0.02em;
   line-height: 1.02; margin-top: 0; color: var(--ink);
 }
 .sec-head h2 .accent { color: var(--coral-deep); font-style: italic; }
@@ -494,7 +495,7 @@ footer a:focus-visible,
 .problem-section h2 {
   font-size: clamp(2.5rem, 5vw, 3.8rem);
   font-weight: 400;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.02em;
   line-height: 1.02;
   color: var(--ink);
   max-width: 14ch;
@@ -607,7 +608,7 @@ footer a:focus-visible,
 .build-head h2 {
   font-size: clamp(2.4rem, 5vw, 3.6rem);
   font-weight: 400;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   margin: 0 0 1rem;
 }
 .build-head p { color: var(--muted); font-size: 1.08rem; line-height: 1.65; margin: 0; max-width: 42ch; }
@@ -635,7 +636,7 @@ footer a:focus-visible,
 .build-item-body h3 {
   font-size: clamp(1.6rem, 2.5vw, 2.1rem);
   font-weight: 400;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.02em;
   margin: 0 0 .35rem;
 }
 .build-item-meta {
@@ -710,7 +711,7 @@ footer a:focus-visible,
 .why-copy h2 {
   font-size: clamp(2.4rem, 5vw, 3.5rem);
   font-weight: 400;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   line-height: 1.04;
   margin-top: 0;
   max-width: 14ch;
@@ -823,7 +824,7 @@ footer a:focus-visible,
 .audience-lead h2 {
   font-size: clamp(2.5rem, 5vw, 3.7rem);
   font-weight: 400;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.02em;
   max-width: 11ch;
   margin: 0 0 1.25rem;
 }
@@ -1046,7 +1047,7 @@ footer a:focus-visible,
   padding: 0 !important; margin-bottom: .6rem; border-radius: 0;
 }
 .product-card.hardware .card-badge { color: var(--muted) !important; }
-.product-card h3 { font-size: 1.65rem; font-weight: 400; color: var(--ink); margin-bottom: .7rem; letter-spacing: -0.035em; }
+.product-card h3 { font-size: 1.65rem; font-weight: 400; color: var(--ink); margin-bottom: .7rem; letter-spacing: -0.02em; }
 .product-card p { color: var(--muted); font-size: 1.02rem; line-height: 1.6; margin-bottom: 1.4rem; max-width: none; }
 .product-card .coming-soon-pill + .coming-soon-pill { margin-top: .2rem; }
 .coming-soon-pill {
