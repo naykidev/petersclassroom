@@ -856,9 +856,16 @@ footer a:focus-visible,
   color: var(--coral-deep);
   margin-bottom: .15rem;
 }
-.work-fit-badge.is-strong { color: #0f6b4c; }
-.work-fit-badge.is-mid { color: var(--coral-deep); }
-.work-fit-badge.is-low { color: #8a6a2f; }
+.work-shift.is-dimmed {
+  opacity: .38;
+}
+.work-shift.is-active {
+  border-color: rgba(136, 19, 55, .28);
+  background: #fff1f2;
+}
+.demo-pane.is-after .work-shift.is-active {
+  background: #fff1f2;
+}
 
 
 /* ════════════════ MISSION (asymmetrical statement) ════════════════ */

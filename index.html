@@ -145,64 +145,70 @@
           <div class="sec-head">
             <span class="eyebrow">Product showcase</span>
             <h2 id="demo-work-h">Try <span class="accent">Axol Work.</span></h2>
-            <p>Same shifts, ranked by accommodation fit. Toggle a Prospect’s needs below and watch the feed reorder before you open a listing.</p>
+            <p>Same hiring surface, built around accommodations. Toggle Axol Work’s pillars below and watch what Prospects and Recruiters actually see.</p>
           </div>
-          <p class="demo-showcase-note">This demo shows how Axol Work surfaces match quality up front. Prospects set needs once; Recruiters tag supports; badges like “3 of 4 needs met” appear before the click.</p>
+          <p class="demo-showcase-note">Prospects browse fit-ranked shifts, find mentorship by shared experience, keep accommodation needs private by default, and look for Inclusive hiring Recruiters before they apply.</p>
         </div>
 
         <div class="demo-shell reveal">
           <div class="demo-pane is-before work-demo-pane">
             <span class="demo-tag"><span class="pip"></span>Before</span>
-            <p class="work-demo-lede">A flat feed sorted by recency. Fit is a surprise after you apply.</p>
-            <ul class="work-shift-list" aria-label="Unranked shift feed">
+            <p class="work-demo-lede">A flat job board. Accommodations stay buried. Mentorship and trust signals don’t show up until after you’ve applied.</p>
+            <ul class="work-shift-list" aria-label="Generic job board">
               <li class="work-shift">
                 <span class="work-shift-meta">Posted 2h ago</span>
-                <strong>Front desk · evening</strong>
-                <span class="work-shift-site">Harbor Clinic</span>
+                <strong>Morning stock associate</strong>
+                <span class="work-shift-site">Accommodations: ask HR later</span>
               </li>
               <li class="work-shift">
-                <span class="work-shift-meta">Posted 5h ago</span>
-                <strong>Inventory count</strong>
-                <span class="work-shift-site">North Market</span>
+                <span class="work-shift-meta">Networking tab</span>
+                <strong>People you may know</strong>
+                <span class="work-shift-site">No shared-experience matches</span>
               </li>
               <li class="work-shift">
-                <span class="work-shift-meta">Posted 1d ago</span>
-                <strong>Remote intake</strong>
-                <span class="work-shift-site">Civic Aid Co-op</span>
+                <span class="work-shift-meta">Profile visibility</span>
+                <strong>Needs listed publicly</strong>
+                <span class="work-shift-site">Or left blank entirely</span>
               </li>
             </ul>
           </div>
           <div class="demo-pane is-after work-demo-pane" id="demoAfterWork">
             <span class="demo-tag"><span class="pip"></span>After</span>
-            <p class="work-demo-lede">Shifts sorted by overlap with needs you already set.</p>
-            <ul class="work-shift-list" id="workShiftList" aria-label="Accommodation-ranked shift feed">
-              <li class="work-shift" data-supports="sr seated quiet flex">
-                <span class="work-fit-badge" data-fit-badge>0 of 0 needs met</span>
-                <strong>Remote intake</strong>
-                <span class="work-shift-site">Civic Aid Co-op</span>
-                <span class="work-shift-tags">Screen reader · Seated · Quiet · Flexible</span>
+            <p class="work-demo-lede" id="workDemoLede">Toggle a pillar below to bring it to the top of the feed.</p>
+            <ul class="work-shift-list" id="workShiftList" aria-label="Axol Work feature feed">
+              <li class="work-shift" data-feature="shifts">
+                <span class="work-fit-badge is-strong">3 of 3 needs met</span>
+                <strong>Morning stock associate</strong>
+                <span class="work-shift-site">Axol Work Factory · $22/hr</span>
+                <span class="work-shift-tags">Need quiet workspace · Prefer predictable routines · Prefer written instructions</span>
               </li>
-              <li class="work-shift" data-supports="sr seated">
-                <span class="work-fit-badge" data-fit-badge>0 of 0 needs met</span>
-                <strong>Front desk · evening</strong>
-                <span class="work-shift-site">Harbor Clinic</span>
-                <span class="work-shift-tags">Screen reader · Seated</span>
+              <li class="work-shift" data-feature="mentorship">
+                <span class="work-fit-badge">2 shared interests</span>
+                <strong>Mentorship match</strong>
+                <span class="work-shift-site">People who share your work background</span>
+                <span class="work-shift-tags">Reach out · Message · Verified experience</span>
               </li>
-              <li class="work-shift" data-supports="quiet">
-                <span class="work-fit-badge" data-fit-badge>0 of 0 needs met</span>
-                <strong>Inventory count</strong>
-                <span class="work-shift-site">North Market</span>
-                <span class="work-shift-tags">Quiet space</span>
+              <li class="work-shift" data-feature="privacy">
+                <span class="work-fit-badge is-strong">Private — only you</span>
+                <strong>Accommodation privacy</strong>
+                <span class="work-shift-site">Keep private · or Share on my profile</span>
+                <span class="work-shift-tags">Fit matching still ranks shifts for you privately</span>
+              </li>
+              <li class="work-shift" data-feature="inclusive">
+                <span class="work-fit-badge is-strong">Inclusive hiring</span>
+                <strong>Axol Work Kitchen</strong>
+                <span class="work-shift-site">Recruiter with workplace supports tagged</span>
+                <span class="work-shift-tags">Headphones allowed · Seated workstations · Structured training</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div class="demo-controls reveal" role="group" aria-label="Prospect accommodation needs" data-demo="work">
-          <button class="demo-chip" type="button" data-need="sr" aria-pressed="false">Screen reader OK</button>
-          <button class="demo-chip" type="button" data-need="seated" aria-pressed="false">Seated role</button>
-          <button class="demo-chip" type="button" data-need="quiet" aria-pressed="false">Quiet space</button>
-          <button class="demo-chip" type="button" data-need="flex" aria-pressed="false">Flexible schedule</button>
+        <div class="demo-controls reveal" role="group" aria-label="Axol Work product pillars" data-demo="work">
+          <button class="demo-chip" type="button" data-feature="shifts" aria-pressed="false">Fit-ranked shifts</button>
+          <button class="demo-chip" type="button" data-feature="mentorship" aria-pressed="false">Mentorship</button>
+          <button class="demo-chip" type="button" data-feature="privacy" aria-pressed="false">Private accommodations</button>
+          <button class="demo-chip" type="button" data-feature="inclusive" aria-pressed="false">Inclusive hiring</button>
         </div>
       </div>
     </section>
@@ -581,39 +587,40 @@
 
     var workGroup = document.querySelector('.demo-controls[data-demo="work"]');
     var workList = document.getElementById('workShiftList');
+    var workLede = document.getElementById('workDemoLede');
+    var workCopy = {
+      shifts: 'Shifts sorted by how many of your needs they meet—before you open a listing.',
+      mentorship: 'Mentorship surfaces people who share your experience tags so you can Reach out.',
+      privacy: 'Needs stay Private — only you by default. Fit matching still ranks shifts privately.',
+      inclusive: 'Inclusive hiring Recruiters tag workplace supports up front on each company.'
+    };
     function updateWorkDemo() {
       if (!workGroup || !workList) return;
-      var needs = [];
-      workGroup.querySelectorAll('.demo-chip[data-need]').forEach(function (chip) {
-        if (chip.getAttribute('aria-pressed') === 'true') needs.push(chip.dataset.need);
+      var active = [];
+      workGroup.querySelectorAll('.demo-chip[data-feature]').forEach(function (chip) {
+        if (chip.getAttribute('aria-pressed') === 'true') active.push(chip.dataset.feature);
       });
-      var total = needs.length;
       var items = Array.prototype.slice.call(workList.querySelectorAll('.work-shift'));
       items.forEach(function (item) {
-        var supports = (item.getAttribute('data-supports') || '').split(/\s+/).filter(Boolean);
-        var met = needs.filter(function (n) { return supports.indexOf(n) !== -1; }).length;
-        var badge = item.querySelector('[data-fit-badge]');
-        if (badge) {
-          if (total === 0) {
-            badge.textContent = 'Set needs below';
-            badge.classList.remove('is-strong', 'is-mid', 'is-low');
-          } else {
-            badge.textContent = met + ' of ' + total + ' needs met';
-            badge.classList.toggle('is-strong', met === total);
-            badge.classList.toggle('is-mid', met > 0 && met < total);
-            badge.classList.toggle('is-low', met === 0);
-          }
-        }
-        item.dataset.met = String(met);
+        var key = item.getAttribute('data-feature');
+        var on = !active.length || active.indexOf(key) !== -1;
+        item.classList.toggle('is-dimmed', active.length > 0 && !on);
+        item.classList.toggle('is-active', active.indexOf(key) !== -1);
+        item.dataset.rank = String(active.indexOf(key) === -1 ? 99 : active.indexOf(key));
       });
       items.sort(function (a, b) {
-        return Number(b.dataset.met || 0) - Number(a.dataset.met || 0);
+        return Number(a.dataset.rank || 99) - Number(b.dataset.rank || 99);
       }).forEach(function (item) {
         workList.appendChild(item);
       });
+      if (workLede) {
+        if (active.length === 1) workLede.textContent = workCopy[active[0]] || workLede.textContent;
+        else if (active.length > 1) workLede.textContent = 'Showing ' + active.length + ' Axol Work pillars at once.';
+        else workLede.textContent = 'Toggle a pillar below to bring it to the top of the feed.';
+      }
     }
     if (workGroup) {
-      workGroup.querySelectorAll('.demo-chip[data-need]').forEach(function (chip) {
+      workGroup.querySelectorAll('.demo-chip[data-feature]').forEach(function (chip) {
         chip.addEventListener('click', function () {
           var on = chip.getAttribute('aria-pressed') !== 'true';
           chip.setAttribute('aria-pressed', on ? 'true' : 'false');
