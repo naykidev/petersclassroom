@@ -831,11 +831,12 @@ footer a:focus-visible,
 .demo-chip[aria-pressed="true"] { background: var(--coral); border-color: var(--coral); color: #fff; }
 
 /* ════════════════ PRODUCTS ════════════════ */
-.product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); align-items: stretch; }
+.product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.4rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); align-items: stretch; }
 .product-card {
   position: relative; overflow: hidden; text-align: left;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
   padding: clamp(1.8rem, 3vw, 2.4rem); display: flex; flex-direction: column;
+  height: 100%;
   min-height: 100%;
   box-shadow: var(--shadow-sm);
   transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .3s var(--ease);
@@ -904,14 +905,15 @@ footer a:focus-visible,
   margin-top: auto;
   padding-top: .5rem;
 }
-.product-card--accessflow {
-  background: linear-gradient(165deg, var(--surface) 0%, rgba(246, 225, 234, .45) 100%);
+.product-card-actions .btn-primary {
+  min-width: 11.5rem;
+  justify-content: center;
+  text-align: center;
 }
-.product-card--surfer {
-  background: linear-gradient(165deg, var(--surface) 0%, rgba(243, 240, 234, .9) 100%);
-}
+.product-card--accessflow,
+.product-card--surfer,
 .product-card--work {
-  background: linear-gradient(165deg, var(--surface) 0%, rgba(184, 36, 98, .10) 100%);
+  background: var(--surface);
 }
 .product-card-top .card-badge { margin-bottom: 0; text-align: right; }
 .product-card .card-glow { display: none; }
@@ -959,7 +961,7 @@ footer a:focus-visible,
 }
 .product-card.hardware .card-badge { color: var(--muted) !important; }
 .product-card h3 { font-size: 1.5rem; font-weight: 600; color: var(--ink); margin-bottom: .7rem; letter-spacing: -0.02em; }
-.product-card p { color: var(--muted); font-size: 1.02rem; line-height: 1.6; margin-bottom: 1.4rem; max-width: 42ch; }
+.product-card p { color: var(--muted); font-size: 1.02rem; line-height: 1.6; margin-bottom: 1.4rem; max-width: none; }
 .product-card .coming-soon-pill + .coming-soon-pill { margin-top: .2rem; }
 .coming-soon-pill {
   display: inline-flex; align-items: center; gap: .35rem;
@@ -1134,10 +1136,10 @@ html.js.reveal-static .reveal { opacity: 1; transform: none; transition: none; }
   .demo-showcase-intro { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
+  .product-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
   .demo-shell { grid-template-columns: 1fr; }
-  .product-grid { grid-template-columns: 1fr; }
   .principles-grid { grid-template-columns: 1fr; gap: 1.2rem; }
 }
 @media (max-width: 600px) {
@@ -1308,9 +1310,9 @@ html[data-contrast="dark"] .audiences, html[data-contrast="dark"] .products, htm
 html[data-contrast="dark"] .mission p, html[data-contrast="dark"] .about-section p, html[data-contrast="dark"] .problem-body p, html[data-contrast="dark"] .why-copy p, html[data-contrast="dark"] .sec-head p, html[data-contrast="dark"] .audience-card p, html[data-contrast="dark"] .principle p, html[data-contrast="dark"] .build-card p, html[data-contrast="dark"] .product-card p, html[data-contrast="dark"] .contact-info p { color: #b7b0a7; }
 html[data-contrast="dark"] .mission p strong, html[data-contrast="dark"] .problem-body p strong, html[data-contrast="dark"] .why-commitment strong { color: #f4f1ec; }
 html[data-contrast="dark"] .audience-card, html[data-contrast="dark"] .product-card, html[data-contrast="dark"] .build-card, html[data-contrast="dark"] .why-principle, html[data-contrast="dark"] .why-commitment, html[data-contrast="dark"] .contact-form { background: #16101e; border-color: #2a2438; }
-html[data-contrast="dark"] .product-card--accessflow { background: linear-gradient(165deg, #16101e 0%, #1e1528 100%); }
-html[data-contrast="dark"] .product-card--surfer { background: linear-gradient(165deg, #16101e 0%, #141018 100%); }
-html[data-contrast="dark"] .product-card--work { background: linear-gradient(165deg, #1a0f16 0%, #241019 100%); }
+html[data-contrast="dark"] .product-card--accessflow,
+html[data-contrast="dark"] .product-card--surfer,
+html[data-contrast="dark"] .product-card--work { background: #16101e; }
 html[data-contrast="dark"] .cred-badge { background: #16101e; border-color: #2a2438; color: #cfc9c1; }
 html[data-contrast="dark"] .credibility-section { border-color: #2a2438; }
 html[data-contrast="dark"] .build-card-icon { background: rgba(176,48,96,.18); color: var(--coral-tint2); }
