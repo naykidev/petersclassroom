@@ -225,63 +225,102 @@
           <p>Pick the surface you need: a barrier-free browser, a more accessible website, or a more inclusive, accommodating workplace.</p>
         </div>
 
-        <div class="product-grid">
-          <article class="product-card product-card--surfer reveal">
-            <div class="product-card-top">
-              <img src="assistsurfer.png" alt="" class="product-card-logo" width="48" height="48" aria-hidden="true" />
-              <span class="card-badge">Chrome extension</span>
+        <div class="product-rows">
+
+          <!-- Row 1: Axol Work comparison -->
+          <article class="product-panel reveal" aria-labelledby="prod-work-h">
+            <p class="product-panel-tag">Axol Work</p>
+            <h3 id="prod-work-h" class="product-panel-title">Shift hiring built around accommodations, not awkward HR chats.</h3>
+
+            <div class="compare-grid" role="group" aria-label="Traditional boards versus Axol Work">
+              <div class="compare-col compare-col--muted">
+                <p class="compare-col-label">Traditional job boards / LinkedIn</p>
+                <h4 class="compare-job">Barista / Shift Lead</h4>
+                <p class="compare-muted-tag">Accommodations: Hidden / Apply First</p>
+                <p class="compare-caption">Traditional job boards force you to apply blindly and ask for physical/visual accommodations later.</p>
+              </div>
+
+              <div class="compare-col compare-col--highlight">
+                <p class="compare-col-label">Axol Work</p>
+                <h4 class="compare-job">Barista / Shift Lead</h4>
+                <p class="compare-fit-badge">3 of 4 Accommodation Needs Met</p>
+                <p class="compare-caption">Axol Work ranks shifts by your specific needs before you spend energy applying.</p>
+              </div>
             </div>
-            <h3>Accessibility Surfer</h3>
-            <p class="product-card-lead">Personal browsing controls for any site you visit.</p>
-            <p>Dwell clicking, text controls, and reading mode. Preferences stay local in Chrome.</p>
-            <ul class="product-card-features">
-              <li>Dwell clicking &amp; pointer assistance</li>
-              <li>Text, font, and contrast controls</li>
-              <li>Reading mode for articles</li>
-            </ul>
-            <div class="product-card-actions">
-              <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="product-card-cta" data-chrome-install rel="noopener noreferrer">Get Accessibility Surfer</a>
-              <a href="easepass.html" class="textlink">Details</a>
+
+            <a href="/demo" class="product-panel-cta">Explore Axol Work <span aria-hidden="true">→</span></a>
+          </article>
+
+          <!-- Row 2: AccessFlow -->
+          <article class="product-panel reveal" aria-labelledby="prod-accessflow-h">
+            <div class="product-split">
+              <div class="product-split-copy">
+                <p class="product-panel-tag">AccessFlow for websites</p>
+                <h3 id="prod-accessflow-h" class="product-panel-title">Give every visitor a toolbar with one line of code.</h3>
+                <p class="product-panel-body">No $10k enterprise overlays or heavy site rebuilds. Paste one script to add contrast, font, spacing, and motion levers that persist in the browser.</p>
+                <a href="toolbar.html#install" class="product-panel-cta">Install AccessFlow</a>
+              </div>
+
+              <div class="product-split-preview">
+                <pre class="accessflow-code" tabindex="0"><code>&lt;script src="https://axolassist.com/cdn/accessflow.js"&gt;&lt;/script&gt;</code></pre>
+                <div class="accessflow-preview" id="accessflowPreview">
+                  <p class="accessflow-preview-sample">Sample page text. Dial contrast, type, and motion without rebuilding the site.</p>
+                  <div class="accessflow-toggles" role="group" aria-label="AccessFlow preview controls">
+                    <button type="button" class="accessflow-toggle" data-preview="contrast" aria-pressed="false">High Contrast</button>
+                    <button type="button" class="accessflow-toggle" data-preview="font" aria-pressed="false">Dyslexia Font</button>
+                    <button type="button" class="accessflow-toggle" data-preview="motion" aria-pressed="false">Motion Off</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </article>
 
-          <article class="product-card product-card--accessflow reveal">
-            <div class="product-card-top">
-              <img src="accessibility.png" alt="" class="product-card-logo" width="48" height="48" aria-hidden="true" />
-              <span class="card-badge">Script or npm</span>
-            </div>
-            <h3>AccessFlow</h3>
-            <p class="product-card-lead">Visitor-controlled accessibility for your website.</p>
-            <p>One script or npm import. Font, contrast, spacing, and motion controls with no backend.</p>
-            <ul class="product-card-features">
-              <li>15+ visitor-facing controls</li>
-              <li>CDN, npm, or React component</li>
-              <li>No backend or account needed</li>
-            </ul>
-            <div class="product-card-actions">
-              <a href="toolbar.html#install" class="product-card-cta">Get AccessFlow</a>
-              <a href="toolbar.html" class="textlink">Details</a>
+          <!-- Row 3: Accessibility Surfer -->
+          <article class="product-panel reveal" aria-labelledby="prod-surfer-h">
+            <div class="product-split product-split--surfer">
+              <div class="surfer-chrome" aria-hidden="true">
+                <div class="surfer-chrome-bar">
+                  <span class="surfer-chrome-dots"><i></i><i></i><i></i></span>
+                  <span class="surfer-chrome-title">Accessibility Surfer</span>
+                </div>
+                <div class="surfer-chrome-body">
+                  <div class="surfer-chrome-row is-on">
+                    <div>
+                      <strong>Dwell Clicking</strong>
+                      <span>3s ring · hover to click</span>
+                    </div>
+                    <span class="surfer-switch" aria-hidden="true"></span>
+                  </div>
+                  <div class="surfer-chrome-row is-on">
+                    <div>
+                      <strong>Reading Mode</strong>
+                      <span>Strip to the article</span>
+                    </div>
+                    <span class="surfer-switch" aria-hidden="true"></span>
+                  </div>
+                  <div class="surfer-chrome-row">
+                    <div>
+                      <strong>Boost contrast</strong>
+                      <span>Off</span>
+                    </div>
+                    <span class="surfer-switch" aria-hidden="true"></span>
+                  </div>
+                  <div class="surfer-dwell-hint">
+                    <span class="surfer-dwell-ring"></span>
+                    <span>Dwell ring preview · 3s</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="product-split-copy">
+                <p class="product-panel-tag">Accessibility Surfer</p>
+                <h3 id="prod-surfer-h" class="product-panel-title">Your personal browser assistant.</h3>
+                <p class="product-panel-body">Dwell-click any link without pressing, boost text contrast on harsh layouts, or strip dense pages down to what you came to read.</p>
+                <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="product-panel-cta" data-chrome-install rel="noopener noreferrer">Add to Chrome</a>
+              </div>
             </div>
           </article>
 
-          <article class="product-card product-card--work reveal">
-            <div class="product-card-top">
-              <img src="axol-work.png" alt="" class="product-card-logo" width="48" height="48" aria-hidden="true" />
-              <span class="card-badge">Web app</span>
-            </div>
-            <h3>Axol Work</h3>
-            <p class="product-card-lead">Accessible shift work and a professional network.</p>
-            <p>Shifts ranked by accommodation fit for Prospects and inclusive Recruiters.</p>
-            <ul class="product-card-features">
-              <li>Shifts ranked by accommodation fit</li>
-              <li>Scout, Express interest &amp; messaging</li>
-              <li>Work-history verification &amp; reviews</li>
-            </ul>
-            <div class="product-card-actions">
-              <a href="/demo" class="product-card-cta">Explore Axol Work</a>
-              <a href="axol-work.html" class="textlink">Details</a>
-            </div>
-          </article>
         </div>
       </div>
     </section>
@@ -511,6 +550,17 @@
         });
       });
       updateWorkDemo();
+    }
+
+    var accessPreview = document.getElementById('accessflowPreview');
+    if (accessPreview) {
+      accessPreview.querySelectorAll('.accessflow-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var on = btn.getAttribute('aria-pressed') !== 'true';
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+          accessPreview.classList.toggle('is-' + btn.dataset.preview, on);
+        });
+      });
     }
   })();
   </script>
