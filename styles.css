@@ -856,6 +856,7 @@ footer a:focus-visible,
   color: var(--coral-deep);
   margin-bottom: .15rem;
 }
+.work-fit-badge.is-strong { color: #0f6b4c; }
 .work-shift.is-dimmed {
   opacity: .38;
 }
