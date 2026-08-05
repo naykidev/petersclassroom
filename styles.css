@@ -2270,7 +2270,7 @@ footer a:focus-visible,
   outline-offset: 3px;
 }
 .story-carousel-caption {
-  margin: .55rem auto 0;
+  margin: .85rem auto 0;
   padding-inline: clamp(1.2rem, 4vw, 2.5rem);
   max-width: 40rem;
   text-align: center;
@@ -2279,15 +2279,9 @@ footer a:focus-visible,
   line-height: 1.35;
   color: var(--muted);
 }
-.story-carousel-caption--motion {
-  margin-top: .85rem;
-}
-.story-carousel-caption--hover {
-  display: none;
-}
-@media (min-width: 901px) {
-  .story-carousel-caption--hover {
-    display: block;
+@media (max-width: 900px) {
+  .story-carousel-caption__hover {
+    display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
