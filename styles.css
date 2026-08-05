@@ -2127,17 +2127,25 @@ footer a:focus-visible,
   border-bottom: 2px solid var(--coral-tint2);
   padding-bottom: .15rem;
 }
+.stories-rail {
+  margin: 0 0 .25rem;
+  padding: 1.25rem 0;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent);
+}
 .stories-rail:has(.stories-track.is-flip) {
   mask-image: none;
   -webkit-mask-image: none;
   overflow: visible;
   padding-inline: 0;
 }
-  margin: 0 0 .25rem;
-  padding: 1.25rem 0;
-  overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent);
+.mobile-story-carousel {
+  display: none;
+  width: 100%;
+  max-width: 36rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.2rem, 4vw, 2.5rem);
 }
 .stories-track {
   display: flex;
@@ -2165,9 +2173,9 @@ footer a:focus-visible,
   animation: none;
   display: grid;
   width: 100%;
-  max-width: 36rem;
-  margin-inline: auto;
-  padding-inline: clamp(1.2rem, 4vw, 2.5rem);
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: 0;
   gap: 0;
 }
 .stories-track.is-flip .story-card {
@@ -2176,21 +2184,57 @@ footer a:focus-visible,
   flex: none;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(8px);
-  transition: opacity .55s ease, transform .55s ease, visibility .55s;
+  transition: opacity 500ms ease-in-out, visibility 500ms ease-in-out;
   pointer-events: none;
 }
 .stories-track.is-flip .story-card.is-active {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
   pointer-events: auto;
   z-index: 1;
+}
+.story-carousel-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .45rem;
+  margin-top: .9rem;
+  min-height: 1rem;
+}
+.story-carousel-dot {
+  width: .45rem;
+  height: .45rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--line-strong);
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+.story-carousel-dot.is-active {
+  background: var(--coral);
+  transform: scale(1.2);
+}
+.story-carousel-dot:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+}
+@media (max-width: 640px) {
+  .mobile-story-carousel:not([hidden]) {
+    display: block;
+  }
+  #storiesTrack {
+    display: none !important;
+  }
+}
+@media (min-width: 641px) {
+  .mobile-story-carousel {
+    display: none !important;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .stories-track.is-flip .story-card {
     transition: none;
-    transform: none;
   }
 }
 .story-card {
