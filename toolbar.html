@@ -3,609 +3,137 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AccessFlow · Accessibility Toolbar for Any Website</title>
-  <meta name="description" content="Add a visitor-controlled accessibility toolbar in under a minute. One script tag or one npm import for font, contrast, spacing, and motion controls on any site." />
+  <title>AccessFlow · Axol Assist</title>
+  <meta name="description" content="AccessFlow is a free embeddable accessibility toolbar: one script tag or npm import for visitor-controlled font, contrast, spacing, and motion on any site. Preferences stay in the browser." />
 
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Axol Assist" />
-  <meta property="og:title" content="AccessFlow · Accessibility Toolbar for Any Website" />
-  <meta property="og:description" content="Install in under a minute. Script tag or npm. The toolbar appears automatically on every page." />
+  <meta property="og:title" content="AccessFlow · Axol Assist" />
+  <meta property="og:description" content="Ship visitor-controlled text, contrast, spacing, and motion on any site. One script or npm import. Settings stay in localStorage — no account, no backend." />
   <meta property="og:url" content="https://axolassist.com/toolbar.html" />
   <meta property="og:image" content="https://axolassist.com/accessibility.png" />
-  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AccessFlow · Axol Assist" />
+  <meta name="twitter:description" content="Embeddable accessibility toolbar for any website. Script tag or @axol-assist/accessflow." />
+  <meta name="twitter:image" content="https://axolassist.com/accessibility.png" />
   <meta name="theme-color" content="#F7F6F4" />
 
   <link rel="icon" type="image/png" href="accessibility.png">
   <link rel="canonical" href="https://axolassist.com/toolbar.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400&display=swap&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=contact-layout-2">
+  <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=accessflow-page-1">
   <script>document.documentElement.classList.add('js');</script>
   <style>
+    /* AccessFlow — install code cards only; brand tokens from styles.css */
     body.af-page {
-      --af-r: 12px;
-      --af-muted: #524a42;
       --code-bg: #15110E;
       --code-text: #F3F0EA;
       --code-muted: #938B80;
       --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     }
 
-    body.af-page .mission,
-    body.af-page .audiences,
-    body.af-page .principles,
-    body.af-page .notify {
-      padding: clamp(4rem, 8vw, 6rem) 0;
-    }
-
-    /* ── Hero ── */
-    .af-hero {
-      padding: clamp(3rem, 7vw, 5rem) 0 clamp(2.5rem, 5vw, 4rem);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .af-hero-inner {
-      max-width: 720px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .page-label {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      font-size: .74rem;
-      font-weight: 600;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--coral-deep);
-      background: var(--coral-tint);
-      padding: .38rem .85rem;
-      border-radius: var(--af-r);
-      margin-bottom: 1.5rem;
-    }
-    .page-label::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--coral);
-    }
-
-    .af-hero-inner h1 {
-      margin: 0;
-      font-size: clamp(2.5rem, 6vw, 3.75rem);
-      line-height: 1.02;
-      letter-spacing: -0.035em;
-    }
-    .af-hero-inner .accent { color: var(--coral-deep); }
-
-    .af-hero-lead {
-      margin: 1.25rem auto 0;
-      max-width: 38rem;
-      font-size: clamp(1.12rem, 2.4vw, 1.32rem);
-      line-height: 1.62;
-      color: var(--af-muted);
-    }
-
-    .af-hero-actions {
+    .af-hero .hero-copy { max-width: 40rem; }
+    .af-hero-heading {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      align-items: center;
       gap: .75rem;
-      margin-top: 2rem;
-    }
-
-    .af-install-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      padding: .7rem 1.15rem;
-      border-radius: var(--af-r);
-      border: 1px solid var(--border);
-      background: var(--white);
-      font-family: var(--mono);
-      font-size: .82rem;
-      font-weight: 500;
-      color: var(--text);
-      text-decoration: none;
-      transition: border-color .2s, box-shadow .2s;
-      box-shadow: var(--shadow-sm);
-    }
-    .af-install-pill:hover {
-      border-color: var(--coral);
-      box-shadow: var(--shadow-sm);
-    }
-    .af-install-pill strong {
-      font-weight: 600;
-      color: var(--coral-deep);
-    }
-    .af-install-pill.is-primary {
-      background: var(--coral);
-      border-color: var(--coral);
-      color: var(--white);
-    }
-    .af-install-pill.is-primary strong { color: var(--white); }
-    .af-install-pill.is-primary:hover {
-      background: var(--coral-deep);
-      border-color: var(--coral-deep);
-    }
-
-    .af-hero-badges {
-      list-style: none;
-      margin: 1.75rem 0 0;
-      padding: 0;
-      display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: .5rem;
-    }
-    .af-hero-badges li {
-      font-family: var(--font-display);
-      font-size: .78rem;
-      font-weight: 600;
-      color: var(--ink-soft);
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: var(--r-pill);
-      padding: .42rem .85rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .af-hero-proof {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      margin-top: 1.35rem;
-      padding: .4rem .75rem .4rem .55rem;
-      border-radius: var(--r-pill);
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .85);
-      font-family: var(--font-display);
-      font-size: .78rem;
-      font-weight: 600;
-      letter-spacing: .02em;
-      color: var(--ink-soft);
-      box-shadow: var(--shadow-sm);
-    }
-    .af-hero-proof-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #1f9d63;
-      box-shadow: 0 0 0 3px rgba(31, 157, 99, .18);
-      flex-shrink: 0;
-    }
-
-    /* ── Unified product section (install + trust + features) ── */
-    .af-product-section {
-      padding: clamp(2.75rem, 5vw, 4rem) 0 clamp(3rem, 6vw, 4.5rem);
-      background:
-        radial-gradient(85% 70% at 0% 0%, rgba(176, 48, 96, .06) 0%, transparent 50%),
-        radial-gradient(60% 50% at 100% 20%, rgba(48, 16, 112, .05) 0%, transparent 45%),
-        var(--bg-alt);
-      border-bottom: 1px solid var(--border);
-    }
-    .af-product-head {
-      text-align: center;
-      max-width: 40rem;
-      margin: 0 auto 2rem;
-    }
-    .af-product-head h2 {
-      font-size: clamp(2rem, 4.5vw, 2.85rem);
-      letter-spacing: -0.035em;
-      line-height: 1.04;
-      margin-top: .65rem;
-    }
-    .af-product-head p {
-      margin-top: .75rem;
-      color: var(--af-muted);
-      font-size: 1.05rem;
-      line-height: 1.58;
-    }
-
-    /* Workflow timeline */
-    .af-workflow {
-      position: relative;
-      max-width: 980px;
-      margin: 0 auto 2.2rem;
-      padding: 0;
-      --af-step-circle: 48px;
-    }
-    .af-workflow-track {
-      position: absolute;
-      top: calc(var(--af-step-circle) / 2);
-      left: calc(100% / 6);
-      right: calc(100% / 6);
-      height: 2px;
-      margin-top: -1px;
-      background: var(--line-strong);
-      border-radius: 999px;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .af-workflow-track::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, var(--coral-tint2), var(--coral), #be4a88);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform .4s var(--ease);
-    }
-    .af-workflow.reveal-in .af-workflow-track::after { transform: scaleX(1); }
-    .af-workflow-steps {
-      list-style: none;
       margin: 0;
-      padding: 0;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1.6rem;
-      position: relative;
-      z-index: 1;
     }
-    .af-workflow-step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 0 .75rem;
-      opacity: 0;
-      transform: translateY(14px);
-      transition: opacity .4s ease, transform .4s ease;
+    .af-hero-heading .demo-showcase-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      flex: 0 0 auto;
     }
-    .af-workflow.reveal-in .af-workflow-step {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .af-workflow.reveal-in .af-workflow-step:nth-child(2) { transition-delay: .11s; }
-    .af-workflow.reveal-in .af-workflow-step:nth-child(3) { transition-delay: .22s; }
-    .af-workflow-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: var(--af-step-circle);
-      height: var(--af-step-circle);
-      border-radius: 50%;
-      border: 1px solid var(--line);
-      background: var(--white);
-      color: var(--ink-soft);
+    .af-hero-heading h1 {
       font-family: var(--font-display);
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      position: relative;
-      z-index: 1;
-      flex-shrink: 0;
-    }
-    .af-workflow-step:first-child .af-workflow-num {
-      background: var(--coral);
-      border-color: var(--coral);
-      color: #fff;
-      box-shadow: 0 10px 24px -14px rgba(176, 48, 96, .85);
-    }
-    .af-workflow-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      color: var(--coral-deep);
-      margin-top: 1rem;
-      margin-bottom: .65rem;
-    }
-    .af-workflow-icon svg {
-      width: 100%;
-      height: 100%;
-    }
-    .af-workflow-step h3 {
-      font-size: clamp(1.1rem, 2.4vw, 1.375rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin: 0 0 .45rem;
-      width: 100%;
-    }
-    .af-workflow-step p {
+      font-size: clamp(2.35rem, 6vw, 3.75rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--ink);
       margin: 0;
-      font-size: .96rem;
-      line-height: 1.55;
-      color: var(--af-muted);
-      max-width: 200px;
     }
-
-    .af-install-label {
-      text-align: center;
-      font-family: var(--font-display);
-      font-size: .72rem;
-      font-weight: 600;
-      letter-spacing: .1em;
-      text-transform: uppercase;
+    .af-hero-heading h1 .accent {
       color: var(--coral-deep);
-      margin: 0 0 .85rem;
+      font-style: italic;
+      font-weight: 400;
+    }
+    .af-hero .hero-tagline code,
+    .af-hero .hero-deck code {
+      font-family: var(--mono);
+      font-size: .88em;
+      background: var(--paper-2);
+      padding: .1em .35em;
+      border-radius: 4px;
     }
 
-    .af-install-section {
-      padding: 0;
-      background: transparent;
-      border: none;
+    .af-install {
+      padding: clamp(3.5rem, 7vw, 6rem) 0;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
     }
-    .af-install-head { display: none; }
+    .af-install .sec-head { margin-bottom: 2rem; }
 
     .af-install-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
       max-width: 960px;
-      margin: 0 auto;
+      margin: 0;
       align-items: stretch;
-    }
-
-    .af-section-divider {
-      max-width: 920px;
-      margin: 2rem auto;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
-      border: 0;
-    }
-
-    /* Credibility block */
-    .af-cred-block {
-      max-width: 920px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 1.25rem;
-      align-items: center;
-      padding: 1.35rem 1.4rem;
-      background: linear-gradient(135deg, var(--white) 0%, var(--coral-tint) 140%);
-      border: 1px solid var(--line);
-      border-radius: var(--r-lg);
-      box-shadow: var(--shadow-sm);
-    }
-    .af-cred-block h3 {
-      font-size: 1.2rem;
-      margin: 0 0 .4rem;
-      letter-spacing: -0.02em;
-    }
-    .af-cred-eyebrow {
-      font-family: var(--font-display);
-      font-size: .72rem;
-      font-weight: 600;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--coral-deep);
-      margin: 0 0 .35rem;
-    }
-    .af-cred-block p {
-      margin: 0;
-      font-size: .94rem;
-      line-height: 1.55;
-      color: var(--af-muted);
-      max-width: 52em;
-    }
-    .af-cred-link {
-      display: inline-flex;
-      align-items: center;
-      gap: .35rem;
-      margin-top: .65rem;
-      font-family: var(--font-display);
-      font-size: .86rem;
-      font-weight: 600;
-      color: var(--coral-deep);
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .af-cred-link:hover { color: var(--coral-press); }
-    .af-cred-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      padding: .5rem .85rem;
-      border-radius: var(--r-pill);
-      background: var(--white);
-      border: 1px solid var(--line);
-      font-size: .78rem;
-      font-weight: 600;
-      color: var(--ink-soft);
-      box-shadow: var(--shadow-sm);
-      white-space: nowrap;
-    }
-    .af-cred-badge-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #1f9d63;
-      box-shadow: 0 0 0 3px rgba(31, 157, 99, .15);
-    }
-
-    /* Feature showcase */
-    .af-showcase {
-      max-width: 920px;
-      margin: 0 auto;
-    }
-    .af-showcase-head {
-      text-align: center;
-      margin-bottom: 1.25rem;
-    }
-    .af-showcase-head h3 {
-      font-size: clamp(1.45rem, 3vw, 1.85rem);
-      letter-spacing: -0.03em;
-      margin: .5rem 0 0;
-    }
-    .af-showcase-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: .65rem;
-      margin-bottom: 1.25rem;
-    }
-    .af-showcase-item {
-      display: flex;
-      align-items: flex-start;
-      gap: .55rem;
-      padding: .85rem .9rem;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      font-size: .88rem;
-      line-height: 1.4;
-      color: var(--ink-soft);
-      transition: border-color .2s, box-shadow .2s, transform .2s var(--ease);
-    }
-    .af-showcase-item:hover {
-      border-color: var(--coral-tint2);
-      box-shadow: var(--shadow-sm);
-      transform: translateY(-2px);
-    }
-    .af-showcase-item svg {
-      width: 16px;
-      height: 16px;
-      color: var(--coral-deep);
-      flex-shrink: 0;
-      margin-top: .1rem;
-    }
-    .af-showcase-item strong {
-      display: block;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: .1rem;
-      font-size: .9rem;
-    }
-
-    .af-product-preview {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 1rem;
-      align-items: end;
-      padding: 1rem 1rem .75rem;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      box-shadow: var(--shadow-sm);
-      overflow: hidden;
-    }
-    .af-preview-chrome {
-      display: flex;
-      align-items: center;
-      gap: .35rem;
-      padding-bottom: .65rem;
-      border-bottom: 1px solid var(--line);
-      margin-bottom: .75rem;
-      grid-column: 1 / -1;
-    }
-    .af-preview-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--line-strong);
-    }
-    .af-preview-dot:nth-child(1) { background: #e8a0a0; }
-    .af-preview-dot:nth-child(2) { background: #e8d4a0; }
-    .af-preview-dot:nth-child(3) { background: #a8d4a8; }
-    .af-preview-url {
-      margin-left: .5rem;
-      font-family: var(--mono);
-      font-size: .72rem;
-      color: var(--text-muted);
-      background: var(--bg-alt);
-      padding: .25rem .55rem;
-      border-radius: 6px;
-      flex: 1;
-      max-width: 14rem;
-    }
-    .af-preview-body p {
-      margin: 0;
-      font-size: .88rem;
-      line-height: 1.55;
-      color: var(--text-muted);
-      max-width: 36em;
-    }
-    .af-preview-toggle {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      box-shadow: 0 12px 28px -12px rgba(48, 16, 112, .4);
-      flex-shrink: 0;
-    }
-    .af-preview-toggle img {
-      width: 100%;
-      height: 100%;
-      border-radius: 14px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .af-product-foot {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: .5rem .75rem;
-      max-width: 920px;
-      margin: 1.5rem auto 0;
-    }
-    .af-product-foot span {
-      font-size: .8rem;
-      font-weight: 600;
-      color: var(--ink-soft);
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--r-pill);
-      padding: .4rem .75rem;
     }
 
     .af-code-card {
       display: flex;
       flex-direction: column;
       height: 100%;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: calc(var(--af-r) + 2px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: var(--shadow-sm);
     }
-
     .af-code-card-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
       padding: 1rem 1.15rem;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--line);
     }
     .af-code-card-head h3 {
-      font-size: .95rem;
+      font-family: var(--font-display);
+      font-size: 1.05rem;
       font-weight: 600;
       margin: 0;
+      letter-spacing: -0.01em;
     }
     .af-code-card-head p {
-      font-size: .8rem;
-      color: var(--text-muted);
-      margin: .15rem 0 0;
+      font-size: .85rem;
+      color: var(--muted);
+      margin: .2rem 0 0;
+      line-height: 1.4;
     }
-
     .af-code-stack {
       padding: 0;
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
     }
-
     .af-code-row {
       border-bottom: 1px solid rgba(255,255,255,.06);
       display: flex;
       flex-direction: column;
     }
     .af-code-row:last-child { border-bottom: none; }
-    .af-code-card:not(:has(.af-code-row + .af-code-row)) .af-code-row {
-      flex: 1;
-    }
+    .af-code-card:not(:has(.af-code-row + .af-code-row)) .af-code-row { flex: 1; }
     .af-code-card:not(:has(.af-code-row + .af-code-row)) pre.af-code {
       flex: 1;
       min-height: 5.5rem;
     }
-
     .af-code-toolbar {
       display: flex;
       align-items: center;
@@ -623,9 +151,7 @@
       letter-spacing: .08em;
       text-transform: uppercase;
       color: var(--code-muted);
-      padding: .2rem 0;
     }
-
     .af-copy-btn {
       display: inline-flex;
       align-items: center;
@@ -635,7 +161,7 @@
       border-radius: 6px;
       background: transparent;
       color: var(--code-text);
-      font-family: var(--font-body);
+      font-family: var(--font-ui);
       font-size: .72rem;
       font-weight: 600;
       cursor: pointer;
@@ -650,13 +176,20 @@
       border-color: var(--coral);
       color: var(--coral-tint2);
     }
-
+    .af-copy-btn:focus-visible {
+      outline: 3px solid var(--coral);
+      outline-offset: 2px;
+    }
     pre.af-code {
       margin: 0;
       padding: 1.1rem 1.15rem;
       background: var(--code-bg);
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+    }
+    pre.af-code:focus-visible {
+      outline: 2px solid var(--coral);
+      outline-offset: -2px;
     }
     pre.af-code code {
       font-family: var(--mono);
@@ -673,7 +206,7 @@
 
     .af-supported {
       padding: .85rem 1.15rem 1.1rem;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--line);
       margin-top: auto;
     }
     .af-supported-label {
@@ -681,8 +214,9 @@
       font-weight: 600;
       letter-spacing: .08em;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: var(--muted);
       margin-bottom: .55rem;
+      font-family: var(--font-ui);
     }
     .af-supported-chips {
       display: flex;
@@ -694,99 +228,37 @@
       font-weight: 500;
       padding: .28rem .65rem;
       border-radius: 6px;
-      background: var(--bg-alt);
-      border: 1px solid var(--border);
-      color: var(--text);
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      color: var(--ink);
     }
 
-    .af-contact-block { margin-top: 0; }
-
-    .af-copy-btn:focus-visible {
-      outline: 3px solid var(--coral);
-      outline-offset: 2px;
+    .af-live-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      margin-top: 1rem;
+      font-family: var(--font-ui);
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--coral-deep);
+      text-decoration: none;
     }
-    .af-cred-link:focus-visible,
-    .af-install-pill:focus-visible {
+    .af-live-link:hover { color: var(--coral-press); }
+    .af-live-link:focus-visible {
       outline: 3px solid var(--coral);
       outline-offset: 3px;
     }
 
+    .features-section { background: var(--paper) !important; }
+
     @media (prefers-reduced-motion: reduce) {
-      .af-workflow-step,
-      .af-workflow-track::after { transition: none !important; }
-      .af-workflow-step { opacity: 1 !important; transform: none !important; }
-      .af-workflow.reveal-in .af-workflow-track::after { transform: none !important; }
       .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
     }
 
-    @media (max-width: 900px) {
-      .af-workflow {
-        max-width: 840px;
-      }
-      .af-workflow-steps {
-        gap: 1rem;
-      }
-    }
-
     @media (max-width: 768px) {
-      .af-workflow {
-        padding-left: 0;
-        --af-step-circle: 44px;
-      }
-      .af-workflow-track {
-        top: calc(var(--af-step-circle) / 2);
-        bottom: calc(var(--af-step-circle) / 2);
-        left: calc(var(--af-step-circle) / 2);
-        right: auto;
-        width: 2px;
-        height: auto;
-        margin-top: 0;
-      }
-      .af-workflow-track::after {
-        transform: scaleY(0);
-        transform-origin: top;
-      }
-      .af-workflow.reveal-in .af-workflow-track::after { transform: scaleY(1); }
-      .af-workflow-steps {
-        grid-template-columns: 1fr;
-        gap: 1.75rem;
-      }
-      .af-workflow-step {
-        display: grid;
-        grid-template-columns: var(--af-step-circle) minmax(0, 1fr);
-        grid-template-rows: auto auto auto;
-        column-gap: 1rem;
-        row-gap: 0;
-        align-items: start;
-        text-align: left;
-        padding: 0;
-      }
-      .af-workflow-num {
-        grid-column: 1;
-        grid-row: 1 / span 3;
-        align-self: start;
-        margin-top: 0;
-      }
-      .af-workflow-icon {
-        grid-column: 2;
-        grid-row: 1;
-        margin: .15rem 0 .45rem;
-        justify-self: start;
-      }
-      .af-workflow-step h3 {
-        grid-column: 2;
-        grid-row: 2;
-      }
-      .af-workflow-step p {
-        grid-column: 2;
-        grid-row: 3;
-        max-width: none;
-      }
-      .af-install-grid,
-      .af-showcase-grid { grid-template-columns: 1fr; }
-      .af-cred-block { grid-template-columns: 1fr; }
-      .af-product-preview { grid-template-columns: 1fr; }
-      .af-preview-toggle { justify-self: end; }
+      .af-install-grid { grid-template-columns: 1fr; }
+      .af-hero-heading .demo-showcase-logo { width: 44px; height: 44px; border-radius: 10px; }
     }
   </style>
 </head>
@@ -795,7 +267,7 @@
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <nav id="siteNav" aria-label="Main navigation">
-    <a href="/" class="nav-logo" aria-label="Axol Assist, back to home">
+    <a href="/" class="nav-logo" aria-label="Axol Assist home">
       <span class="axol-mark" role="img" aria-label="Axol the axolotl"></span>
       <span><span class="nav-axolo">Axol</span> <span class="nav-assist">Assist</span></span>
     </a>
@@ -804,84 +276,86 @@
     </button>
     <ul class="nav-links" id="siteNavMenu">
       <li><a href="/#demo">Products</a></li>
-      <li><a href="#install">Install</a></li>
-      <li><a href="#contact" class="nav-cta">Contact</a></li>
+      <li><a href="/#stories">Stories</a></li>
+      <li><a href="#contact" class="nav-cta">Get in touch</a></li>
     </ul>
   </nav>
 
   <main id="main" tabindex="-1">
 
     <header class="hero af-hero">
-      <div class="wrap af-hero-inner reveal">
-        <span class="page-label">Accessibility toolbar · Free</span>
-        <h1>Access<span class="accent">Flow</span></h1>
-        <p class="af-hero-lead">Drop in a floating toolbar with font, contrast, spacing, and motion controls. One script tag or <code>npm i @axolassist/accessflow</code>. Settings stay in each visitor’s browser; no account and no backend.</p>
-        <p class="af-hero-proof reveal">
-          <span class="af-hero-proof-dot" aria-hidden="true"></span>
-          React, Next.js, Astro, Vite, or plain HTML
-        </p>
-        <div class="af-hero-actions">
-          <a href="#install-script" class="af-install-pill is-primary">
-            <strong>Script</strong> tag install
-          </a>
-          <a href="#install-npm" class="af-install-pill">
-            <strong>npm</strong> install
-          </a>
+      <div class="wrap">
+        <div class="hero-copy">
+          <span class="eyebrow">Embeddable toolbar · Free</span>
+          <div class="af-hero-heading">
+            <img src="accessibility.png" alt="" class="demo-showcase-logo" width="56" height="56" />
+            <h1>Access<span class="accent">Flow.</span></h1>
+          </div>
+          <p class="hero-deck">Give every visitor controls for type, contrast, spacing, and motion — on your site, not only in their browser extension.</p>
+          <p class="hero-tagline">One <code>&lt;script&gt;</code> or <code>npm i @axol-assist/accessflow</code>. Preferences stay in that visitor’s <code>localStorage</code>. No Axol account. No backend. Try the floating button on this page — that’s the toolbar.</p>
+          <div class="hero-links">
+            <a href="#install" class="hero-cta-primary">Get the install snippet</a>
+            <a href="#controls" class="hero-cta-secondary">See what visitors can change</a>
+          </div>
         </div>
-        <ul class="af-hero-badges" aria-label="Product highlights">
-          <li>No account required</li>
-          <li>WCAG-oriented controls</li>
-          <li>Settings persist per visitor</li>
-        </ul>
       </div>
     </header>
 
-    <section class="af-product-section" id="install">
-      <div class="wrap">
-        <header class="af-product-head reveal">
-          <span class="eyebrow">Install</span>
-          <h2>Copy a snippet. <span class="accent">Toolbar on every page.</span></h2>
-          <p>CDN script, npm package, or React component. AccessFlow injects the visitor controls; preferences persist locally per browser.</p>
-        </header>
-
-        <div class="af-workflow reveal" aria-label="Installation workflow">
-          <div class="af-workflow-track" aria-hidden="true"></div>
-          <ol class="af-workflow-steps">
-            <li class="af-workflow-step">
-              <span class="af-workflow-num">Step 1</span>
-              <span class="af-workflow-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/></svg>
-              </span>
-              <h3>Choose a platform</h3>
-              <p>Wix, WordPress, Webflow, React, or any modern stack.</p>
-            </li>
-            <li class="af-workflow-step">
-              <span class="af-workflow-num">Step 2</span>
-              <span class="af-workflow-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M8 9L4.5 12l3.5 3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 9l3.5 3-3.5 3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.6 6.5l-3.2 11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-              </span>
-              <h3>Paste one line</h3>
-              <p>Copy the install snippet and drop it in your site.</p>
-            </li>
-            <li class="af-workflow-step">
-              <span class="af-workflow-num">Step 3</span>
-              <span class="af-workflow-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/><path d="M8.4 12.3l2.4 2.4 4.8-4.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <h3>You're live</h3>
-              <p>Accessibility tools appear instantly and visitor settings persist.</p>
-            </li>
-          </ol>
+    <section class="mission">
+      <div class="wrap reveal">
+        <h2>Visitor controls that ship with <span class="accent">your HTML.</span></h2>
+        <div>
+          <p>Accessibility Surfer helps people adapt any Chrome tab. AccessFlow ships the same class of levers to <strong>everyone who lands on your domain</strong> — including visitors who will never install an extension. Paste a script into Wix, WordPress, or a React layout; the toolbar appears on every page.</p>
         </div>
+      </div>
+    </section>
 
-        <p class="af-install-label reveal">Step 2 · Copy your install code</p>
+    <section class="principles" id="how" aria-labelledby="how-h">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">How you ship it</span>
+          <h2 id="how-h">Paste once. <span class="accent">Toolbar on every route.</span></h2>
+          <p>Not a dashboard, not a procurement workflow — a file on your CDN or a package in your app.</p>
+        </div>
+        <div class="principles-grid">
+          <div class="principle reveal">
+            <span class="principle-num">1</span>
+            <h3>Pick script or npm</h3>
+            <p>CMS and static sites load <code>accessflow.js</code> from our CDN. React, Next, Vite, Astro, and Remix install <code>@axol-assist/accessflow</code> and import the auto entry.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">2</span>
+            <h3>Drop it in the layout</h3>
+            <p>One tag before <code>&lt;/body&gt;</code>, or one import in your root layout. No CSS framework required. No API key.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">3</span>
+            <h3>Visitors open the panel</h3>
+            <p>The Axol button floats on the page. Font size, OpenDyslexic, contrast, link underlines, reading guide, reduce motion — saved in that browser only.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">4</span>
+            <h3>Honest about what it is</h3>
+            <p>AccessFlow helps visitors adapt the page in front of them. It does not replace accessible HTML, labels, or keyboard paths underneath. Sites still owe WCAG work.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="af-install" id="install" aria-labelledby="install-h">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Install</span>
+          <h2 id="install-h">Copy a snippet. <span class="accent">Ship on the next deploy.</span></h2>
+          <p>CDN script for any site builder. npm package when you already own the JavaScript bundle.</p>
+        </div>
 
         <div class="af-install-grid">
           <article class="af-code-card reveal" id="install-script">
             <div class="af-code-card-head">
               <div>
                 <h3>Any website</h3>
-                <p>HTML, CMS, or site builder</p>
+                <p>HTML, CMS, or site builder — before <code>&lt;/body&gt;</code></p>
               </div>
             </div>
             <div class="af-code-stack">
@@ -897,7 +371,7 @@
               </div>
             </div>
             <div class="af-supported">
-              <div class="af-supported-label">Works with</div>
+              <div class="af-supported-label">Common embeds</div>
               <div class="af-supported-chips">
                 <span class="af-chip">Wix</span>
                 <span class="af-chip">Squarespace</span>
@@ -911,8 +385,8 @@
           <article class="af-code-card reveal" id="install-npm">
             <div class="af-code-card-head">
               <div>
-                <h3>React / Next.js</h3>
-                <p>Modern JavaScript apps</p>
+                <h3>React / Next.js &amp; bundlers</h3>
+                <p>Import once in the root layout or app shell</p>
               </div>
             </div>
             <div class="af-code-stack">
@@ -938,7 +412,7 @@
               </div>
             </div>
             <div class="af-supported">
-              <div class="af-supported-label">Works with</div>
+              <div class="af-supported-label">Common stacks</div>
               <div class="af-supported-chips">
                 <span class="af-chip">React</span>
                 <span class="af-chip">Next.js</span>
@@ -949,91 +423,89 @@
             </div>
           </article>
         </div>
+      </div>
+    </section>
 
-        <hr class="af-section-divider" aria-hidden="true" />
-
-        <div class="af-cred-block reveal" id="trust">
-          <div>
-            <p class="af-cred-eyebrow">Already powering real websites</p>
-            <h3>Surf Del Mar Festival</h3>
-            <p>AccessFlow powers the accessibility toolbar on the Surf Del Mar Festival website, giving visitors control over text size, contrast, spacing, motion, and more.</p>
-            <a class="af-cred-link" href="https://surfdelmarfestival.com/" target="_blank" rel="noopener noreferrer">
-              surfdelmarfestival.com →
-            </a>
+    <section class="audiences" id="for-whom" aria-labelledby="for-whom-h">
+      <div class="wrap">
+        <div class="audience-layout reveal">
+          <div class="audience-lead">
+            <span class="eyebrow">Who installs it</span>
+            <h2 id="for-whom-h">Built for people who <span class="accent">ship sites.</span></h2>
+            <p class="audience-lead-text">If you can paste a script or merge one import, you can give visitors on-page text and contrast controls without buying an overlay SaaS seat.</p>
           </div>
-          <span class="af-cred-badge">
-            <span class="af-cred-badge-dot" aria-hidden="true"></span>
-            Live in production
-          </span>
-        </div>
-
-        <hr class="af-section-divider" aria-hidden="true" />
-
-        <div class="af-showcase reveal" id="features">
-          <div class="af-showcase-head">
-            <span class="eyebrow">What visitors get</span>
-            <h3>Controls that work <span class="accent">out of the box.</span></h3>
-          </div>
-
-          <div class="af-showcase-grid">
-            <div class="af-showcase-item">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>15+ accessibility controls</strong> Font, contrast, spacing, motion, and more.</span>
+          <div class="audience-stack">
+            <div class="audience-row">
+              <h3>Site owners &amp; CMS editors</h3>
+              <p>Wix, Squarespace, WordPress, Webflow — drop the CDN script in a custom code / footer slot. No React required.</p>
             </div>
-            <div class="af-showcase-item">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>Typography adjustments</strong> OpenDyslexic and scaling up to 200%.</span>
+            <div class="audience-row">
+              <h3>Front-end developers</h3>
+              <p>Add <code>@axol-assist/accessflow</code> next to your other client packages. Auto-init on import, or call <code>boot()</code> when you want explicit control.</p>
             </div>
-            <div class="af-showcase-item">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>Contrast controls</strong> Dark, high contrast, grayscale, sepia, invert.</span>
-            </div>
-            <div class="af-showcase-item">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>Motion reduction</strong> Reduce motion and pause animations.</span>
-            </div>
-            <div class="af-showcase-item">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>Saved visitor preferences</strong> Settings persist in localStorage.</span>
-            </div>
-            <div class="af-showcase-item">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>No account required</strong> Free for visitors and site owners.</span>
+            <div class="audience-row">
+              <h3>Schools, nonprofits &amp; event sites</h3>
+              <p>Public calendars and festival pages where visitors need larger type and contrast today — without waiting for a redesign. Live example: Surf Del Mar Festival.</p>
             </div>
           </div>
-
-          <div class="af-product-preview" aria-hidden="true">
-            <div class="af-preview-chrome">
-              <span class="af-preview-dot"></span>
-              <span class="af-preview-dot"></span>
-              <span class="af-preview-dot"></span>
-              <span class="af-preview-url">yoursite.com</span>
-            </div>
-            <div class="af-preview-body">
-              <p>Your page content stays exactly where it is. AccessFlow adds a floating toolbar so visitors can adapt the site to how they read and navigate.</p>
-            </div>
-            <div class="af-preview-toggle">
-              <img src="accessibility.png" alt="" width="52" height="52" />
-            </div>
-          </div>
-        </div>
-
-        <div class="af-product-foot reveal">
-          <span>Free · no subscription</span>
-          <span>CDN-hosted · zero maintenance</span>
-          <span>Privacy-conscious · no data collection</span>
-          <span>WCAG-aligned approach</span>
         </div>
       </div>
     </section>
 
-    <section class="notify" id="contact">
+    <section class="principles features-section" id="controls" aria-labelledby="controls-h">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">What visitors get</span>
+          <h2 id="controls-h">Levers for reading the <span class="accent">page you already published.</span></h2>
+          <p>Open the floating button on this page to try the same panel visitors get after install.</p>
+        </div>
+        <div class="principles-grid">
+          <div class="principle reveal">
+            <span class="principle-num">01</span>
+            <h3>Type that scales</h3>
+            <p>Bump text size, widen line and letter spacing, switch to a dyslexia-friendly font — applied to your live DOM, not a separate reader view.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">02</span>
+            <h3>Contrast &amp; color filters</h3>
+            <p>Dark mode, high contrast, grayscale, muted, or invert when your brand palette fights the reader’s eyes.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">03</span>
+            <h3>Focus, links &amp; motion</h3>
+            <p>Underline links, strengthen focus rings, highlight headings, show a reading guide, reduce motion, or pause animations — including when <code>prefers-reduced-motion</code> is on.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">04</span>
+            <h3>Preferences that stick locally</h3>
+            <p>Choices persist in that visitor’s browser. Nothing is sent to Axol for analytics. Leave, come back — settings are still there.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mission" id="live" aria-labelledby="live-h">
+      <div class="wrap reveal">
+        <h2 id="live-h">Already running on <span class="accent">Surf Del Mar Festival.</span></h2>
+        <div>
+          <p>The festival site embeds AccessFlow so attendees can grow type, fix contrast, and calm motion without installing anything. Same toolbar, production traffic.</p>
+          <p>
+            <a class="af-live-link" href="https://surfdelmarfestival.com/" target="_blank" rel="noopener noreferrer">
+              Visit surfdelmarfestival.com
+              <span aria-hidden="true">→</span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="notify" id="contact" aria-labelledby="contact-h">
       <div class="wrap">
         <div class="contact-layout">
           <div class="contact-copy reveal">
-            <span class="eyebrow">Contact</span>
-            <h2>Questions or <span class="accent">feedback?</span></h2>
-            <p class="contact-lede">Integration help, feature requests, or field reports.</p>
+            <span class="eyebrow">Get in touch</span>
+            <h2 id="contact-h">Installing AccessFlow on <span class="accent">your stack?</span></h2>
+            <p class="contact-lede">Embed questions, CMS quirks, feature requests, or a page where the toolbar misbehaves. We usually reply within two business days.</p>
             <div class="contact-direct">
               <span class="contact-direct-label">Direct</span>
               <a class="contact-direct-email" href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a>
@@ -1063,7 +535,7 @@
             </div>
             <div class="form-row">
               <label for="cf-message">Message</label>
-              <textarea id="cf-message" name="message" rows="3" required maxlength="2000" placeholder="Tell us about your stack or integration question."></textarea>
+              <textarea id="cf-message" name="message" rows="3" required maxlength="2000" placeholder="Your stack, CMS, or what broke when you pasted the script."></textarea>
             </div>
             <div class="contact-honeypot" aria-hidden="true">
               <label for="cf-website">Website (leave blank)</label>
@@ -1079,14 +551,40 @@
   </main>
 
   <footer role="contentinfo">
-    <div class="wrap">
-      <div class="footer-top">
-        <a href="/" class="footer-brand"><span class="axol-mark" aria-hidden="true"></span>Axol Assist</a>
+    <div class="wrap footer-grid">
+      <div class="footer-brand-col">
+        <a href="/" class="footer-brand">
+          <span class="axol-mark" aria-hidden="true"></span>
+          Axol Assist
+        </a>
+        <p class="footer-tagline">Redefining digital accessibility.</p>
       </div>
-      <div class="footer-bottom">
-        <p>Copyright &copy; 2026 <strong class="accent">Axol Assist</strong>. All rights reserved.</p>
-        <p><a href="/">Home</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></p>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Products</h3>
+        <ul class="footer-links">
+          <li><a href="easepass.html">Accessibility Surfer</a></li>
+          <li><a href="toolbar.html" aria-current="page">AccessFlow</a></li>
+          <li><a href="axol-work.html">Axol Work</a></li>
+        </ul>
       </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Company</h3>
+        <ul class="footer-links">
+          <li><a href="/#why">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Resources</h3>
+        <ul class="footer-links">
+          <li><a href="#install">Install snippets</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap footer-bottom">
+      <p>Copyright &copy; 2026 <strong class="accent">Axol Assist</strong>. All rights reserved.</p>
+      <p><a href="privacy.html">Privacy Policy</a></p>
     </div>
   </footer>
 
@@ -1097,89 +595,89 @@
   <aside class="a11y-panel" id="a11yPanel" role="dialog" aria-labelledby="a11yTitle" aria-modal="true" tabindex="-1">
     <div class="a11y-panel-header">
       <h2 id="a11yTitle">Accessibility</h2>
-      <button class="a11y-close" id="a11yClose" aria-label="Close accessibility settings">✕</button>
+      <button type="button" class="a11y-close" id="a11yClose" aria-label="Close accessibility settings">✕</button>
     </div>
     <div class="a11y-group">
       <h3>Text Size</h3>
       <div class="a11y-options" role="group" aria-label="Text size">
-        <button class="a11y-btn" data-setting="text-size" data-value="default" aria-pressed="true">A</button>
-        <button class="a11y-btn" data-setting="text-size" data-value="lg" aria-pressed="false" style="font-size:0.95rem;">A+</button>
-        <button class="a11y-btn" data-setting="text-size" data-value="xl" aria-pressed="false" style="font-size:1.05rem;">A++</button>
-        <button class="a11y-btn" data-setting="text-size" data-value="xxl" aria-pressed="false" style="font-size:1.15rem;">A+++</button>
+        <button type="button" class="a11y-btn" data-setting="text-size" data-value="default" aria-pressed="true">A</button>
+        <button type="button" class="a11y-btn" data-setting="text-size" data-value="lg" aria-pressed="false" style="font-size:0.95rem;">A+</button>
+        <button type="button" class="a11y-btn" data-setting="text-size" data-value="xl" aria-pressed="false" style="font-size:1.05rem;">A++</button>
+        <button type="button" class="a11y-btn" data-setting="text-size" data-value="xxl" aria-pressed="false" style="font-size:1.15rem;">A+++</button>
       </div>
     </div>
     <div class="a11y-group">
       <h3>Line Spacing</h3>
       <div class="a11y-options" role="group" aria-label="Line spacing">
-        <button class="a11y-btn" data-setting="line-spacing" data-value="default" aria-pressed="true">Normal</button>
-        <button class="a11y-btn" data-setting="line-spacing" data-value="wide" aria-pressed="false">Wide</button>
-        <button class="a11y-btn" data-setting="line-spacing" data-value="wider" aria-pressed="false">Wider</button>
+        <button type="button" class="a11y-btn" data-setting="line-spacing" data-value="default" aria-pressed="true">Normal</button>
+        <button type="button" class="a11y-btn" data-setting="line-spacing" data-value="wide" aria-pressed="false">Wide</button>
+        <button type="button" class="a11y-btn" data-setting="line-spacing" data-value="wider" aria-pressed="false">Wider</button>
       </div>
     </div>
     <div class="a11y-group">
       <h3>Letter Spacing</h3>
       <div class="a11y-options" role="group" aria-label="Letter spacing">
-        <button class="a11y-btn" data-setting="letter-spacing" data-value="default" aria-pressed="true">Normal</button>
-        <button class="a11y-btn" data-setting="letter-spacing" data-value="wide" aria-pressed="false">Wide</button>
-        <button class="a11y-btn" data-setting="letter-spacing" data-value="wider" aria-pressed="false">Wider</button>
+        <button type="button" class="a11y-btn" data-setting="letter-spacing" data-value="default" aria-pressed="true">Normal</button>
+        <button type="button" class="a11y-btn" data-setting="letter-spacing" data-value="wide" aria-pressed="false">Wide</button>
+        <button type="button" class="a11y-btn" data-setting="letter-spacing" data-value="wider" aria-pressed="false">Wider</button>
       </div>
     </div>
     <div class="a11y-group">
       <h3>Font</h3>
       <div class="a11y-options" role="group" aria-label="Font choice">
-        <button class="a11y-btn" data-setting="font" data-value="default" aria-pressed="true">Default</button>
-        <button class="a11y-btn" data-setting="font" data-value="dyslexia" aria-pressed="false">Dyslexia-friendly</button>
+        <button type="button" class="a11y-btn" data-setting="font" data-value="default" aria-pressed="true">Default</button>
+        <button type="button" class="a11y-btn" data-setting="font" data-value="dyslexia" aria-pressed="false">Dyslexia-friendly</button>
       </div>
     </div>
     <div class="a11y-group">
       <h3>Contrast</h3>
       <div class="a11y-options" role="group" aria-label="Contrast mode">
-        <button class="a11y-btn" data-setting="contrast" data-value="default" aria-pressed="true">Normal</button>
-        <button class="a11y-btn" data-setting="contrast" data-value="dark" aria-pressed="false">Dark</button>
-        <button class="a11y-btn" data-setting="contrast" data-value="high" aria-pressed="false">High</button>
+        <button type="button" class="a11y-btn" data-setting="contrast" data-value="default" aria-pressed="true">Normal</button>
+        <button type="button" class="a11y-btn" data-setting="contrast" data-value="dark" aria-pressed="false">Dark</button>
+        <button type="button" class="a11y-btn" data-setting="contrast" data-value="high" aria-pressed="false">High</button>
       </div>
     </div>
     <div class="a11y-group">
       <h3>Color Filter</h3>
       <div class="a11y-options" role="group" aria-label="Color filter">
-        <button class="a11y-btn" data-setting="saturation" data-value="default" aria-pressed="true">None</button>
-        <button class="a11y-btn" data-setting="saturation" data-value="grayscale" aria-pressed="false">Gray</button>
-        <button class="a11y-btn" data-setting="saturation" data-value="sepia" aria-pressed="false">Muted</button>
-        <button class="a11y-btn" data-setting="saturation" data-value="inverted" aria-pressed="false">Invert</button>
+        <button type="button" class="a11y-btn" data-setting="saturation" data-value="default" aria-pressed="true">None</button>
+        <button type="button" class="a11y-btn" data-setting="saturation" data-value="grayscale" aria-pressed="false">Gray</button>
+        <button type="button" class="a11y-btn" data-setting="saturation" data-value="sepia" aria-pressed="false">Muted</button>
+        <button type="button" class="a11y-btn" data-setting="saturation" data-value="inverted" aria-pressed="false">Invert</button>
       </div>
     </div>
     <div class="a11y-group">
       <h3>Reading &amp; Motion</h3>
       <div class="a11y-toggle-row">
         <label for="sw-underline-links">Underline links</label>
-        <button class="a11y-switch" id="sw-underline-links" data-toggle="underline-links" role="switch" aria-checked="false" aria-label="Underline all links"></button>
+        <button type="button" class="a11y-switch" id="sw-underline-links" data-toggle="underline-links" role="switch" aria-checked="false" aria-label="Underline all links"></button>
       </div>
       <div class="a11y-toggle-row">
         <label for="sw-enhanced-focus">Enhanced focus</label>
-        <button class="a11y-switch" id="sw-enhanced-focus" data-toggle="enhanced-focus" role="switch" aria-checked="false" aria-label="Enhanced focus indicators"></button>
+        <button type="button" class="a11y-switch" id="sw-enhanced-focus" data-toggle="enhanced-focus" role="switch" aria-checked="false" aria-label="Enhanced focus indicators"></button>
       </div>
       <div class="a11y-toggle-row">
         <label for="sw-highlight-headings">Highlight headings</label>
-        <button class="a11y-switch" id="sw-highlight-headings" data-toggle="highlight-headings" role="switch" aria-checked="false" aria-label="Highlight headings"></button>
+        <button type="button" class="a11y-switch" id="sw-highlight-headings" data-toggle="highlight-headings" role="switch" aria-checked="false" aria-label="Highlight headings"></button>
       </div>
       <div class="a11y-toggle-row">
         <label for="sw-reading-guide">Reading guide</label>
-        <button class="a11y-switch" id="sw-reading-guide" data-toggle="reading-guide" role="switch" aria-checked="false" aria-label="Reading guide bar that follows the cursor"></button>
+        <button type="button" class="a11y-switch" id="sw-reading-guide" data-toggle="reading-guide" role="switch" aria-checked="false" aria-label="Reading guide bar that follows the cursor"></button>
       </div>
       <div class="a11y-toggle-row">
         <label for="sw-reduce-motion">Reduce motion</label>
-        <button class="a11y-switch" id="sw-reduce-motion" data-toggle="reduce-motion" role="switch" aria-checked="false" aria-label="Reduce motion and animations"></button>
+        <button type="button" class="a11y-switch" id="sw-reduce-motion" data-toggle="reduce-motion" role="switch" aria-checked="false" aria-label="Reduce motion and animations"></button>
       </div>
       <div class="a11y-toggle-row">
         <label for="sw-pause-animations">Pause animations</label>
-        <button class="a11y-switch" id="sw-pause-animations" data-toggle="pause-animations" role="switch" aria-checked="false" aria-label="Pause all animations"></button>
+        <button type="button" class="a11y-switch" id="sw-pause-animations" data-toggle="pause-animations" role="switch" aria-checked="false" aria-label="Pause all animations"></button>
       </div>
       <div class="a11y-toggle-row">
         <label for="sw-big-cursor">Large cursor</label>
-        <button class="a11y-switch" id="sw-big-cursor" data-toggle="big-cursor" role="switch" aria-checked="false" aria-label="Enlarge cursor"></button>
+        <button type="button" class="a11y-switch" id="sw-big-cursor" data-toggle="big-cursor" role="switch" aria-checked="false" aria-label="Enlarge cursor"></button>
       </div>
     </div>
-    <button class="a11y-reset" id="a11yReset">Reset all settings</button>
+    <button type="button" class="a11y-reset" id="a11yReset">Reset all settings</button>
   </aside>
 
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -1200,7 +698,10 @@
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (es) {
         es.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add('reveal-in'); io.unobserve(e.target); }
+          if (e.isIntersecting) {
+            e.target.classList.add('reveal-in');
+            io.unobserve(e.target);
+          }
         });
       }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
       reveals.forEach(function (el) { io.observe(el); });
@@ -1212,18 +713,23 @@
       btn.addEventListener('click', function () {
         var text = btn.getAttribute('data-copy');
         if (!text) return;
+        var copyIcon = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2" stroke="currentColor" stroke-width="1.8"/></svg> Copy';
+        var doneIcon = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Copied';
         var done = function () {
           btn.classList.add('is-copied');
-          btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Copied';
+          btn.innerHTML = doneIcon;
+          btn.setAttribute('aria-label', 'Copied to clipboard');
           setTimeout(function () {
             btn.classList.remove('is-copied');
-            btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2" stroke="currentColor" stroke-width="1.8"/></svg> Copy';
+            btn.innerHTML = copyIcon;
+            btn.setAttribute('aria-label', btn.getAttribute('data-copy-label') || 'Copy');
           }, 2000);
         };
+        if (!btn.getAttribute('data-copy-label')) {
+          btn.setAttribute('data-copy-label', btn.getAttribute('aria-label') || 'Copy');
+        }
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(done).catch(function () {
-            fallbackCopy(text, done);
-          });
+          navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
         } else {
           fallbackCopy(text, done);
         }
