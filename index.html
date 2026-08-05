@@ -565,17 +565,6 @@
       });
       showWorkPreview('shifts');
     }
-
-    var accessPreview = document.getElementById('accessflowPreview');
-    if (accessPreview) {
-      accessPreview.querySelectorAll('.accessflow-toggle').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var on = btn.getAttribute('aria-pressed') !== 'true';
-          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-          accessPreview.classList.toggle('is-' + btn.dataset.preview, on);
-        });
-      });
-    }
   })();
   </script>
 
