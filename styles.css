@@ -2783,23 +2783,31 @@ nav { padding-left: max(clamp(1.2rem,4vw,2.5rem), env(safe-area-inset-left)); pa
 .a11y-reset:hover { background: #2a241e; }
 .a11y-reading-guide { position: fixed; left: 0; right: 0; height: 44px; background: rgba(176,48,96,.14); border-top: 2px solid rgba(176,48,96,.55); border-bottom: 2px solid rgba(176,48,96,.55); pointer-events: none; z-index: 210; top: -100px; }
 
-@media (max-width: 720px) {
-  /* Promo copy collides between the two corner launchers — icons only on small screens. */
+@media (max-width: 900px) {
+  /* Corner promos collide on phones — stack icons on the left, hide bubble copy. */
   .epd-bubble,
   .af-bubble {
-    display: none;
+    display: none !important;
   }
-  .af-launcher {
+
+  .epd-launcher {
+    left: calc(1rem + env(safe-area-inset-left));
+    right: auto;
     bottom: calc(1rem + env(safe-area-inset-bottom));
-    right: calc(1rem + env(safe-area-inset-right));
+    gap: 0;
+    z-index: 9000;
+  }
+
+  .af-launcher {
+    left: calc(1rem + env(safe-area-inset-left));
+    right: auto;
+    /* Sit above the Surfer launcher (52px icon + 12px gap). */
+    bottom: calc(1rem + 52px + 0.75rem + env(safe-area-inset-bottom));
     gap: 0;
     max-width: none;
+    z-index: 221;
   }
-  .epd-launcher {
-    bottom: calc(1rem + env(safe-area-inset-bottom));
-    left: calc(1rem + env(safe-area-inset-left));
-    gap: 0;
-  }
+
   .a11y-toggle,
   #epd-toggle {
     width: 52px;
