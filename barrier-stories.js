@@ -88,6 +88,8 @@
   var FLIP_MS = 5000;
   var MOBILE_FLIP_MQ = '(max-width: 640px)';
   var flipListenersBound = false;
+  var lastWasMobileFlip = null;
+  var advanceLockUntil = 0;
 
   function stopFlip() {
     if (flipTimer) {
@@ -172,10 +174,11 @@
     }, FLIP_MS);
   }
 
-  function startFlip(track) {
+  function startFlip(track, keepIndex) {
     stopFlip();
-    flipIndex = 0;
-    setActiveCard(track, 0);
+    if (!keepIndex) flipIndex = 0;
+    if (flipIndex < 0 || flipIndex >= railStories.length) flipIndex = 0;
+    setActiveCard(track, flipIndex);
     restartFlipTimer(track);
   }
 
@@ -198,6 +201,11 @@
     }
     function goNext() {
       if (railStories.length < 2) return;
+      // Prevent double-fire (pointer+click / iOS quirks) — with 2 stories
+      // that lands on the same card and looks like "nothing happened".
+      var now = Date.now();
+      if (now < advanceLockUntil) return;
+      advanceLockUntil = now + 450;
       var t = activeTrack();
       advanceFlip(t);
       restartFlipTimer(t);
@@ -208,11 +216,6 @@
         holdTimer = null;
       }
     }
-
-    root.addEventListener('focusin', pause);
-    root.addEventListener('focusout', function (e) {
-      if (!root.contains(e.relatedTarget)) resume();
-    });
 
     // Transparent <button> overlay — reliable finger taps on iOS/Android
     var tapBtn = $('storyCarouselTap');
@@ -316,7 +319,7 @@
     });
   }
 
-  function renderFlip(track) {
+  function renderFlip(track, keepIndex) {
     var desktop = desktopTrack();
     var mobileWrap = document.querySelector('[data-mobile-carousel]');
     if (desktop) {
@@ -332,7 +335,7 @@
     track.classList.remove('is-static');
     track.innerHTML = railStories.map(storyCardHtml).join('');
     buildDots(railStories.length);
-    startFlip(track);
+    startFlip(track, keepIndex);
     bindFlipPause(mobileWrap || track, track);
   }
 
@@ -356,11 +359,13 @@
       }
       buildDots(0);
       setRailVisible(false);
+      lastWasMobileFlip = null;
       return;
     }
 
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setRailVisible(true);
+    lastWasMobileFlip = isMobileFlip();
 
     if (reduce) {
       var mobileWrap = document.querySelector('[data-mobile-carousel]');
@@ -384,7 +389,7 @@
     }
 
     if (isMobileFlip() && trackMobile) {
-      renderFlip(trackMobile);
+      renderFlip(trackMobile, false);
     } else if (trackDesktop) {
       renderMarquee(trackDesktop, rail);
       buildDots(0);
@@ -399,8 +404,19 @@
           if (!railStories.length) return;
           clearTimeout(resizeTimer);
           resizeTimer = setTimeout(function () {
+            var nowMobile = isMobileFlip();
+            // iOS/Android chrome show/hide fires resize — don't remount the
+            // carousel (that resets to story 0 and looks like tap did nothing).
+            if (nowMobile === lastWasMobileFlip) {
+              if (!nowMobile && trackDesktop) {
+                var r = document.querySelector('[data-stories-rail]');
+                renderMarquee(trackDesktop, r);
+              }
+              return;
+            }
+            lastWasMobileFlip = nowMobile;
             renderRail(railStories);
-          }, 120);
+          }, 150);
         },
         { passive: true },
       );
