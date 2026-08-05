@@ -1396,71 +1396,197 @@ footer a:focus-visible,
   color: #fff !important;
 }
 
-.compare-grid {
+/* Axol Work comparison row: copy left, job-post previews right */
+.product-panel--work {
+  background: #FAF8F6;
+  border-color: rgba(231, 229, 228, .8);
+  padding: clamp(2rem, 4vw, 3rem);
+  box-shadow: 0 1px 2px rgba(28, 25, 23, .04);
+}
+.work-compare {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(1.75rem, 4vw, 2.5rem);
+  align-items: center;
+}
+.work-compare-copy {
+  min-width: 0;
+}
+.work-compare-tag {
+  display: inline-flex;
+  width: max-content;
+  margin: 0 0 1rem;
+  padding: .25rem .75rem;
+  border-radius: 999px;
+  background: rgba(48, 16, 112, .1);
+  color: var(--purple);
+  font-family: var(--font-ui);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.work-compare-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.8vw, 1.9rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--ink);
+  max-width: 18ch;
+}
+.work-compare-body {
+  margin: .85rem 0 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #57534e;
+  max-width: 36ch;
+}
+.work-compare-points {
+  list-style: none;
+  margin: 1.15rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: .55rem;
+}
+.work-compare-points li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: .95rem;
+  line-height: 1.45;
+  color: #44403c;
+}
+.work-compare-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--coral);
+}
+.work-compare-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin-top: 1.5rem;
+  padding: .8rem 1.4rem;
+  border-radius: .75rem;
+  background: var(--purple);
+  border: 1px solid var(--purple);
+  color: #fff !important;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: .925rem;
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(28, 25, 23, .06);
+  transition: background .18s var(--ease), border-color .18s var(--ease);
+}
+.work-compare-cta:hover {
+  background: var(--purple-deep);
+  border-color: var(--purple-deep);
+  color: #fff !important;
+}
+
+.work-compare-cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin-bottom: .25rem;
+  min-width: 0;
 }
-.compare-col {
+.job-post {
   border-radius: .75rem;
   padding: 1.25rem;
+  min-height: 100%;
 }
-.compare-col--muted {
-  background: rgba(245, 245, 244, .7);
-  border: 1px solid rgba(231, 229, 228, .8);
+.job-post--old {
+  background: #f5f5f4;
+  border: 1px solid #e7e5e4;
+  box-shadow: inset 0 1px 2px rgba(28, 25, 23, .04);
+}
+.job-post--axol {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border: 2px solid rgba(48, 16, 112, .28);
+  box-shadow: 0 4px 14px rgba(28, 25, 23, .06);
+}
+.job-post-label {
+  margin: 0 0 .75rem;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.job-post--old .job-post-label { color: #78716c; }
+.job-post--axol .job-post-label { color: var(--purple); }
+.job-post-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: .98rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+.job-post--old .job-post-title { color: #44403c; font-weight: 600; }
+.job-post--axol .job-post-title { color: var(--ink); }
+.job-post-meta {
+  margin: .3rem 0 0;
+  font-size: .75rem;
   color: #78716c;
 }
-.compare-col--highlight {
-  background: rgba(255, 241, 242, .4);
-  border: 2px solid rgba(136, 19, 55, .2);
-  box-shadow: 0 1px 2px rgba(28, 25, 23, .04);
-  color: var(--ink);
-}
-.compare-col-label {
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  margin: 0 0 .65rem;
-  opacity: .8;
-}
-.compare-job {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  margin: 0 0 .5rem;
-  color: inherit;
-}
-.compare-col--muted .compare-job { color: #57534e; }
-.compare-muted-tag {
+.job-post-warn {
   display: inline-block;
-  font-size: .78rem;
+  margin: .75rem 0 0;
+  padding: .25rem .55rem;
+  border-radius: .35rem;
+  background: #e7e5e4;
+  color: #57534e;
+  font-size: .7rem;
   font-weight: 600;
-  color: #a8a29e;
-  margin: 0 0 .75rem;
 }
-.compare-fit-badge {
+.job-post-note {
+  margin: .75rem 0 0;
+  font-size: .72rem;
+  line-height: 1.45;
+  color: #a8a29e;
+  font-style: italic;
+}
+.job-post-match {
   display: inline-block;
-  margin: .5rem 0;
-  padding: .25rem .65rem;
+  margin: .75rem 0 0;
+  padding: .28rem .65rem;
   border-radius: .375rem;
   border: 1px solid #6ee7b7;
   background: #d1fae5;
   color: #064e3b;
   font-size: .75rem;
   font-weight: 700;
-  line-height: 1.3;
+  box-shadow: 0 1px 2px rgba(28, 25, 23, .04);
 }
-.compare-caption {
-  font-size: .92rem;
-  line-height: 1.5;
-  margin: .5rem 0 0;
-  max-width: 36ch;
+.job-post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-top: .65rem;
 }
-.compare-col--muted .compare-caption { color: #78716c; }
-.compare-col--highlight .compare-caption { color: #44403c; }
+.job-post-tags span {
+  display: inline-block;
+  padding: .15rem .5rem;
+  border-radius: .3rem;
+  background: #f5f5f4;
+  color: #44403c;
+  font-size: .7rem;
+  font-weight: 600;
+}
+
+@media (max-width: 960px) {
+  .work-compare { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .work-compare-cards { grid-template-columns: 1fr; }
+}
 
 .product-split {
   display: grid;
