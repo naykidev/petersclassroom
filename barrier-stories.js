@@ -84,18 +84,33 @@
   var railResizeBound = false;
   var flipTimer = null;
   var flipIndex = 0;
-  var FLIP_MS = 4200;
-  var MOBILE_FLIP_MQ = '(max-width: 720px)';
+  var flipPaused = false;
+  var FLIP_MS = 10000;
+  var MOBILE_FLIP_MQ = '(max-width: 640px)';
+  var flipListenersBound = false;
 
   function stopFlip() {
     if (flipTimer) {
       clearInterval(flipTimer);
       flipTimer = null;
     }
+    flipPaused = false;
   }
 
   function isMobileFlip() {
     return window.matchMedia(MOBILE_FLIP_MQ).matches;
+  }
+
+  function desktopTrack() {
+    return $('storiesTrack');
+  }
+
+  function mobileTrack() {
+    return $('storiesTrackMobile');
+  }
+
+  function dotsEl() {
+    return $('storyCarouselDots');
   }
 
   function setActiveCard(track, index) {
@@ -104,6 +119,47 @@
       card.classList.toggle('is-active', idx === index);
       card.setAttribute('aria-hidden', idx === index ? 'false' : 'true');
     });
+    var dots = dotsEl();
+    if (!dots) return;
+    dots.querySelectorAll('.story-carousel-dot').forEach(function (dot, idx) {
+      var on = idx === index;
+      dot.classList.toggle('is-active', on);
+      dot.setAttribute('aria-selected', on ? 'true' : 'false');
+      dot.tabIndex = on ? 0 : -1;
+    });
+  }
+
+  function buildDots(count) {
+    var dots = dotsEl();
+    if (!dots) return;
+    if (count < 2) {
+      dots.innerHTML = '';
+      dots.hidden = true;
+      return;
+    }
+    dots.hidden = false;
+    var html = '';
+    for (var i = 0; i < count; i++) {
+      html +=
+        '<button type="button" class="story-carousel-dot' +
+        (i === 0 ? ' is-active' : '') +
+        '" role="tab" aria-label="Show story ' +
+        (i + 1) +
+        '" aria-selected="' +
+        (i === 0 ? 'true' : 'false') +
+        '" data-index="' +
+        i +
+        '" tabindex="' +
+        (i === 0 ? '0' : '-1') +
+        '"></button>';
+    }
+    dots.innerHTML = html;
+  }
+
+  function advanceFlip(track) {
+    if (!railStories.length) return;
+    flipIndex = (flipIndex + 1) % railStories.length;
+    setActiveCard(track, flipIndex);
   }
 
   function startFlip(track) {
@@ -113,10 +169,53 @@
     if (railStories.length < 2) return;
 
     flipTimer = setInterval(function () {
-      if (track.matches(':hover') || track.contains(document.activeElement)) return;
-      flipIndex = (flipIndex + 1) % railStories.length;
-      setActiveCard(track, flipIndex);
+      if (flipPaused) return;
+      advanceFlip(track);
     }, FLIP_MS);
+  }
+
+  function bindFlipPause(root, track) {
+    if (flipListenersBound || !root) return;
+    flipListenersBound = true;
+
+    function pause() {
+      flipPaused = true;
+    }
+    function resume() {
+      flipPaused = false;
+    }
+
+    root.addEventListener('pointerdown', pause);
+    root.addEventListener('pointerup', resume);
+    root.addEventListener('pointercancel', resume);
+    root.addEventListener('pointerleave', resume);
+    root.addEventListener('focusin', pause);
+    root.addEventListener('focusout', function (e) {
+      if (!root.contains(e.relatedTarget)) resume();
+    });
+    root.addEventListener('touchstart', pause, { passive: true });
+    root.addEventListener('touchend', resume, { passive: true });
+    root.addEventListener('touchcancel', resume, { passive: true });
+
+    var dots = dotsEl();
+    if (dots) {
+      dots.addEventListener('click', function (e) {
+        var btn = e.target.closest('.story-carousel-dot');
+        if (!btn) return;
+        var idx = parseInt(btn.getAttribute('data-index'), 10);
+        if (isNaN(idx)) return;
+        var activeTrack = mobileTrack() || track;
+        flipIndex = idx;
+        setActiveCard(activeTrack, flipIndex);
+        if (flipTimer) {
+          clearInterval(flipTimer);
+          flipTimer = setInterval(function () {
+            if (flipPaused) return;
+            advanceFlip(activeTrack);
+          }, FLIP_MS);
+        }
+      });
+    }
   }
 
   function buildLoopHtml(stories, railWidth) {
@@ -143,6 +242,9 @@
   }
 
   function renderMarquee(track, rail) {
+    var mobileWrap = document.querySelector('[data-mobile-carousel]');
+    if (mobileWrap) mobileWrap.hidden = true;
+    track.hidden = false;
     track.classList.remove('is-flip', 'is-static');
     function applyLoop() {
       var width = rail ? rail.clientWidth : window.innerWidth;
@@ -154,54 +256,90 @@
   }
 
   function renderFlip(track) {
+    var desktop = desktopTrack();
+    var mobileWrap = document.querySelector('[data-mobile-carousel]');
+    if (desktop) {
+      desktop.hidden = true;
+      desktop.innerHTML = '';
+      desktop.classList.remove('is-flip');
+    }
+    if (mobileWrap) mobileWrap.hidden = false;
+
     stopFlip();
+    track.hidden = false;
     track.classList.add('is-flip');
     track.classList.remove('is-static');
     track.innerHTML = railStories.map(storyCardHtml).join('');
+    buildDots(railStories.length);
     startFlip(track);
+    bindFlipPause(mobileWrap || track, track);
   }
 
   function renderRail(stories) {
-    var track = $('storiesTrack');
+    var trackDesktop = desktopTrack();
+    var trackMobile = mobileTrack();
     var rail = document.querySelector('[data-stories-rail]');
-    if (!track) return;
+    if (!trackDesktop && !trackMobile) return;
 
     railStories = stories || [];
     stopFlip();
 
     if (!railStories.length) {
-      track.innerHTML = '';
-      track.removeAttribute('data-count');
-      track.classList.remove('is-static', 'is-sparse', 'is-flip');
+      if (trackDesktop) {
+        trackDesktop.innerHTML = '';
+        trackDesktop.classList.remove('is-static', 'is-sparse', 'is-flip');
+      }
+      if (trackMobile) {
+        trackMobile.innerHTML = '';
+        trackMobile.classList.remove('is-static', 'is-flip');
+      }
+      buildDots(0);
       setRailVisible(false);
       return;
     }
 
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    track.setAttribute('data-count', String(railStories.length));
-    track.classList.remove('is-sparse');
     setRailVisible(true);
 
     if (reduce) {
-      track.classList.remove('is-flip');
-      track.innerHTML = railStories.map(storyCardHtml).join('');
-      track.classList.add('is-static');
+      var mobileWrap = document.querySelector('[data-mobile-carousel]');
+      if (isMobileFlip() && trackMobile) {
+        if (mobileWrap) mobileWrap.hidden = false;
+        if (trackDesktop) trackDesktop.hidden = true;
+        trackMobile.classList.add('is-static', 'is-flip');
+        trackMobile.innerHTML = railStories.map(storyCardHtml).join('');
+        buildDots(0);
+        var first = trackMobile.querySelector('.story-card');
+        if (first) first.classList.add('is-active');
+      } else if (trackDesktop) {
+        if (mobileWrap) mobileWrap.hidden = true;
+        trackDesktop.hidden = false;
+        trackDesktop.classList.remove('is-flip');
+        trackDesktop.innerHTML = railStories.map(storyCardHtml).join('');
+        trackDesktop.classList.add('is-static');
+        buildDots(0);
+      }
       return;
     }
 
-    if (isMobileFlip()) {
-      renderFlip(track);
-    } else {
-      renderMarquee(track, rail);
+    if (isMobileFlip() && trackMobile) {
+      renderFlip(trackMobile);
+    } else if (trackDesktop) {
+      renderMarquee(trackDesktop, rail);
+      buildDots(0);
     }
 
     if (!railResizeBound) {
       railResizeBound = true;
+      var resizeTimer = null;
       window.addEventListener(
         'resize',
         function () {
           if (!railStories.length) return;
-          renderRail(railStories);
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function () {
+            renderRail(railStories);
+          }, 120);
         },
         { passive: true },
       );
