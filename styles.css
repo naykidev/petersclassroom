@@ -2783,38 +2783,6 @@ nav { padding-left: max(clamp(1.2rem,4vw,2.5rem), env(safe-area-inset-left)); pa
 .a11y-reset:hover { background: #2a241e; }
 .a11y-reading-guide { position: fixed; left: 0; right: 0; height: 44px; background: rgba(176,48,96,.14); border-top: 2px solid rgba(176,48,96,.55); border-bottom: 2px solid rgba(176,48,96,.55); pointer-events: none; z-index: 210; top: -100px; }
 
-@media (max-width: 900px) {
-  /* Corner promos collide on phones — stack icons on the left, hide bubble copy. */
-  .epd-bubble,
-  .af-bubble {
-    display: none !important;
-  }
-
-  .epd-launcher {
-    left: calc(1rem + env(safe-area-inset-left));
-    right: auto;
-    bottom: calc(1rem + env(safe-area-inset-bottom));
-    gap: 0;
-    z-index: 9000;
-  }
-
-  .af-launcher {
-    left: calc(1rem + env(safe-area-inset-left));
-    right: auto;
-    /* Sit above the Surfer launcher (52px icon + 12px gap). */
-    bottom: calc(1rem + 52px + 0.75rem + env(safe-area-inset-bottom));
-    gap: 0;
-    max-width: none;
-    z-index: 221;
-  }
-
-  .a11y-toggle,
-  #epd-toggle {
-    width: 52px;
-    height: 52px;
-  }
-}
-
 @media (max-width: 600px) {
   .a11y-panel { width: 100vw; }
   #epd-panel { width: 100vw; max-width: 100vw; }
@@ -3159,4 +3127,72 @@ html[data-contrast="dark"] .af-bubble-cta { color: #f6c4d8; }
 html[data-contrast="dark"] .af-bubble::before {
   background: linear-gradient(135deg, #1a1224 0%, #2a1830 100%);
   border-color: rgba(236, 196, 214, .22);
+}
+
+/* ══════════════════════════════════════════
+   MOBILE LAUNCHERS (must stay last so earlier epd/af rules don't override)
+   Icons stay in opposite bottom corners. Bubbles sit above the icons, with
+   AccessFlow’s message stacked higher so the two bubbles don’t collide.
+   ══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .epd-launcher,
+  .af-launcher {
+    position: fixed;
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+    gap: 0;
+    max-width: none;
+  }
+
+  .epd-launcher {
+    left: calc(1rem + env(safe-area-inset-left));
+    right: auto;
+    z-index: 9000;
+  }
+
+  .af-launcher {
+    left: auto;
+    right: calc(1rem + env(safe-area-inset-right));
+    z-index: 221;
+  }
+
+  .a11y-toggle,
+  #epd-toggle {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+  }
+
+  .epd-bubble,
+  .af-bubble {
+    display: flex !important;
+    position: absolute;
+    width: max-content;
+    max-width: min(12.5rem, 44vw);
+    margin: 0;
+    white-space: normal;
+  }
+
+  .epd-bubble-text,
+  .af-bubble-text {
+    white-space: normal;
+  }
+
+  .epd-bubble::before,
+  .af-bubble::before {
+    display: none;
+  }
+
+  /* Surfer message directly above its icon */
+  .epd-bubble {
+    left: 0;
+    right: auto;
+    bottom: calc(100% + .5rem);
+  }
+
+  /* AccessFlow message above Surfer’s message so they stack, not collide */
+  .af-bubble {
+    right: 0;
+    left: auto;
+    bottom: calc(100% + 5.25rem);
+  }
 }
