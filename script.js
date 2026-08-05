@@ -149,8 +149,8 @@ revealTargets.forEach(el => {
 
   // The toolbar markup is injected here rather than hand-copied into every
   // page's HTML — one source of truth, and it appears anywhere script.js
-  // loads (index, easepass, privacy). Idempotent: bails if already present
-  // (e.g. an older page that still has the static markup).
+  // loads (home + all marketing product pages). Idempotent: bails if already
+  // present (e.g. an older page that still has the static markup).
   function injectAccessibilityToolbar() {
     if (document.getElementById('a11yPanel')) return;
     const group = (heading, label, buttons) =>
@@ -166,11 +166,17 @@ revealTargets.forEach(el => {
         <button class="a11y-switch" id="sw-${id}" data-toggle="${toggle}" role="switch" aria-checked="false" aria-label="${ariaLabel || label}"></button>
       </div>`;
 
+    const onToolbarPage = /toolbar\.html$/i.test(location.pathname || '');
+    const afBubbleHref = onToolbarPage ? '#install' : 'toolbar.html#install';
+    const afBubbleText = onToolbarPage
+      ? 'Copy the snippet below — this is how <em class="af-bubble-accent">AccessFlow</em> looks for your visitors.'
+      : 'How <em class="af-bubble-accent">AccessFlow</em> will look on your website.';
+
     const html =
       `<div class="af-launcher" role="group" aria-label="AccessFlow toolbar">
-        <a class="af-bubble" id="af-bubble" href="toolbar.html#install">
+        <a class="af-bubble" id="af-bubble" href="${afBubbleHref}">
           <span class="af-bubble-kicker">Add to your code</span>
-          <span class="af-bubble-text">How <em class="af-bubble-accent">AccessFlow</em> will look on your website.</span>
+          <span class="af-bubble-text">${afBubbleText}</span>
         </a>
         <button class="a11y-toggle" id="a11yToggle" aria-label="Open AccessFlow accessibility toolbar" aria-expanded="false" aria-controls="a11yPanel" aria-describedby="af-bubble">
           <img src="accessibility.png" alt="" width="60" height="60" aria-hidden="true" />
@@ -367,9 +373,10 @@ revealTargets.forEach(el => {
    A bottom-left floating button (Accessibility Surfer logo) that opens a left-side
    preview of the extension's dwell-clicking controls, so visitors can see what the
    extension offers. Injected here (one source, appears on every page that
-   loads script.js). The toggles and sliders are a visual demo — they update
-   their own UI but don't drive dwell-clicking on this static page. (Text-
-   accessibility controls live only in the extension itself, not here.) */
+   loads script.js unless body[data-skip-surfer-preview] is set). The toggles and
+   sliders are a visual demo — they update their own UI but don't drive
+   dwell-clicking on this static page. (Text-accessibility controls live only
+   in the extension itself, not here.) */
 (function () {
   if (document.body && document.body.hasAttribute('data-skip-surfer-preview')) return;
   if (document.getElementById('epd-panel')) return;
@@ -378,6 +385,11 @@ revealTargets.forEach(el => {
     const sec = Math.round(Number(ms) / 1000);
     return sec + (sec === 1 ? ' second' : ' seconds');
   }
+
+  const onSurferPage = /easepass\.html$/i.test(location.pathname || '');
+  const bubbleText = onSurferPage
+    ? 'Preview the <em class="epd-bubble-accent">Accessibility Surfer</em> popup'
+    : 'Try <em class="epd-bubble-accent">Accessibility Surfer</em>';
 
   const slider = (id, label, min, max, step, value) =>
     `<div class="epd-slider-block">` +
@@ -404,7 +416,7 @@ revealTargets.forEach(el => {
   bubble.id = 'epd-bubble';
   bubble.innerHTML =
     '<span class="epd-bubble-kicker">Free Chrome extension</span>' +
-    '<span class="epd-bubble-text">Try <em class="epd-bubble-accent">Accessibility Surfer</em></span>';
+    '<span class="epd-bubble-text">' + bubbleText + '</span>';
   launcher.appendChild(toggle);
   launcher.appendChild(bubble);
 
