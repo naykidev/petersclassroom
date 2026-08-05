@@ -29,7 +29,7 @@
       .replace(/"/g, '&quot;');
   }
 
-  function storyCardHtml(story) {
+  function storyItemHtml(story) {
     var chips = (story.tags || [])
       .map(function (id) {
         return '<span class="story-chip">' + escapeHtml(TAG_LABEL[id] || id) + '</span>';
@@ -37,20 +37,16 @@
       .join('');
     var place = story.place ? ' · ' + escapeHtml(story.place) : '';
     return (
-      '<article class="story-item">' +
-      '<p class="story-text">' +
+      '<span class="story-item">' +
+      '<span class="story-text">' +
       escapeHtml(story.text) +
-      '</p>' +
-      '<div class="story-meta">' +
+      '</span>' +
       '<span class="story-by">— ' +
-      escapeHtml(story.name) +
+      escapeHtml(story.name || 'Anonymous') +
       place +
       '</span>' +
-      '<span class="story-chips">' +
-      chips +
-      '</span>' +
-      '</div>' +
-      '</article>'
+      (chips ? '<span class="story-chips">' + chips + '</span>' : '') +
+      '</span>'
     );
   }
 
@@ -66,19 +62,26 @@
     if (!stories || !stories.length) {
       track.innerHTML = '';
       track.removeAttribute('data-count');
-      track.classList.remove('is-static', 'is-sparse');
+      track.classList.remove('is-static');
       setRailVisible(false);
       return;
     }
 
-    var html = stories.map(storyCardHtml).join('');
+    var sep = '<span class="story-sep" aria-hidden="true">·</span>';
+    var unique = stories.map(storyItemHtml).join(sep);
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // Always duplicate for a seamless CSS loop when motion is allowed.
-    // Sparse rails get extra spacing so clones aren't visible side-by-side.
-    track.innerHTML = reduce ? html : html + html;
+
+    // Repeat the unique set until the ribbon is long enough to feel continuous,
+    // then duplicate that whole segment for a seamless -50% CSS loop.
+    var minItems = 8;
+    var repeats = Math.max(2, Math.ceil(minItems / stories.length));
+    var segmentParts = [];
+    for (var i = 0; i < repeats; i++) segmentParts.push(unique);
+    var segment = segmentParts.join(sep);
+
+    track.innerHTML = reduce ? unique : segment + sep + segment;
     track.setAttribute('data-count', String(stories.length));
     track.classList.toggle('is-static', reduce);
-    track.classList.toggle('is-sparse', !reduce && stories.length < 3);
     setRailVisible(true);
   }
 
