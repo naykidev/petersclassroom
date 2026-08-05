@@ -162,16 +162,21 @@
     setActiveCard(track, flipIndex);
   }
 
-  function startFlip(track) {
-    stopFlip();
-    flipIndex = 0;
-    setActiveCard(track, 0);
+  function restartFlipTimer(track) {
+    if (flipTimer) clearInterval(flipTimer);
+    flipTimer = null;
     if (railStories.length < 2) return;
-
     flipTimer = setInterval(function () {
       if (flipPaused) return;
       advanceFlip(track);
     }, FLIP_MS);
+  }
+
+  function startFlip(track) {
+    stopFlip();
+    flipIndex = 0;
+    setActiveCard(track, 0);
+    restartFlipTimer(track);
   }
 
   function bindFlipPause(root, track) {
@@ -183,6 +188,9 @@
     }
     function resume() {
       flipPaused = false;
+    }
+    function activeTrack() {
+      return mobileTrack() || track;
     }
 
     root.addEventListener('pointerdown', pause);
@@ -197,6 +205,15 @@
     root.addEventListener('touchend', resume, { passive: true });
     root.addEventListener('touchcancel', resume, { passive: true });
 
+    // Tap / click the card to go to the next story
+    track.addEventListener('click', function (e) {
+      if (e.target.closest('.story-carousel-dot')) return;
+      if (railStories.length < 2) return;
+      var t = activeTrack();
+      advanceFlip(t);
+      restartFlipTimer(t);
+    });
+
     var dots = dotsEl();
     if (dots) {
       dots.addEventListener('click', function (e) {
@@ -204,16 +221,10 @@
         if (!btn) return;
         var idx = parseInt(btn.getAttribute('data-index'), 10);
         if (isNaN(idx)) return;
-        var activeTrack = mobileTrack() || track;
+        var t = activeTrack();
         flipIndex = idx;
-        setActiveCard(activeTrack, flipIndex);
-        if (flipTimer) {
-          clearInterval(flipTimer);
-          flipTimer = setInterval(function () {
-            if (flipPaused) return;
-            advanceFlip(activeTrack);
-          }, FLIP_MS);
-        }
+        setActiveCard(t, flipIndex);
+        restartFlipTimer(t);
       });
     }
   }

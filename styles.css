@@ -2177,6 +2177,7 @@ footer a:focus-visible,
   margin-inline: 0;
   padding-inline: 0;
   gap: 0;
+  cursor: pointer;
 }
 .stories-track.is-flip .story-card {
   grid-area: 1 / 1;
