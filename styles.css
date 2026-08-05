@@ -2170,6 +2170,11 @@ footer a:focus-visible,
   border-radius: 10px;
   box-shadow: none;
 }
+.story-card-spacer {
+  flex: 0 0 auto;
+  align-self: stretch;
+  pointer-events: none;
+}
 .story-card-text {
   font-family: var(--font-display);
   font-size: 1.05rem;

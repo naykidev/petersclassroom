@@ -80,12 +80,42 @@
     if (rail) rail.hidden = !visible;
   }
 
+  var railStories = [];
+  var railResizeBound = false;
+
+  function buildLoopHtml(stories, railWidth) {
+    var unique = stories.map(storyCardHtml).join('');
+    // Pad short sets so the loop half is wider than the viewport — animation
+    // keeps moving without packing A–B–A–B side by side.
+    var measure = document.createElement('div');
+    measure.style.cssText =
+      'position:absolute;visibility:hidden;display:flex;gap:1rem;pointer-events:none';
+    measure.innerHTML = unique;
+    document.body.appendChild(measure);
+    var uniqueWidth = measure.scrollWidth;
+    document.body.removeChild(measure);
+
+    var pad = 0;
+    if (railWidth > 0 && uniqueWidth <= railWidth + 24) {
+      pad = Math.ceil(railWidth - uniqueWidth + 96);
+    }
+    var spacer = pad
+      ? '<span class="story-card-spacer" aria-hidden="true" style="flex:0 0 ' +
+        pad +
+        'px"></span>'
+      : '';
+    var half = unique + spacer;
+    return half + half;
+  }
+
   function renderRail(stories) {
     var track = $('storiesTrack');
     var rail = document.querySelector('[data-stories-rail]');
     if (!track) return;
 
-    if (!stories || !stories.length) {
+    railStories = stories || [];
+
+    if (!railStories.length) {
       track.innerHTML = '';
       track.removeAttribute('data-count');
       track.classList.remove('is-static', 'is-sparse');
@@ -93,33 +123,40 @@
       return;
     }
 
-    var unique = stories.map(storyCardHtml).join('');
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Always paint unique cards first so we never flash clones.
-    track.innerHTML = unique;
-    track.setAttribute('data-count', String(stories.length));
+    track.setAttribute('data-count', String(railStories.length));
     track.classList.remove('is-sparse');
     setRailVisible(true);
 
-    // Only clone for a seamless loop when unique cards already overflow the rail.
-    // With 1–2 short cards, cloning would show obvious side-by-side duplicates.
-    function applyLoop() {
-      if (reduce || !rail) {
-        track.classList.add('is-static');
-        return;
-      }
-      var overflows = track.scrollWidth > rail.clientWidth + 24;
-      if (overflows) {
-        track.innerHTML = unique + unique;
-        track.classList.remove('is-static');
-      } else {
-        track.innerHTML = unique;
-        track.classList.add('is-static');
-      }
+    if (reduce) {
+      track.innerHTML = railStories.map(storyCardHtml).join('');
+      track.classList.add('is-static');
+      return;
     }
 
-    requestAnimationFrame(applyLoop);
+    function applyLoop() {
+      var width = rail ? rail.clientWidth : window.innerWidth;
+      track.innerHTML = buildLoopHtml(railStories, width);
+      track.classList.remove('is-static');
+    }
+
+    // Second frame: rail is visible and has a real width.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(applyLoop);
+    });
+
+    if (!railResizeBound) {
+      railResizeBound = true;
+      window.addEventListener(
+        'resize',
+        function () {
+          if (!railStories.length) return;
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          applyLoop();
+        },
+        { passive: true },
+      );
+    }
   }
 
   function normalizeCustomTag(raw) {
