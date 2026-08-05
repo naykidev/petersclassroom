@@ -85,7 +85,7 @@
   var flipTimer = null;
   var flipIndex = 0;
   var flipPaused = false;
-  var FLIP_MS = 10000;
+  var FLIP_MS = 5000;
   var MOBILE_FLIP_MQ = '(max-width: 640px)';
   var flipListenersBound = false;
 
