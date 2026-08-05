@@ -806,7 +806,7 @@ footer a:focus-visible,
   flex-wrap: wrap;
   gap: .75rem;
   margin-top: 2rem;
-  justify-content: flex-start;
+  justify-content: center;
 }
 .demo-showcase-cta {
   display: inline-flex;
@@ -819,31 +819,15 @@ footer a:focus-visible,
   padding: .75rem 1.25rem;
   border-radius: .5rem;
   text-decoration: none;
-  background: #4c0519;
+  background: var(--coral);
   color: #fff !important;
-  border: 1px solid #4c0519;
+  border: 1px solid var(--coral);
   transition: background .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease);
 }
 .demo-showcase-cta:hover {
-  background: #881337;
-  border-color: #881337;
-  color: #fff !important;
-}
-.demo-showcase-cta--primary {
-  background: var(--coral);
-  border-color: var(--coral);
-}
-.demo-showcase-cta--primary:hover {
   background: var(--coral-deep);
   border-color: var(--coral-deep);
-}
-.demo-showcase-cta--secondary {
-  background: #1c1917;
-  border-color: #1c1917;
-}
-.demo-showcase-cta--secondary:hover {
-  background: #292524;
-  border-color: #292524;
+  color: #fff !important;
 }
 .demo-showcase-intro {
   display: flex;
