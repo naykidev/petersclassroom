@@ -176,7 +176,7 @@
       }
 
       var text = (form.elements.text.value || '').trim();
-      var name = (form.elements.name.value || '').trim();
+      var name = (form.elements.name.value || '').trim() || 'Anonymous';
       var place = (form.elements.place.value || '').trim();
       var tags = selectedTags(form);
 
@@ -186,10 +186,6 @@
       }
       if (text.length > MAX_LEN) {
         setStatus('Keep it to ' + MAX_LEN + ' characters.', true);
-        return;
-      }
-      if (!name) {
-        setStatus('Add a first name (or a nickname).', true);
         return;
       }
       if (!tags.length) {
