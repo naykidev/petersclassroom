@@ -2150,24 +2150,6 @@ footer a:focus-visible,
 .story-carousel-stage {
   position: relative;
 }
-.story-carousel-tap {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: rgba(176, 48, 96, 0.1);
-}
-.story-carousel-tap:focus-visible {
-  outline: 2px solid var(--coral);
-  outline-offset: 3px;
-}
 .stories-track {
   display: flex;
   flex-wrap: nowrap;
@@ -2198,36 +2180,75 @@ footer a:focus-visible,
   margin-inline: 0;
   padding-inline: 0;
   gap: 0;
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
 }
 .stories-track.is-flip .story-card {
   grid-area: 1 / 1;
   width: 100%;
   flex: none;
   opacity: 0;
-  visibility: hidden;
-  transition: opacity 500ms ease-in-out, visibility 500ms ease-in-out;
+  transition: opacity 500ms ease-in-out;
   pointer-events: none;
+  z-index: 0;
 }
 .stories-track.is-flip .story-card.is-active {
   opacity: 1;
-  visibility: visible;
   pointer-events: auto;
   z-index: 1;
+}
+.story-carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  margin-top: .95rem;
+}
+.story-carousel-nav[hidden] {
+  display: none !important;
+}
+.story-carousel-arrow {
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 1.65rem;
+  font-weight: 500;
+  line-height: 1;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: rgba(176, 48, 96, 0.12);
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.story-carousel-arrow span {
+  display: block;
+  margin-top: -.08em;
+}
+.story-carousel-arrow:hover {
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+.story-carousel-arrow:active {
+  background: var(--coral-tint);
+}
+.story-carousel-arrow:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
 }
 .story-carousel-dots {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1 1 auto;
   gap: .45rem;
-  margin-top: .9rem;
   min-height: 1rem;
+  max-width: 10rem;
 }
 .story-carousel-dot {
   width: .45rem;

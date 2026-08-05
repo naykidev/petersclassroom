@@ -234,9 +234,16 @@
         <div class="mobile-story-carousel" data-mobile-carousel>
           <div class="story-carousel-stage">
             <div class="stories-track is-flip" id="storiesTrackMobile" tabindex="0" aria-roledescription="carousel" aria-label="Accessibility barrier stories"></div>
-            <button type="button" class="story-carousel-tap" id="storyCarouselTap" aria-label="Show next story"></button>
           </div>
-          <div class="story-carousel-dots" id="storyCarouselDots" role="tablist" aria-label="Story slides"></div>
+          <div class="story-carousel-nav" id="storyCarouselNav" hidden>
+            <button type="button" class="story-carousel-arrow" id="storyCarouselPrev" aria-label="Previous story">
+              <span aria-hidden="true">‹</span>
+            </button>
+            <div class="story-carousel-dots" id="storyCarouselDots" role="tablist" aria-label="Story slides"></div>
+            <button type="button" class="story-carousel-arrow" id="storyCarouselNext" aria-label="Next story">
+              <span aria-hidden="true">›</span>
+            </button>
+          </div>
         </div>
         <div class="stories-track" id="storiesTrack" tabindex="0" aria-label="Accessibility barrier stories"></div>
       </div>

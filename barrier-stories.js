@@ -89,7 +89,6 @@
   var MOBILE_FLIP_MQ = '(max-width: 640px)';
   var flipListenersBound = false;
   var lastWasMobileFlip = null;
-  var advanceLockUntil = 0;
 
   function stopFlip() {
     if (flipTimer) {
@@ -115,11 +114,17 @@
     return $('storyCarouselDots');
   }
 
+  function navEl() {
+    return $('storyCarouselNav');
+  }
+
   function setActiveCard(track, index) {
+    if (!track) return;
     var cards = track.querySelectorAll('.story-card');
     cards.forEach(function (card, idx) {
-      card.classList.toggle('is-active', idx === index);
-      card.setAttribute('aria-hidden', idx === index ? 'false' : 'true');
+      var on = idx === index;
+      card.classList.toggle('is-active', on);
+      card.setAttribute('aria-hidden', on ? 'false' : 'true');
     });
     var dots = dotsEl();
     if (!dots) return;
@@ -133,44 +138,55 @@
 
   function buildDots(count) {
     var dots = dotsEl();
+    var nav = navEl();
+    if (nav) nav.hidden = count < 2;
     if (!dots) return;
     if (count < 2) {
       dots.innerHTML = '';
-      dots.hidden = true;
       return;
     }
-    dots.hidden = false;
     var html = '';
     for (var i = 0; i < count; i++) {
       html +=
         '<button type="button" class="story-carousel-dot' +
-        (i === 0 ? ' is-active' : '') +
+        (i === flipIndex ? ' is-active' : '') +
         '" role="tab" aria-label="Show story ' +
         (i + 1) +
         '" aria-selected="' +
-        (i === 0 ? 'true' : 'false') +
+        (i === flipIndex ? 'true' : 'false') +
         '" data-index="' +
         i +
         '" tabindex="' +
-        (i === 0 ? '0' : '-1') +
+        (i === flipIndex ? '0' : '-1') +
         '"></button>';
     }
     dots.innerHTML = html;
   }
 
-  function advanceFlip(track) {
+  function goToFlip(index) {
     if (!railStories.length) return;
-    flipIndex = (flipIndex + 1) % railStories.length;
+    var track = mobileTrack();
+    if (!track) return;
+    flipIndex = ((index % railStories.length) + railStories.length) % railStories.length;
     setActiveCard(track, flipIndex);
+    restartFlipTimer(track);
+  }
+
+  function advanceFlip(track, step) {
+    if (!railStories.length) return;
+    var delta = typeof step === 'number' ? step : 1;
+    flipIndex = (flipIndex + delta + railStories.length) % railStories.length;
+    setActiveCard(track || mobileTrack(), flipIndex);
   }
 
   function restartFlipTimer(track) {
     if (flipTimer) clearInterval(flipTimer);
     flipTimer = null;
     if (railStories.length < 2) return;
+    var t = track || mobileTrack();
     flipTimer = setInterval(function () {
       if (flipPaused) return;
-      advanceFlip(track);
+      advanceFlip(t, 1);
     }, FLIP_MS);
   }
 
@@ -182,13 +198,9 @@
     restartFlipTimer(track);
   }
 
-  function bindFlipPause(root, track) {
+  function bindFlipControls(root, track) {
     if (flipListenersBound || !root) return;
     flipListenersBound = true;
-
-    var HOLD_MS = 500;
-    var holdTimer = null;
-    var heldLong = false;
 
     function pause() {
       flipPaused = true;
@@ -196,75 +208,37 @@
     function resume() {
       flipPaused = false;
     }
-    function activeTrack() {
-      return mobileTrack() || track;
-    }
-    function goNext() {
-      if (railStories.length < 2) return;
-      // Prevent double-fire (pointer+click / iOS quirks) — with 2 stories
-      // that lands on the same card and looks like "nothing happened".
-      var now = Date.now();
-      if (now < advanceLockUntil) return;
-      advanceLockUntil = now + 450;
-      var t = activeTrack();
-      advanceFlip(t);
-      restartFlipTimer(t);
-    }
-    function clearHold() {
-      if (holdTimer) {
-        clearTimeout(holdTimer);
-        holdTimer = null;
-      }
-    }
 
-    // Transparent <button> overlay — reliable finger taps on iOS/Android
-    var tapBtn = $('storyCarouselTap');
-    if (tapBtn) {
-      tapBtn.addEventListener(
-        'pointerdown',
-        function (e) {
-          if (e.pointerType === 'mouse' && e.button !== 0) return;
-          heldLong = false;
-          clearHold();
-          pause();
-          holdTimer = setTimeout(function () {
-            heldLong = true;
-          }, HOLD_MS);
-        },
-        { passive: true },
-      );
-      tapBtn.addEventListener(
-        'pointerup',
-        function () {
-          clearHold();
-          resume();
-        },
-        { passive: true },
-      );
-      tapBtn.addEventListener(
-        'pointercancel',
-        function () {
-          clearHold();
-          heldLong = true;
-          resume();
-        },
-        { passive: true },
-      );
-      tapBtn.addEventListener('click', function (e) {
+    root.addEventListener('pointerdown', pause, { passive: true });
+    root.addEventListener('pointerup', resume, { passive: true });
+    root.addEventListener('pointercancel', resume, { passive: true });
+    root.addEventListener('pointerleave', resume, { passive: true });
+
+    var prev = $('storyCarouselPrev');
+    var next = $('storyCarouselNext');
+    if (prev) {
+      prev.addEventListener('click', function (e) {
         e.preventDefault();
-        // Long-press to read: don't skip when releasing after a hold
-        if (heldLong) {
-          heldLong = false;
-          return;
-        }
-        goNext();
+        e.stopPropagation();
+        goToFlip(flipIndex - 1);
+      });
+    }
+    if (next) {
+      next.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        goToFlip(flipIndex + 1);
       });
     }
 
     track.addEventListener('keydown', function (e) {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      e.preventDefault();
-      goNext();
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        goToFlip(flipIndex + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        goToFlip(flipIndex - 1);
+      }
     });
 
     var dots = dotsEl();
@@ -274,10 +248,7 @@
         if (!btn) return;
         var idx = parseInt(btn.getAttribute('data-index'), 10);
         if (isNaN(idx)) return;
-        var t = activeTrack();
-        flipIndex = idx;
-        setActiveCard(t, flipIndex);
-        restartFlipTimer(t);
+        goToFlip(idx);
       });
     }
   }
@@ -336,7 +307,7 @@
     track.innerHTML = railStories.map(storyCardHtml).join('');
     buildDots(railStories.length);
     startFlip(track, keepIndex);
-    bindFlipPause(mobileWrap || track, track);
+    bindFlipControls(mobileWrap || track, track);
   }
 
   function renderRail(stories) {
