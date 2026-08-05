@@ -278,47 +278,64 @@
           </article>
 
           <!-- Row 3: Accessibility Surfer -->
-          <article class="product-panel reveal" aria-labelledby="prod-surfer-h">
-            <div class="product-split product-split--surfer">
-              <div class="surfer-chrome" aria-hidden="true">
-                <div class="surfer-chrome-bar">
-                  <span class="surfer-chrome-dots"><i></i><i></i><i></i></span>
-                  <span class="surfer-chrome-title">Accessibility Surfer</span>
-                </div>
-                <div class="surfer-chrome-body">
-                  <div class="surfer-chrome-row is-on">
-                    <div>
-                      <strong>Dwell Clicking</strong>
-                      <span>3s ring · hover to click</span>
-                    </div>
-                    <span class="surfer-switch" aria-hidden="true"></span>
-                  </div>
-                  <div class="surfer-chrome-row is-on">
-                    <div>
-                      <strong>Reading Mode</strong>
-                      <span>Strip to the article</span>
-                    </div>
-                    <span class="surfer-switch" aria-hidden="true"></span>
-                  </div>
-                  <div class="surfer-chrome-row">
-                    <div>
-                      <strong>Boost contrast</strong>
-                      <span>Off</span>
-                    </div>
-                    <span class="surfer-switch" aria-hidden="true"></span>
-                  </div>
-                  <div class="surfer-dwell-hint">
-                    <span class="surfer-dwell-ring"></span>
-                    <span>Dwell ring preview · 3s</span>
-                  </div>
-                </div>
+          <article class="product-panel product-panel--surfer reveal" aria-labelledby="prod-surfer-h">
+            <div class="surfer-compare">
+              <div class="surfer-compare-copy">
+                <p class="surfer-compare-tag">Accessibility Surfer</p>
+                <h3 id="prod-surfer-h" class="surfer-compare-title">Hover to click. Resize any page. Strip the clutter.</h3>
+                <p class="surfer-compare-body">A Chrome extension that puts dwell clicking, reading mode, and text controls on every site you open, no rebuild required.</p>
+                <ul class="surfer-compare-points">
+                  <li>Dwell-click links and buttons with a 3s ring</li>
+                  <li>Reading mode that keeps the article, drops the rest</li>
+                  <li>Fonts, size, and spacing that stick site to site</li>
+                </ul>
+                <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="surfer-compare-cta" data-chrome-install rel="noopener noreferrer">Add to Chrome <span aria-hidden="true">→</span></a>
               </div>
 
-              <div class="product-split-copy">
-                <p class="product-panel-tag">Accessibility Surfer</p>
-                <h3 id="prod-surfer-h" class="product-panel-title">Your personal browser assistant.</h3>
-                <p class="product-panel-body">Dwell-click any link without pressing, boost text contrast on harsh layouts, or strip dense pages down to what you came to read.</p>
-                <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="product-panel-cta" data-chrome-install rel="noopener noreferrer">Add to Chrome</a>
+              <div class="surfer-popup" aria-hidden="true">
+                <div class="surfer-popup-chrome">
+                  <span class="surfer-popup-dots"><i></i><i></i><i></i></span>
+                  <span class="surfer-popup-url">accessibility-surfer</span>
+                </div>
+                <div class="surfer-popup-body">
+                  <img src="assistsurfer.png" alt="" class="surfer-popup-logo" width="56" height="56" />
+                  <p class="surfer-popup-name">Accessibility <span>Surfer</span></p>
+                  <p class="surfer-popup-tagline">Hover to click. No button needed.</p>
+
+                  <p class="surfer-popup-section">Every other site</p>
+                  <div class="surfer-popup-row is-on">
+                    <div>
+                      <strong>Dwell clicking</strong>
+                      <span>Active everywhere · 3s</span>
+                    </div>
+                    <span class="surfer-switch"></span>
+                  </div>
+
+                  <div class="surfer-popup-row is-on">
+                    <div>
+                      <strong>Reading mode</strong>
+                      <span>Strip to the article</span>
+                    </div>
+                    <span class="surfer-switch"></span>
+                  </div>
+
+                  <p class="surfer-popup-section">Text Accessibility</p>
+                  <div class="surfer-popup-fonts">
+                    <span class="is-active">OpenDyslexic</span>
+                    <span>Lexend</span>
+                    <span>Atkinson</span>
+                  </div>
+                  <div class="surfer-popup-slider">
+                    <span>Text size</span>
+                    <span class="surfer-popup-track"><i style="width:62%"></i></span>
+                    <span>120%</span>
+                  </div>
+
+                  <div class="surfer-dwell-hint">
+                    <span class="surfer-dwell-ring"></span>
+                    <span>Hover · ring fills · click</span>
+                  </div>
+                </div>
               </div>
             </div>
           </article>
