@@ -183,6 +183,13 @@
     if (flipListenersBound || !root) return;
     flipListenersBound = true;
 
+    var TAP_MS = 450;
+    var TAP_MOVE_PX = 14;
+    var ptrDownAt = 0;
+    var ptrX = 0;
+    var ptrY = 0;
+    var suppressClick = false;
+
     function pause() {
       flipPaused = true;
     }
@@ -192,26 +199,57 @@
     function activeTrack() {
       return mobileTrack() || track;
     }
-
-    root.addEventListener('pointerdown', pause);
-    root.addEventListener('pointerup', resume);
-    root.addEventListener('pointercancel', resume);
-    root.addEventListener('pointerleave', resume);
-    root.addEventListener('focusin', pause);
-    root.addEventListener('focusout', function (e) {
-      if (!root.contains(e.relatedTarget)) resume();
-    });
-    root.addEventListener('touchstart', pause, { passive: true });
-    root.addEventListener('touchend', resume, { passive: true });
-    root.addEventListener('touchcancel', resume, { passive: true });
-
-    // Tap / click the card to go to the next story
-    track.addEventListener('click', function (e) {
-      if (e.target.closest('.story-carousel-dot')) return;
+    function goNext() {
       if (railStories.length < 2) return;
       var t = activeTrack();
       advanceFlip(t);
       restartFlipTimer(t);
+    }
+
+    root.addEventListener('focusin', pause);
+    root.addEventListener('focusout', function (e) {
+      if (!root.contains(e.relatedTarget)) resume();
+    });
+
+    // Transparent <button> overlay — iOS fires click reliably on real buttons
+    var tapBtn = $('storyCarouselTap');
+    if (tapBtn) {
+      tapBtn.addEventListener('pointerdown', function (e) {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        suppressClick = false;
+        ptrDownAt = Date.now();
+        ptrX = e.clientX;
+        ptrY = e.clientY;
+        pause();
+      });
+      tapBtn.addEventListener('pointerup', function (e) {
+        resume();
+        var dt = Date.now() - ptrDownAt;
+        var dx = Math.abs(e.clientX - ptrX);
+        var dy = Math.abs(e.clientY - ptrY);
+        // Hold-to-read or drag should not advance
+        if (dt > TAP_MS || dx > TAP_MOVE_PX || dy > TAP_MOVE_PX) {
+          suppressClick = true;
+        }
+      });
+      tapBtn.addEventListener('pointercancel', function () {
+        suppressClick = true;
+        resume();
+      });
+      tapBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (suppressClick) {
+          suppressClick = false;
+          return;
+        }
+        goNext();
+      });
+    }
+
+    track.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      goNext();
     });
 
     var dots = dotsEl();

@@ -2147,6 +2147,27 @@ footer a:focus-visible,
   margin-inline: auto;
   padding-inline: clamp(1.2rem, 4vw, 2.5rem);
 }
+.story-carousel-stage {
+  position: relative;
+}
+.story-carousel-tap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(176, 48, 96, 0.1);
+}
+.story-carousel-tap:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+}
 .stories-track {
   display: flex;
   flex-wrap: nowrap;
@@ -2178,6 +2199,9 @@ footer a:focus-visible,
   padding-inline: 0;
   gap: 0;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 .stories-track.is-flip .story-card {
   grid-area: 1 / 1;
@@ -2193,6 +2217,9 @@ footer a:focus-visible,
   visibility: visible;
   pointer-events: auto;
   z-index: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(176, 48, 96, 0.12);
 }
 .story-carousel-dots {
   display: flex;
