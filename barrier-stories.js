@@ -5,53 +5,14 @@
 (function () {
   'use strict';
 
-  var TAGS = [
-    { id: 'chrome', label: 'Chrome' },
-    { id: 'job-apply', label: 'Job apply' },
-    { id: 'reading', label: 'Reading' },
-    { id: 'motor', label: 'Motor' },
-    { id: 'vision', label: 'Vision' },
-    { id: 'websites', label: 'Websites' },
-  ];
-
-  var TAG_LABEL = TAGS.reduce(function (map, t) {
-    map[t.id] = t.label;
-    return map;
-  }, {});
-
-  /** Seed until approved Firestore stories exist. Tone: specific, not testimonial. */
-  var SEED = [
-    {
-      text: 'Applied for three café shifts. None said if I could sit. Spent the afternoon emailing HR.',
-      name: 'Maya',
-      place: 'Seattle',
-      tags: ['job-apply'],
-    },
-    {
-      text: 'Chrome tab, 11px gray on Medium. Zoomed until the layout broke. Closed the tab.',
-      name: 'Jordan',
-      place: '',
-      tags: ['chrome', 'reading'],
-    },
-    {
-      text: 'Target was a 24px icon. Dwell missed it twice, then I rage-quit the checkout form.',
-      name: 'Luis',
-      place: 'Portland',
-      tags: ['motor', 'chrome'],
-    },
-    {
-      text: 'Job board only asked about accommodations after I applied. Ghosted before the call.',
-      name: 'Sam',
-      place: '',
-      tags: ['job-apply'],
-    },
-    {
-      text: 'Reading mode on my laptop helped. Phone site still buried the article under related junk.',
-      name: 'Avery',
-      place: 'Oakland',
-      tags: ['reading', 'websites'],
-    },
-  ];
+  var TAG_LABEL = {
+    chrome: 'Chrome',
+    'job-apply': 'Job apply',
+    reading: 'Reading',
+    motor: 'Motor',
+    vision: 'Vision',
+    websites: 'Websites',
+  };
 
   var MAX_LEN = 240;
   var MIN_LEN = 20;
@@ -93,15 +54,28 @@
     );
   }
 
+  function setRailVisible(visible) {
+    var rail = document.querySelector('[data-stories-rail]');
+    if (rail) rail.hidden = !visible;
+  }
+
   function renderRail(stories) {
     var track = $('storiesTrack');
-    if (!track || !stories.length) return;
+    if (!track) return;
+
+    if (!stories || !stories.length) {
+      track.innerHTML = '';
+      track.removeAttribute('data-count');
+      setRailVisible(false);
+      return;
+    }
 
     var html = stories.map(storyCardHtml).join('');
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     track.innerHTML = reduce ? html : html + html;
     track.setAttribute('data-count', String(stories.length));
     track.classList.toggle('is-static', reduce);
+    setRailVisible(true);
   }
 
   function selectedTags(form) {
@@ -146,7 +120,7 @@
       .limit(40)
       .get()
       .then(function (snap) {
-        if (snap.empty) return SEED.slice();
+        if (snap.empty) return [];
         var list = [];
         snap.forEach(function (doc) {
           var d = doc.data();
@@ -161,10 +135,10 @@
         list.sort(function (a, b) {
           return b.createdAt - a.createdAt;
         });
-        return list.length ? list : SEED.slice();
+        return list;
       })
       .catch(function () {
-        return SEED.slice();
+        return [];
       });
   }
 
@@ -244,7 +218,7 @@
   function init() {
     if (!$('storiesTrack')) return;
 
-    renderRail(SEED);
+    setRailVisible(false);
 
     var db = null;
     try {
