@@ -82,11 +82,45 @@
 
   var railStories = [];
   var railResizeBound = false;
+  var flipTimer = null;
+  var flipIndex = 0;
+  var FLIP_MS = 4200;
+  var MOBILE_FLIP_MQ = '(max-width: 720px)';
+
+  function stopFlip() {
+    if (flipTimer) {
+      clearInterval(flipTimer);
+      flipTimer = null;
+    }
+  }
+
+  function isMobileFlip() {
+    return window.matchMedia(MOBILE_FLIP_MQ).matches;
+  }
+
+  function setActiveCard(track, index) {
+    var cards = track.querySelectorAll('.story-card');
+    cards.forEach(function (card, idx) {
+      card.classList.toggle('is-active', idx === index);
+      card.setAttribute('aria-hidden', idx === index ? 'false' : 'true');
+    });
+  }
+
+  function startFlip(track) {
+    stopFlip();
+    flipIndex = 0;
+    setActiveCard(track, 0);
+    if (railStories.length < 2) return;
+
+    flipTimer = setInterval(function () {
+      if (track.matches(':hover') || track.contains(document.activeElement)) return;
+      flipIndex = (flipIndex + 1) % railStories.length;
+      setActiveCard(track, flipIndex);
+    }, FLIP_MS);
+  }
 
   function buildLoopHtml(stories, railWidth) {
     var unique = stories.map(storyCardHtml).join('');
-    // Pad short sets so the loop half is wider than the viewport — animation
-    // keeps moving without packing A–B–A–B side by side.
     var measure = document.createElement('div');
     measure.style.cssText =
       'position:absolute;visibility:hidden;display:flex;gap:1rem;pointer-events:none';
@@ -108,17 +142,37 @@
     return half + half;
   }
 
+  function renderMarquee(track, rail) {
+    track.classList.remove('is-flip', 'is-static');
+    function applyLoop() {
+      var width = rail ? rail.clientWidth : window.innerWidth;
+      track.innerHTML = buildLoopHtml(railStories, width);
+    }
+    requestAnimationFrame(function () {
+      requestAnimationFrame(applyLoop);
+    });
+  }
+
+  function renderFlip(track) {
+    stopFlip();
+    track.classList.add('is-flip');
+    track.classList.remove('is-static');
+    track.innerHTML = railStories.map(storyCardHtml).join('');
+    startFlip(track);
+  }
+
   function renderRail(stories) {
     var track = $('storiesTrack');
     var rail = document.querySelector('[data-stories-rail]');
     if (!track) return;
 
     railStories = stories || [];
+    stopFlip();
 
     if (!railStories.length) {
       track.innerHTML = '';
       track.removeAttribute('data-count');
-      track.classList.remove('is-static', 'is-sparse');
+      track.classList.remove('is-static', 'is-sparse', 'is-flip');
       setRailVisible(false);
       return;
     }
@@ -129,21 +183,17 @@
     setRailVisible(true);
 
     if (reduce) {
+      track.classList.remove('is-flip');
       track.innerHTML = railStories.map(storyCardHtml).join('');
       track.classList.add('is-static');
       return;
     }
 
-    function applyLoop() {
-      var width = rail ? rail.clientWidth : window.innerWidth;
-      track.innerHTML = buildLoopHtml(railStories, width);
-      track.classList.remove('is-static');
+    if (isMobileFlip()) {
+      renderFlip(track);
+    } else {
+      renderMarquee(track, rail);
     }
-
-    // Second frame: rail is visible and has a real width.
-    requestAnimationFrame(function () {
-      requestAnimationFrame(applyLoop);
-    });
 
     if (!railResizeBound) {
       railResizeBound = true;
@@ -151,8 +201,7 @@
         'resize',
         function () {
           if (!railStories.length) return;
-          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-          applyLoop();
+          renderRail(railStories);
         },
         { passive: true },
       );

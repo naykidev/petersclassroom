@@ -2127,9 +2127,12 @@ footer a:focus-visible,
   border-bottom: 2px solid var(--coral-tint2);
   padding-bottom: .15rem;
 }
-.stories-share-jump:hover { border-color: var(--coral); }
-
-.stories-rail {
+.stories-rail:has(.stories-track.is-flip) {
+  mask-image: none;
+  -webkit-mask-image: none;
+  overflow: visible;
+  padding-inline: 0;
+}
   margin: 0 0 .25rem;
   padding: 1.25rem 0;
   overflow: hidden;
@@ -2154,9 +2157,41 @@ footer a:focus-visible,
   row-gap: 1rem;
   margin-inline: auto;
 }
-.stories-rail:hover .stories-track:not(.is-static),
-.stories-rail:focus-within .stories-track:not(.is-static) {
+.stories-rail:hover .stories-track:not(.is-static):not(.is-flip),
+.stories-rail:focus-within .stories-track:not(.is-static):not(.is-flip) {
   animation-play-state: paused;
+}
+.stories-track.is-flip {
+  animation: none;
+  display: grid;
+  width: 100%;
+  max-width: 36rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.2rem, 4vw, 2.5rem);
+  gap: 0;
+}
+.stories-track.is-flip .story-card {
+  grid-area: 1 / 1;
+  width: 100%;
+  flex: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity .55s ease, transform .55s ease, visibility .55s;
+  pointer-events: none;
+}
+.stories-track.is-flip .story-card.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stories-track.is-flip .story-card {
+    transition: none;
+    transform: none;
+  }
 }
 .story-card {
   flex: 0 0 340px;
