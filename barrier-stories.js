@@ -183,12 +183,9 @@
     if (flipListenersBound || !root) return;
     flipListenersBound = true;
 
-    var TAP_MS = 450;
-    var TAP_MOVE_PX = 14;
-    var ptrDownAt = 0;
-    var ptrX = 0;
-    var ptrY = 0;
-    var suppressClick = false;
+    var HOLD_MS = 500;
+    var holdTimer = null;
+    var heldLong = false;
 
     function pause() {
       flipPaused = true;
@@ -205,41 +202,56 @@
       advanceFlip(t);
       restartFlipTimer(t);
     }
+    function clearHold() {
+      if (holdTimer) {
+        clearTimeout(holdTimer);
+        holdTimer = null;
+      }
+    }
 
     root.addEventListener('focusin', pause);
     root.addEventListener('focusout', function (e) {
       if (!root.contains(e.relatedTarget)) resume();
     });
 
-    // Transparent <button> overlay — iOS fires click reliably on real buttons
+    // Transparent <button> overlay — reliable finger taps on iOS/Android
     var tapBtn = $('storyCarouselTap');
     if (tapBtn) {
-      tapBtn.addEventListener('pointerdown', function (e) {
-        if (e.pointerType === 'mouse' && e.button !== 0) return;
-        suppressClick = false;
-        ptrDownAt = Date.now();
-        ptrX = e.clientX;
-        ptrY = e.clientY;
-        pause();
-      });
-      tapBtn.addEventListener('pointerup', function (e) {
-        resume();
-        var dt = Date.now() - ptrDownAt;
-        var dx = Math.abs(e.clientX - ptrX);
-        var dy = Math.abs(e.clientY - ptrY);
-        // Hold-to-read or drag should not advance
-        if (dt > TAP_MS || dx > TAP_MOVE_PX || dy > TAP_MOVE_PX) {
-          suppressClick = true;
-        }
-      });
-      tapBtn.addEventListener('pointercancel', function () {
-        suppressClick = true;
-        resume();
-      });
+      tapBtn.addEventListener(
+        'pointerdown',
+        function (e) {
+          if (e.pointerType === 'mouse' && e.button !== 0) return;
+          heldLong = false;
+          clearHold();
+          pause();
+          holdTimer = setTimeout(function () {
+            heldLong = true;
+          }, HOLD_MS);
+        },
+        { passive: true },
+      );
+      tapBtn.addEventListener(
+        'pointerup',
+        function () {
+          clearHold();
+          resume();
+        },
+        { passive: true },
+      );
+      tapBtn.addEventListener(
+        'pointercancel',
+        function () {
+          clearHold();
+          heldLong = true;
+          resume();
+        },
+        { passive: true },
+      );
       tapBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        if (suppressClick) {
-          suppressClick = false;
+        // Long-press to read: don't skip when releasing after a hold
+        if (heldLong) {
+          heldLong = false;
           return;
         }
         goNext();
