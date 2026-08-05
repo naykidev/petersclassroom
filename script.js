@@ -1,12 +1,15 @@
 function handleContactSubmit(e) {
   e.preventDefault();
   const form = e.target;
-  const status = form.querySelector('#formStatus');
+  const status = form.querySelector('#formStatus') || form.querySelector('.form-status');
+  const submitBtn = form.querySelector('[type="submit"]');
   const siteOrigin = (window.AXOL_SITE && window.AXOL_SITE.origin) || 'https://axolassist.com';
   const siteHost = siteOrigin.replace(/^https?:\/\//, '');
 
-  status.textContent = '';
-  status.className = 'form-status';
+  if (status) {
+    status.textContent = '';
+    status.className = 'form-status';
+  }
 
   if (!form.checkValidity()) {
     form.reportValidity();
@@ -16,29 +19,96 @@ function handleContactSubmit(e) {
   const data = Object.fromEntries(new FormData(form));
 
   if (data.website && data.website.trim()) {
-    status.textContent = 'Opening your email app...';
-    status.classList.add('success');
+    if (status) {
+      status.textContent = 'Thanks — we got your message.';
+      status.classList.add('success');
+    }
+    form.reset();
     return;
   }
 
-  const subject = encodeURIComponent("Inquiry from Axol Assist site: " + data.name);
-  const body = encodeURIComponent(
-    "Name: "  + data.name  + "\n" +
-    "Email: " + data.email + "\n" +
-    "Role: "  + data.role  + "\n\n" +
-    "Message:\n" + data.message + "\n\n" +
-    "-- Sent via " + siteHost + " contact form"
-  );
+  const name = String(data.name || '').trim();
+  const email = String(data.email || '').trim();
+  const role = String(data.role || '').trim();
+  const message = String(data.message || '').trim();
 
-  const mailtoUrl =
-    "mailto:axolassist.business@gmail.com" +
-    "?subject=" + subject +
-    "&body="    + body;
+  if (!name || !email || !role || !message) {
+    if (status) {
+      status.textContent = 'Please fill in all fields.';
+      status.classList.add('error');
+    }
+    return;
+  }
 
-  window.location.href = mailtoUrl;
+  function setOk(msg) {
+    if (status) {
+      status.innerHTML = msg;
+      status.classList.add('success');
+    }
+    form.reset();
+  }
 
-  status.innerHTML = 'Opening your email app. Review the message and tap Send. If no app opens, email us directly at <a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a>.';
-  status.classList.add('success');
+  function setErr(msg) {
+    if (status) {
+      status.textContent = msg;
+      status.classList.add('error');
+    }
+  }
+
+  function mailtoFallback() {
+    const subject = encodeURIComponent('Inquiry from Axol Assist site: ' + name);
+    const body = encodeURIComponent(
+      'Name: ' + name + '\n' +
+      'Email: ' + email + '\n' +
+      'Role: ' + role + '\n\n' +
+      'Message:\n' + message + '\n\n' +
+      '-- Sent via ' + siteHost + ' contact form'
+    );
+    window.location.href =
+      'mailto:axolassist.business@gmail.com?subject=' + subject + '&body=' + body;
+    setOk(
+      'Opening your email app. Review the message and tap Send. If no app opens, email us directly at <a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a>.'
+    );
+  }
+
+  function getDb() {
+    var cfg = window.AXOL_SITE && window.AXOL_SITE.firebase;
+    if (!cfg || !window.firebase || !firebase.firestore) return null;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(cfg);
+      return firebase.firestore();
+    } catch (err) {
+      return null;
+    }
+  }
+
+  var db = getDb();
+  if (!db) {
+    mailtoFallback();
+    return;
+  }
+
+  if (submitBtn) submitBtn.disabled = true;
+  if (status) status.textContent = 'Sending…';
+
+  db.collection('contactMessages')
+    .add({
+      name: name.slice(0, 80),
+      email: email.slice(0, 120),
+      role: role.slice(0, 80),
+      message: message.slice(0, 2000),
+      page: window.location.pathname || '/',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    })
+    .then(function () {
+      setOk('Thanks — we got your message and will reply within two business days.');
+    })
+    .catch(function () {
+      setErr('Couldn’t send just now. Email axolassist.business@gmail.com, or try again.');
+    })
+    .then(function () {
+      if (submitBtn) submitBtn.disabled = false;
+    });
 }
 
 // Reveal-on-scroll

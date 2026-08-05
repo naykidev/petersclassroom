@@ -344,24 +344,16 @@
             <h3>Direct</h3>
             <p><a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a></p>
             <p class="contact-note">Typically within 2 business days.</p>
-
-            <h3 class="contact-info-subhead">Who writes in</h3>
-            <ul class="contact-list">
-              <li>People using dwell click or eye gaze day to day</li>
-              <li>Family members and caregivers</li>
-              <li>Accessibility and AT professionals</li>
-              <li>Developers embedding AccessFlow or hiring on Axol Work</li>
-            </ul>
           </div>
 
-          <form class="contact-form reveal" onsubmit="handleContactSubmit(event)" novalidate>
+          <form class="contact-form reveal" id="contactForm" onsubmit="handleContactSubmit(event)" novalidate>
             <div class="form-row">
               <label for="cf-name">Name</label>
-              <input type="text" id="cf-name" name="name" required autocomplete="name" />
+              <input type="text" id="cf-name" name="name" required autocomplete="name" maxlength="80" />
             </div>
             <div class="form-row">
               <label for="cf-email">Email</label>
-              <input type="email" id="cf-email" name="email" required autocomplete="email" />
+              <input type="email" id="cf-email" name="email" required autocomplete="email" maxlength="120" />
             </div>
             <div class="form-row">
               <label for="cf-role">I am a...</label>
@@ -376,7 +368,7 @@
             </div>
             <div class="form-row">
               <label for="cf-message">Message</label>
-              <textarea id="cf-message" name="message" rows="4" required placeholder="Which product, what broke, or what you want to try."></textarea>
+              <textarea id="cf-message" name="message" rows="4" required maxlength="2000" placeholder="Which product, what broke, or what you want to try."></textarea>
             </div>
             <div class="contact-honeypot" aria-hidden="true">
               <label for="cf-website">Website (leave blank)</label>
