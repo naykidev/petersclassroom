@@ -589,7 +589,6 @@
 
       var text = (form.elements.text.value || '').trim();
       var name = (form.elements.name.value || '').trim() || 'Anonymous';
-      var place = (form.elements.place.value || '').trim();
       var tags = selectedTags(form);
 
       if (text.length < MIN_LEN) {
@@ -612,7 +611,7 @@
       var btn = form.querySelector('[type="submit"]');
       if (btn) btn.disabled = true;
 
-      submitStory(db, { text: text, name: name, place: place, tags: tags })
+      submitStory(db, { text: text, name: name, place: '', tags: tags })
         .then(function () {
           setStatus('Got it. The Axol Assist team will review it before it appears.');
           form.reset();
