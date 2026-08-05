@@ -788,6 +788,7 @@ footer a:focus-visible,
 }
 .demo-showcase-heading h2 {
   margin: 0;
+  white-space: nowrap;
 }
 .demo-showcase-logo {
   width: 56px;
