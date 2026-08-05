@@ -300,10 +300,14 @@ service cloud.firestore {
     // approved in Firebase Console until admin claims exist.
     function barrierStoryTagsOk() {
       return request.resource.data.tags is list
-        && request.resource.data.tags.size() > 0
-        && request.resource.data.tags.size() <= 4
+        && request.resource.data.tags.size() <= 3
         && request.resource.data.tags.hasOnly([
-          'chrome', 'job-apply', 'reading', 'motor', 'vision', 'websites'
+          'visual',
+          'motor-keyboard',
+          'screen-reader',
+          'forms-inputs',
+          'color-contrast',
+          'cognitive-focus'
         ]);
     }
 

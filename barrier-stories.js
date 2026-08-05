@@ -1,21 +1,35 @@
 /**
- * Barrier stories — marketing-site rail + moderated Firestore submissions.
+ * Barrier stories — card carousel + moderated Firestore submissions.
  * Collection: barrierStories (axol-work). Public create; approved-only read.
  */
 (function () {
   'use strict';
 
-  var TAG_LABEL = {
+  var STORY_TAGS = [
+    { id: 'visual', label: 'Visual' },
+    { id: 'motor-keyboard', label: 'Motor & Keyboard' },
+    { id: 'screen-reader', label: 'Screen Reader' },
+    { id: 'forms-inputs', label: 'Forms & Inputs' },
+    { id: 'color-contrast', label: 'Color & Contrast' },
+    { id: 'cognitive-focus', label: 'Cognitive & Focus' },
+  ];
+
+  /** Display labels for current + legacy tag ids. */
+  var TAG_LABEL = STORY_TAGS.reduce(function (map, t) {
+    map[t.id] = t.label;
+    return map;
+  }, {
     chrome: 'Chrome',
     'job-apply': 'Job apply',
     reading: 'Reading',
     motor: 'Motor',
     vision: 'Vision',
     websites: 'Websites',
-  };
+  });
 
   var MAX_LEN = 240;
   var MIN_LEN = 20;
+  var MAX_TAGS = 3;
 
   function $(id) {
     return document.getElementById(id);
@@ -29,24 +43,33 @@
       .replace(/"/g, '&quot;');
   }
 
-  function storyItemHtml(story) {
-    var chips = (story.tags || [])
+  function tagLabel(id) {
+    return TAG_LABEL[id] || id;
+  }
+
+  function storyCardHtml(story) {
+    var tags = (story.tags || []).filter(Boolean);
+    var chips = tags
       .map(function (id) {
-        return '<span class="story-chip">' + escapeHtml(TAG_LABEL[id] || id) + '</span>';
+        return '<span class="story-card-tag">' + escapeHtml(tagLabel(id)) + '</span>';
       })
       .join('');
     var place = story.place ? ' · ' + escapeHtml(story.place) : '';
+    var tagsBlock = chips
+      ? '<div class="story-card-tags">' + chips + '</div>'
+      : '';
+
     return (
-      '<span class="story-item">' +
-      '<span class="story-text">' +
+      '<article class="story-card">' +
+      '<p class="story-card-text">' +
       escapeHtml(story.text) +
-      '</span>' +
-      '<span class="story-by">— ' +
+      '</p>' +
+      '<p class="story-card-by">— ' +
       escapeHtml(story.name || 'Anonymous') +
       place +
-      '</span>' +
-      (chips ? '<span class="story-chips">' + chips + '</span>' : '') +
-      '</span>'
+      '</p>' +
+      tagsBlock +
+      '</article>'
     );
   }
 
@@ -67,19 +90,16 @@
       return;
     }
 
-    var sep = '<span class="story-sep" aria-hidden="true">·</span>';
-    var unique = stories.map(storyItemHtml).join(sep);
+    var unique = stories.map(storyCardHtml).join('');
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Repeat the unique set until the ribbon is long enough to feel continuous,
-    // then duplicate that whole segment for a seamless -50% CSS loop.
-    var minItems = 8;
-    var repeats = Math.max(2, Math.ceil(minItems / stories.length));
-    var segmentParts = [];
-    for (var i = 0; i < repeats; i++) segmentParts.push(unique);
-    var segment = segmentParts.join(sep);
+    // Enough cards for a seamless ribbon, then duplicate for -50% loop.
+    var minCards = 6;
+    var repeats = Math.max(2, Math.ceil(minCards / stories.length));
+    var segment = '';
+    for (var i = 0; i < repeats; i++) segment += unique;
 
-    track.innerHTML = reduce ? unique : segment + sep + segment;
+    track.innerHTML = reduce ? unique : segment + segment;
     track.setAttribute('data-count', String(stories.length));
     track.classList.toggle('is-static', reduce);
     setRailVisible(true);
@@ -91,7 +111,7 @@
       .map(function (el) {
         return el.value;
       })
-      .slice(0, 4);
+      .slice(0, MAX_TAGS);
   }
 
   function setStatus(msg, isError) {
@@ -111,6 +131,23 @@
     }
     textarea.addEventListener('input', sync);
     sync();
+  }
+
+  function initTagLimit(form) {
+    var boxes = form.querySelectorAll('input[name="tag"]');
+    boxes.forEach(function (box) {
+      box.addEventListener('change', function () {
+        var checked = form.querySelectorAll('input[name="tag"]:checked');
+        if (checked.length > MAX_TAGS) {
+          box.checked = false;
+          setStatus('Pick up to ' + MAX_TAGS + ' tags.', true);
+          return;
+        }
+        if ($('storyFormStatus') && $('storyFormStatus').classList.contains('is-error')) {
+          setStatus('');
+        }
+      });
+    });
   }
 
   function getFirebase() {
@@ -165,6 +202,7 @@
     if (!form) return;
 
     initCharCount($('story-text'));
+    initTagLimit(form);
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -172,7 +210,7 @@
 
       var honey = form.querySelector('[name="website"]');
       if (honey && honey.value.trim()) {
-        setStatus('Thanks — we’ll review it before it shows up.');
+        setStatus('Thanks — every story is reviewed before publication.');
         form.reset();
         initCharCount($('story-text'));
         return;
@@ -191,8 +229,8 @@
         setStatus('Keep it to ' + MAX_LEN + ' characters.', true);
         return;
       }
-      if (!tags.length) {
-        setStatus('Pick at least one context chip.', true);
+      if (tags.length > MAX_TAGS) {
+        setStatus('Pick up to ' + MAX_TAGS + ' tags.', true);
         return;
       }
       if (!db) {
@@ -205,7 +243,7 @@
 
       submitStory(db, { text: text, name: name, place: place, tags: tags })
         .then(function () {
-          setStatus('Got it. We review before anything goes on the rail.');
+          setStatus('Got it. The Axol Assist team will review it before it appears.');
           form.reset();
           initCharCount($('story-text'));
         })
