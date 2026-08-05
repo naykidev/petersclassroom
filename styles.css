@@ -2141,6 +2141,11 @@ footer a:focus-visible,
   justify-content: flex-start;
   row-gap: 1rem;
 }
+.stories-track.is-sparse {
+  /* One card in view while still looping with a single unique story. */
+  gap: max(2rem, calc(100vw - 360px));
+  animation-duration: 28s;
+}
 .stories-rail:hover .stories-track:not(.is-static),
 .stories-rail:focus-within .stories-track:not(.is-static) {
   animation-play-state: paused;
@@ -2284,6 +2289,45 @@ footer a:focus-visible,
   display: flex;
   flex-wrap: wrap;
   gap: .5rem;
+}
+.story-tag-custom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .75rem;
+  align-items: center;
+}
+.story-tag-custom input {
+  flex: 1 1 12rem;
+  min-width: 10rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: .7rem .9rem;
+  font-family: inherit;
+  font-size: .95rem;
+  color: var(--ink);
+}
+.story-tag-custom input:focus-visible {
+  outline: 3px solid var(--coral-tint2);
+  outline-offset: 2px;
+  border-color: var(--coral);
+}
+.story-tag-add {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: .88rem;
+  line-height: 1;
+  padding: .72rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper-2);
+  color: var(--ink);
+  cursor: pointer;
+}
+.story-tag-add:hover {
+  border-color: var(--coral);
+  color: var(--coral-deep);
 }
 .story-tag {
   display: inline-flex;

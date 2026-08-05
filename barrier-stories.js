@@ -30,6 +30,8 @@
   var MAX_LEN = 240;
   var MIN_LEN = 20;
   var MAX_TAGS = 3;
+  var MAX_TAG_LEN = 28;
+  var MIN_TAG_LEN = 2;
 
   function $(id) {
     return document.getElementById(id);
@@ -85,7 +87,7 @@
     if (!stories || !stories.length) {
       track.innerHTML = '';
       track.removeAttribute('data-count');
-      track.classList.remove('is-static');
+      track.classList.remove('is-static', 'is-sparse');
       setRailVisible(false);
       return;
     }
@@ -93,16 +95,19 @@
     var unique = stories.map(storyCardHtml).join('');
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Enough cards for a seamless ribbon, then duplicate for -50% loop.
-    var minCards = 6;
-    var repeats = Math.max(2, Math.ceil(minCards / stories.length));
-    var segment = '';
-    for (var i = 0; i < repeats; i++) segment += unique;
-
-    track.innerHTML = reduce ? unique : segment + segment;
+    // One seamless loop copy only — do not pad with extra repeats of the same cards.
+    track.innerHTML = reduce ? unique : unique + unique;
     track.setAttribute('data-count', String(stories.length));
     track.classList.toggle('is-static', reduce);
+    track.classList.toggle('is-sparse', !reduce && stories.length === 1);
     setRailVisible(true);
+  }
+
+  function normalizeCustomTag(raw) {
+    return String(raw || '')
+      .trim()
+      .replace(/\s+/g, ' ')
+      .slice(0, MAX_TAG_LEN);
   }
 
   function selectedTags(form) {
@@ -112,6 +117,65 @@
         return el.value;
       })
       .slice(0, MAX_TAGS);
+  }
+
+  function tagCount(form) {
+    return form.querySelectorAll('input[name="tag"]:checked').length;
+  }
+
+  function addCustomTagPill(form, label) {
+    var options = form.querySelector('.story-tag-options');
+    if (!options) return false;
+
+    var value = normalizeCustomTag(label);
+    if (value.length < MIN_TAG_LEN) {
+      setStatus('Custom tags need at least ' + MIN_TAG_LEN + ' characters.', true);
+      return false;
+    }
+    if (value.length > MAX_TAG_LEN) {
+      setStatus('Keep custom tags to ' + MAX_TAG_LEN + ' characters.', true);
+      return false;
+    }
+
+    var existing = form.querySelectorAll('input[name="tag"]');
+    for (var i = 0; i < existing.length; i++) {
+      if (existing[i].value.toLowerCase() === value.toLowerCase()) {
+        if (!existing[i].checked) {
+          if (tagCount(form) >= MAX_TAGS) {
+            setStatus('Pick up to ' + MAX_TAGS + ' tags.', true);
+            return false;
+          }
+          existing[i].checked = true;
+        }
+        setStatus('');
+        return true;
+      }
+    }
+
+    if (tagCount(form) >= MAX_TAGS) {
+      setStatus('Pick up to ' + MAX_TAGS + ' tags.', true);
+      return false;
+    }
+
+    var id = 'story-tag-custom-' + Date.now();
+    var pill = document.createElement('label');
+    pill.className = 'story-tag story-tag--custom';
+    pill.innerHTML =
+      '<input type="checkbox" name="tag" value="' +
+      escapeHtml(value) +
+      '" id="' +
+      id +
+      '" checked /> ' +
+      escapeHtml(value);
+    options.appendChild(pill);
+    setStatus('');
+    return true;
+  }
+
+  function clearCustomTagPills(form) {
+    form.querySelectorAll('.story-tag--custom').forEach(function (el) {
+      el.remove();
+    });
   }
 
   function setStatus(msg, isError) {
@@ -133,20 +197,41 @@
     sync();
   }
 
-  function initTagLimit(form) {
-    var boxes = form.querySelectorAll('input[name="tag"]');
-    boxes.forEach(function (box) {
-      box.addEventListener('change', function () {
-        var checked = form.querySelectorAll('input[name="tag"]:checked');
-        if (checked.length > MAX_TAGS) {
-          box.checked = false;
-          setStatus('Pick up to ' + MAX_TAGS + ' tags.', true);
-          return;
-        }
-        if ($('storyFormStatus') && $('storyFormStatus').classList.contains('is-error')) {
-          setStatus('');
-        }
-      });
+  function initTagControls(form) {
+    form.addEventListener('change', function (e) {
+      var t = e.target;
+      if (!t || t.name !== 'tag') return;
+      if (t.checked && tagCount(form) > MAX_TAGS) {
+        t.checked = false;
+        setStatus('Pick up to ' + MAX_TAGS + ' tags.', true);
+        return;
+      }
+      if ($('storyFormStatus') && $('storyFormStatus').classList.contains('is-error')) {
+        setStatus('');
+      }
+    });
+
+    var addBtn = $('storyTagAdd');
+    var customInput = $('story-tag-custom');
+    if (!addBtn || !customInput) return;
+
+    function tryAdd() {
+      var value = customInput.value;
+      if (!normalizeCustomTag(value)) return;
+      if (addCustomTagPill(form, value)) {
+        customInput.value = '';
+        customInput.focus();
+      }
+    }
+
+    addBtn.addEventListener('click', function () {
+      tryAdd();
+    });
+    customInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        tryAdd();
+      }
     });
   }
 
@@ -202,7 +287,7 @@
     if (!form) return;
 
     initCharCount($('story-text'));
-    initTagLimit(form);
+    initTagControls(form);
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -212,6 +297,7 @@
       if (honey && honey.value.trim()) {
         setStatus('Thanks — every story is reviewed before publication.');
         form.reset();
+        clearCustomTagPills(form);
         initCharCount($('story-text'));
         return;
       }
@@ -245,6 +331,7 @@
         .then(function () {
           setStatus('Got it. The Axol Assist team will review it before it appears.');
           form.reset();
+          clearCustomTagPills(form);
           initCharCount($('story-text'));
         })
         .catch(function () {

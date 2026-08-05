@@ -298,17 +298,21 @@ service cloud.firestore {
     // Public marketing-site submissions. Anyone can create (forced
     // approved:false). Public can only read approved stories. Flip
     // approved in Firebase Console until admin claims exist.
+    function barrierStoryTagOk(t) {
+      return t is string
+        && t.size() >= 2
+        && t.size() <= 28;
+    }
+
     function barrierStoryTagsOk() {
       return request.resource.data.tags is list
         && request.resource.data.tags.size() <= 3
-        && request.resource.data.tags.hasOnly([
-          'visual',
-          'motor-keyboard',
-          'screen-reader',
-          'forms-inputs',
-          'color-contrast',
-          'cognitive-focus'
-        ]);
+        && (request.resource.data.tags.size() == 0
+            || barrierStoryTagOk(request.resource.data.tags[0]))
+        && (request.resource.data.tags.size() < 2
+            || barrierStoryTagOk(request.resource.data.tags[1]))
+        && (request.resource.data.tags.size() < 3
+            || barrierStoryTagOk(request.resource.data.tags[2]));
     }
 
     match /barrierStories/{id} {
