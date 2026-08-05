@@ -55,6 +55,7 @@
     </button>
     <ul class="nav-links" id="siteNavMenu">
       <li><a href="#demo">Showcase</a></li>
+      <li><a href="#stories">Stories</a></li>
       <li><a href="axol-work.html">Axol Work</a></li>
       <li><a href="#contact" class="nav-cta">Get in touch</a></li>
     </ul>
@@ -216,6 +217,67 @@
       </div>
     </section>
 
+    <!-- BARRIER STORIES -->
+    <section class="barrier-stories" id="stories" aria-labelledby="stories-h">
+      <div class="wrap">
+        <div class="stories-head reveal">
+          <div class="sec-head">
+            <span class="eyebrow">Real barriers</span>
+            <h2 id="stories-h">What broke <span class="accent">this week.</span></h2>
+            <p>Concrete moments from browsing, applying, and reading — not star ratings. Reviewed before they show here.</p>
+          </div>
+          <a href="#share-story" class="stories-share-jump">Share yours</a>
+        </div>
+      </div>
+
+      <div class="stories-rail" data-stories-rail>
+        <div class="stories-track" id="storiesTrack" tabindex="0" aria-label="Accessibility barrier stories"></div>
+      </div>
+
+      <div class="wrap">
+        <div class="stories-share reveal" id="share-story">
+          <h3>Share yours</h3>
+          <p class="stories-share-prompt">What broke, on which site or app, and what did you try next? Keep it sharp — 240 characters max.</p>
+
+          <form class="story-form" id="storyForm" novalidate>
+            <div class="form-row">
+              <label for="story-text">The moment</label>
+              <textarea id="story-text" name="text" rows="3" maxlength="240" required placeholder="e.g. Applied for three café shifts. None said if I could sit. Spent the afternoon emailing HR."></textarea>
+              <span class="story-char-count" id="storyCharCount" aria-live="polite">0 / 240</span>
+            </div>
+            <div class="story-form-row">
+              <div class="form-row">
+                <label for="story-name">First name</label>
+                <input type="text" id="story-name" name="name" maxlength="40" required autocomplete="nickname" />
+              </div>
+              <div class="form-row">
+                <label for="story-place">City or role <span class="label-optional">(optional)</span></label>
+                <input type="text" id="story-place" name="place" maxlength="60" autocomplete="off" placeholder="Seattle · barista" />
+              </div>
+            </div>
+            <fieldset class="story-tags">
+              <legend>Context <span class="label-optional">(pick 1–4)</span></legend>
+              <div class="story-tag-options">
+                <label class="story-tag"><input type="checkbox" name="tag" value="chrome" /> Chrome</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="job-apply" /> Job apply</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="reading" /> Reading</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="motor" /> Motor</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="vision" /> Vision</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="websites" /> Websites</label>
+              </div>
+            </fieldset>
+            <div class="contact-honeypot" aria-hidden="true">
+              <label for="story-website">Website (leave blank)</label>
+              <input type="text" id="story-website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+            <button type="submit">Submit story</button>
+            <p class="form-status" id="storyFormStatus" aria-live="polite" role="status"></p>
+            <p class="stories-mod-note">Nothing goes live until someone at Axol flips <code>approved</code> in Firebase Console.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
     <!-- WHY AXOL ASSIST EXISTS -->
     <section class="why-section section--alt" id="why">
       <div class="wrap">
@@ -360,9 +422,12 @@
   </footer>
 
   <!-- Accessibility toolbar + Surfer preview are injected by script.js / surfer-demo.js -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="surfer-demo.js"></script>
   <script src="site-config.js"></script>
   <script src="script.js"></script>
+  <script src="barrier-stories.js"></script>
 
   <!-- Page micro-interactions: nav shadow, scroll reveal, before/after demo -->
   <script>

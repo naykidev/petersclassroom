@@ -293,5 +293,39 @@ service cloud.firestore {
       // No client read/update — handle in Console / admin tooling
       allow read, update, delete: if false;
     }
+
+    // ── barrierStories/{id} ───────────────────────────────────────────────
+    // Public marketing-site submissions. Anyone can create (forced
+    // approved:false). Public can only read approved stories. Flip
+    // approved in Firebase Console until admin claims exist.
+    function barrierStoryTagsOk() {
+      return request.resource.data.tags is list
+        && request.resource.data.tags.size() > 0
+        && request.resource.data.tags.size() <= 4
+        && request.resource.data.tags.hasOnly([
+          'chrome', 'job-apply', 'reading', 'motor', 'vision', 'websites'
+        ]);
+    }
+
+    match /barrierStories/{id} {
+      allow create: if request.resource.data.keys().hasOnly([
+          'text', 'name', 'place', 'tags', 'createdAt', 'approved'
+        ])
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 20
+        && request.resource.data.text.size() <= 240
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.name.size() <= 40
+        && request.resource.data.place is string
+        && request.resource.data.place.size() <= 60
+        && barrierStoryTagsOk()
+        && request.resource.data.approved == false
+        && request.resource.data.createdAt == request.time;
+
+      allow read: if resource.data.approved == true;
+
+      allow update, delete: if false;
+    }
   }
 }

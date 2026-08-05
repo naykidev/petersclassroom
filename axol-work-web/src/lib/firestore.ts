@@ -123,6 +123,8 @@ export const COL = {
   reports: 'reports',
   /** Owner-only Prospect accommodation PII — never world-readable. */
   userPrivate: 'userPrivate',
+  /** Public marketing-site barrier stories (approved-only read). */
+  barrierStories: 'barrierStories',
 } as const
 
 /** A typed document reference in a top-level collection. */
