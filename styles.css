@@ -3131,10 +3131,15 @@ html[data-contrast="dark"] .af-bubble::before {
 
 /* ══════════════════════════════════════════
    MOBILE LAUNCHERS (must stay last so earlier epd/af rules don't override)
-   Icons stay in opposite bottom corners. Bubbles sit above the icons, with
-   AccessFlow’s message stacked higher so the two bubbles don’t collide.
+   Icons only in opposite corners — promo bubbles hidden so nothing collides
+   or gets cropped on narrow screens.
    ══════════════════════════════════════════ */
 @media (max-width: 900px) {
+  .epd-bubble,
+  .af-bubble {
+    display: none !important;
+  }
+
   .epd-launcher,
   .af-launcher {
     position: fixed;
@@ -3160,39 +3165,15 @@ html[data-contrast="dark"] .af-bubble::before {
     width: 52px;
     height: 52px;
     flex: 0 0 52px;
+    border-radius: 50%;
+    overflow: hidden;
   }
 
-  .epd-bubble,
-  .af-bubble {
-    display: flex !important;
-    position: absolute;
-    width: max-content;
-    max-width: min(12.5rem, 44vw);
-    margin: 0;
-    white-space: normal;
-  }
-
-  .epd-bubble-text,
-  .af-bubble-text {
-    white-space: normal;
-  }
-
-  .epd-bubble::before,
-  .af-bubble::before {
-    display: none;
-  }
-
-  /* Surfer message directly above its icon */
-  .epd-bubble {
-    left: 0;
-    right: auto;
-    bottom: calc(100% + .5rem);
-  }
-
-  /* AccessFlow message above Surfer’s message so they stack, not collide */
-  .af-bubble {
-    right: 0;
-    left: auto;
-    bottom: calc(100% + 5.25rem);
+  #epd-toggle img,
+  .a11y-toggle img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
   }
 }
