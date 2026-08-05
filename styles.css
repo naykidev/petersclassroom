@@ -2131,8 +2131,16 @@ footer a:focus-visible,
   padding-inline: clamp(1.2rem, 4vw, 2.5rem);
   animation: stories-marquee 70s linear infinite;
 }
-.stories-rail:hover .stories-track,
-.stories-rail:focus-within .stories-track {
+.stories-track.is-static {
+  animation: none;
+  width: auto;
+  max-width: 100%;
+  flex-wrap: wrap;
+  margin-inline: auto;
+  justify-content: center;
+}
+.stories-rail:hover .stories-track:not(.is-static),
+.stories-rail:focus-within .stories-track:not(.is-static) {
   animation-play-state: paused;
 }
 .story-item {

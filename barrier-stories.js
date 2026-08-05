@@ -72,9 +72,12 @@
 
     var html = stories.map(storyCardHtml).join('');
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    track.innerHTML = reduce ? html : html + html;
+    // Duplicate only when there are enough items for a seamless loop.
+    // One or two stories would otherwise look like obvious clones.
+    var canLoop = !reduce && stories.length >= 3;
+    track.innerHTML = canLoop ? html + html : html;
     track.setAttribute('data-count', String(stories.length));
-    track.classList.toggle('is-static', reduce);
+    track.classList.toggle('is-static', !canLoop);
     setRailVisible(true);
   }
 
