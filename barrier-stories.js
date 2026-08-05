@@ -66,18 +66,19 @@
     if (!stories || !stories.length) {
       track.innerHTML = '';
       track.removeAttribute('data-count');
+      track.classList.remove('is-static', 'is-sparse');
       setRailVisible(false);
       return;
     }
 
     var html = stories.map(storyCardHtml).join('');
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // Duplicate only when there are enough items for a seamless loop.
-    // One or two stories would otherwise look like obvious clones.
-    var canLoop = !reduce && stories.length >= 3;
-    track.innerHTML = canLoop ? html + html : html;
+    // Always duplicate for a seamless CSS loop when motion is allowed.
+    // Sparse rails get extra spacing so clones aren't visible side-by-side.
+    track.innerHTML = reduce ? html : html + html;
     track.setAttribute('data-count', String(stories.length));
-    track.classList.toggle('is-static', !canLoop);
+    track.classList.toggle('is-static', reduce);
+    track.classList.toggle('is-sparse', !reduce && stories.length < 3);
     setRailVisible(true);
   }
 

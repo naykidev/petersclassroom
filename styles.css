@@ -2131,6 +2131,11 @@ footer a:focus-visible,
   padding-inline: clamp(1.2rem, 4vw, 2.5rem);
   animation: stories-marquee 70s linear infinite;
 }
+.stories-track.is-sparse {
+  /* Keep only one card in view while still looping from a single story. */
+  gap: max(6rem, calc(100vw - 22rem));
+  animation-duration: 40s;
+}
 .stories-track.is-static {
   animation: none;
   width: auto;
@@ -2138,6 +2143,7 @@ footer a:focus-visible,
   flex-wrap: wrap;
   margin-inline: auto;
   justify-content: center;
+  gap: 1.25rem;
 }
 .stories-rail:hover .stories-track:not(.is-static),
 .stories-rail:focus-within .stories-track:not(.is-static) {
