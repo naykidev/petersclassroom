@@ -2138,13 +2138,9 @@ footer a:focus-visible,
   width: auto;
   max-width: 100%;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
   row-gap: 1rem;
-}
-.stories-track.is-sparse {
-  /* One card in view while still looping with a single unique story. */
-  gap: max(2rem, calc(100vw - 360px));
-  animation-duration: 28s;
+  margin-inline: auto;
 }
 .stories-rail:hover .stories-track:not(.is-static),
 .stories-rail:focus-within .stories-track:not(.is-static) {

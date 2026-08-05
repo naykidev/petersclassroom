@@ -82,6 +82,7 @@
 
   function renderRail(stories) {
     var track = $('storiesTrack');
+    var rail = document.querySelector('[data-stories-rail]');
     if (!track) return;
 
     if (!stories || !stories.length) {
@@ -95,12 +96,30 @@
     var unique = stories.map(storyCardHtml).join('');
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // One seamless loop copy only — do not pad with extra repeats of the same cards.
-    track.innerHTML = reduce ? unique : unique + unique;
+    // Always paint unique cards first so we never flash clones.
+    track.innerHTML = unique;
     track.setAttribute('data-count', String(stories.length));
-    track.classList.toggle('is-static', reduce);
-    track.classList.toggle('is-sparse', !reduce && stories.length === 1);
+    track.classList.remove('is-sparse');
     setRailVisible(true);
+
+    // Only clone for a seamless loop when unique cards already overflow the rail.
+    // With 1–2 short cards, cloning would show obvious side-by-side duplicates.
+    function applyLoop() {
+      if (reduce || !rail) {
+        track.classList.add('is-static');
+        return;
+      }
+      var overflows = track.scrollWidth > rail.clientWidth + 24;
+      if (overflows) {
+        track.innerHTML = unique + unique;
+        track.classList.remove('is-static');
+      } else {
+        track.innerHTML = unique;
+        track.classList.add('is-static');
+      }
+    }
+
+    requestAnimationFrame(applyLoop);
   }
 
   function normalizeCustomTag(raw) {
