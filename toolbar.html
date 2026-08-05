@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400&display=swap&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=contact-layout-2">
   <script>document.documentElement.classList.add('js');</script>
   <style>
     body.af-page {
@@ -1029,46 +1029,49 @@
 
     <section class="notify" id="contact">
       <div class="wrap">
-        <div class="af-contact-block">
-          <div class="sec-head reveal">
+        <div class="contact-layout">
+          <div class="contact-copy reveal">
             <span class="eyebrow">Contact</span>
             <h2>Questions or <span class="accent">feedback?</span></h2>
-            <p>Integration help, feature requests, or field reports.</p>
-          </div>
-          <div class="contact-grid">
-            <div class="contact-info reveal">
-              <h3>Reach us directly</h3>
-              <p><a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a></p>
-              <p class="contact-note">We typically respond within 2 business days.</p>
+            <p class="contact-lede">Integration help, feature requests, or field reports.</p>
+            <div class="contact-direct">
+              <span class="contact-direct-label">Direct</span>
+              <a class="contact-direct-email" href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a>
+              <p class="contact-note">Typically within 2 business days.</p>
             </div>
-            <form class="contact-form reveal" onsubmit="handleContactSubmit(event)" novalidate>
-              <div class="form-row">
-                <label for="cf-name">Name</label>
-                <input type="text" id="cf-name" name="name" required autocomplete="name" />
-              </div>
-              <div class="form-row">
-                <label for="cf-email">Email</label>
-                <input type="email" id="cf-email" name="email" required autocomplete="email" />
-              </div>
-              <div class="form-row">
-                <label for="cf-role">I am a...</label>
-                <select id="cf-role" name="role" required>
-                  <option value="">Select an option</option>
-                  <option value="Developer">Developer</option>
-                  <option value="Website owner">Website owner</option>
-                  <option value="School / District IT coordinator">School / District IT coordinator</option>
-                  <option value="Accessibility / AT professional">Accessibility / AT professional</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div class="form-row">
-                <label for="cf-message">Message</label>
-                <textarea id="cf-message" name="message" rows="4" required placeholder="Tell us about your stack or integration question."></textarea>
-              </div>
-              <button type="submit">Send message</button>
-              <p class="form-status" id="formStatus" aria-live="polite" role="status"></p>
-            </form>
           </div>
+
+          <form class="contact-form reveal" onsubmit="handleContactSubmit(event)" novalidate>
+            <div class="form-row form-row--half">
+              <label for="cf-name">Name</label>
+              <input type="text" id="cf-name" name="name" required autocomplete="name" maxlength="80" />
+            </div>
+            <div class="form-row form-row--half">
+              <label for="cf-email">Email</label>
+              <input type="email" id="cf-email" name="email" required autocomplete="email" maxlength="120" />
+            </div>
+            <div class="form-row">
+              <label for="cf-role">I am a...</label>
+              <select id="cf-role" name="role" required>
+                <option value="">Select an option</option>
+                <option value="Developer">Developer</option>
+                <option value="Website owner">Website owner</option>
+                <option value="School / District IT coordinator">School / District IT coordinator</option>
+                <option value="Accessibility / AT professional">Accessibility / AT professional</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="cf-message">Message</label>
+              <textarea id="cf-message" name="message" rows="3" required maxlength="2000" placeholder="Tell us about your stack or integration question."></textarea>
+            </div>
+            <div class="contact-honeypot" aria-hidden="true">
+              <label for="cf-website">Website (leave blank)</label>
+              <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+            <button type="submit">Send message</button>
+            <p class="form-status" id="formStatus" aria-live="polite" role="status"></p>
+          </form>
         </div>
       </div>
     </section>
