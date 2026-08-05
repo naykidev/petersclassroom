@@ -2269,6 +2269,19 @@ footer a:focus-visible,
   outline: 2px solid var(--coral);
   outline-offset: 3px;
 }
+.story-carousel-caption {
+  margin: .7rem 0 0;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: .78rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-carousel-caption {
+    display: none;
+  }
+}
 @media (max-width: 900px) {
   .mobile-story-carousel:not([hidden]) {
     display: block;
