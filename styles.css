@@ -1069,6 +1069,8 @@ footer a:focus-visible,
   max-width: 11ch;
   margin: 0 0 1.25rem;
 }
+.audience-lead h2 .accent { color: var(--coral-deep); font-style: italic; }
+.audience-lead .eyebrow { display: block; margin-bottom: .75rem; }
 .audience-lead-text {
   font-size: 1.08rem;
   line-height: 1.65;
@@ -1096,8 +1098,41 @@ footer a:focus-visible,
   color: var(--muted);
   max-width: 46ch;
 }
-/* legacy */
-.audience-grid, .audience-card { display: none; }
+/* Product-page audience cards (Axol Work, legacy Surfer layouts) */
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+  margin-top: 3rem;
+}
+.audience-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 2rem 1.8rem;
+  text-align: left;
+  transition: border-color .2s var(--ease);
+}
+.audience-card:hover { border-color: var(--line-strong); }
+.audience-card .icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--coral-tint);
+  color: var(--coral-deep);
+  margin-bottom: 1.3rem;
+}
+.audience-card .icon svg { width: 26px; height: 26px; }
+.audience-card h3 {
+  font-size: 1.22rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .5rem;
+  letter-spacing: -0.01em;
+}
+.audience-card p { font-size: 1rem; color: var(--muted); line-height: 1.55; }
 .card-emoji { display: none; }
 
 /* ════════════════ PRINCIPLES (numbered list, asymmetrical) ════════════════ */

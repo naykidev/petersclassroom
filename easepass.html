@@ -3,19 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Accessibility Surfer · Browse your way</title>
-  <meta name="description" content="Accessibility Surfer is a free Chrome extension that helps you browse more independently: less clicking, easier reading, less visual strain, and a browsing experience you control." />
+  <title>Accessibility Surfer · Axol Assist</title>
+  <meta name="description" content="Accessibility Surfer is a free Chrome extension for dwell clicking, on-page text controls, and reading mode — built for mouse, trackpad, head tracker, and eye gaze." />
 
-  <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Axol Assist" />
-  <meta property="og:title" content="Accessibility Surfer · Browse your way" />
-  <meta property="og:description" content="Browse with less clicking, easier reading, and less strain. A free Chrome extension for when standard websites get in the way." />
+  <meta property="og:title" content="Accessibility Surfer · Axol Assist" />
+  <meta property="og:description" content="Dwell-click links and buttons when pressing hurts. Grow type, spacing, and contrast on any page. Open reading mode when the layout is the problem." />
   <meta property="og:url" content="https://axolassist.com/easepass.html" />
   <meta property="og:image" content="https://axolassist.com/assistsurfer.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Accessibility Surfer · Browse your way" />
-  <meta name="twitter:description" content="Less clicking. Easier reading. More control over how you browse." />
+  <meta name="twitter:title" content="Accessibility Surfer · Axol Assist" />
+  <meta name="twitter:description" content="Dwell click, text controls, and reading mode in Chrome — preferences stay on your device." />
   <meta name="twitter:image" content="https://axolassist.com/assistsurfer.png" />
   <meta name="theme-color" content="#F7F6F4" />
 
@@ -23,78 +22,66 @@
   <link rel="canonical" href="https://axolassist.com/easepass.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400&display=swap&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=contact-layout-2">
+  <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=surfer-page-2">
   <script>document.documentElement.classList.add('js');</script>
   <style>
-    /* ── Accessibility Surfer product page ── */
-    .ep-hero { background: linear-gradient(180deg, #EFEAF3 0%, var(--paper) 70%); }
-    .ep-hero .wrap { max-width: 880px; }
-    .page-label {
-      display: inline-flex; align-items: center; gap: .5rem;
-      font-family: var(--font-display); font-size: .78rem; font-weight: 600; letter-spacing: .04em;
-      color: var(--coral-deep); background: var(--coral-tint); padding: .45rem 1rem; border-radius: var(--r-sm);
-      margin-bottom: 1.6rem;
+    /* Surfer page — only carousel + compare overrides; brand tokens come from styles.css */
+    .ep-hero .hero-copy { max-width: 40rem; }
+    .ep-hero-heading {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin: 0;
     }
-    .page-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--coral); }
-    .product-hero-title {
-      display: flex; align-items: center; gap: 0.32em;
-      flex-wrap: nowrap; margin: 0;
-      font-size: clamp(2.4rem, 7.5vw, 5.4rem);
-      line-height: 1;
+    .ep-hero-heading .demo-showcase-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      flex: 0 0 auto;
     }
-    .product-hero-logo {
-      display: block; width: 0.92em; height: 0.92em; flex: 0 0 auto;
-      border-radius: 0.2em; object-fit: contain;
-      box-shadow: 0 0.12em 0.28em -0.12em rgba(48, 16, 112, .35);
+    .ep-hero-heading h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.35rem, 6vw, 3.75rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--ink);
+      margin: 0;
     }
-    .product-hero-wordmark {
-      display: block; font-family: var(--font-display); font-weight: 600;
-      font-size: 1em; letter-spacing: -0.035em; line-height: 1; color: var(--ink);
-      white-space: nowrap;
+    .ep-hero-heading h1 .accent {
+      color: var(--coral-deep);
+      font-style: italic;
+      font-weight: 400;
     }
-    .product-hero-wordmark .accent { color: var(--coral-deep); }
-    .ep-hero .hero-tagline { margin-left: 0; }
 
-    /* Demo carousel */
-    .demo-section { padding: 0 0 clamp(3rem,6vw,5rem); background: var(--paper); }
+    .demo-section { padding: 0 0 clamp(3rem, 6vw, 5rem); background: var(--paper); border-bottom: 1px solid var(--line); }
     .demo-carousel { max-width: 960px; margin: 0 auto; }
-    .demo-carousel-head {
-      margin: 0 auto 1.8rem;
-      text-align: center;
-    }
+    .demo-carousel-head { margin: 0 0 1.5rem; max-width: 40rem; }
+    .demo-carousel-head .eyebrow { margin-bottom: .75rem; }
     .demo-carousel-head h2 {
       margin: 0;
-      font-size: clamp(1.5rem, 3.5vw, 2.35rem);
-      line-height: 1.15;
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 3.5vw, 2.45rem);
+      font-weight: 400;
+      line-height: 1.12;
       letter-spacing: -0.02em;
+      color: var(--ink);
     }
-    .demo-carousel-head h2 .accent { color: var(--coral-deep); }
+    .demo-carousel-head h2 .accent { color: var(--coral-deep); font-style: italic; }
+
     .carousel {
       position: relative;
       background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: var(--r-lg);
-      box-shadow: var(--shadow-sm);
+      border-radius: 12px;
       overflow: hidden;
-    }
-    .carousel::after {
-      content: "";
-      position: absolute;
-      inset: auto 0 0 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--coral), var(--coral-tint));
-      z-index: 2;
     }
     .carousel-viewport { overflow: hidden; }
     .carousel-track {
       display: flex;
       transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-      will-change: transform;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .carousel-track { transition: none; }
-      .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
     }
     .carousel-slide {
       flex: 0 0 100%;
@@ -108,60 +95,61 @@
       height: auto;
       aspect-ratio: 1024 / 848;
       object-fit: cover;
-      background: #111;
+      background: var(--paper-2);
     }
     .carousel-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
       z-index: 3;
-      width: 44px;
-      height: 44px;
-      border: 1px solid var(--line);
+      width: 2.75rem;
+      height: 2.75rem;
+      border: 1px solid var(--line-strong);
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.94);
+      background: var(--surface);
       color: var(--coral-deep);
       cursor: pointer;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 8px 24px -12px rgba(48, 16, 112, 0.35);
-      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: background .15s ease, border-color .15s ease;
     }
     .carousel-btn:hover {
-      background: #fff;
-      transform: translateY(-50%) scale(1.05);
-      box-shadow: 0 12px 28px -10px rgba(48, 16, 112, 0.4);
+      background: var(--coral-tint);
+      border-color: var(--coral-tint2);
     }
     .carousel-btn:focus-visible {
-      outline: 3px solid var(--coral);
-      outline-offset: 2px;
+      outline: 2px solid var(--coral);
+      outline-offset: 3px;
     }
-    .carousel-prev { left: 0.85rem; }
-    .carousel-next { right: 0.85rem; }
+    .carousel-prev { left: .85rem; }
+    .carousel-next { right: .85rem; }
     .carousel-dots {
       display: flex;
       justify-content: center;
-      gap: 0.55rem;
-      padding: 1rem 1rem 1.15rem;
+      gap: .45rem;
+      padding: .9rem 1rem 1rem;
       background: var(--surface);
+      border-top: 1px solid var(--line);
     }
     .carousel-dot {
-      width: 10px;
-      height: 10px;
+      width: .45rem;
+      height: .45rem;
       border: 0;
       border-radius: 50%;
       padding: 0;
-      background: #d8cdd4;
+      background: var(--line-strong);
       cursor: pointer;
-      transition: transform 0.15s, background 0.15s;
+      transition: background .15s ease, transform .15s ease;
     }
     .carousel-dot[aria-current="true"] {
       background: var(--coral);
-      transform: scale(1.15);
+      transform: scale(1.2);
     }
     .carousel-dot:focus-visible {
-      outline: 3px solid var(--coral);
-      outline-offset: 2px;
+      outline: 2px solid var(--coral);
+      outline-offset: 3px;
     }
     .carousel-live {
       position: absolute;
@@ -174,40 +162,95 @@
       white-space: nowrap;
       border: 0;
     }
-    @media (max-width: 640px) {
-      .carousel-btn { width: 38px; height: 38px; }
-      .carousel-prev { left: 0.45rem; }
-      .carousel-next { right: 0.45rem; }
-    }
 
-    /* Features section sits between two alt sections — keep it on paper */
     .features-section { background: var(--paper) !important; }
 
-    /* Comparison */
-    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; max-width: 900px; margin: 3rem auto 0; text-align: left; }
-    .compare-card { padding: 2.2rem 2rem; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); }
-    .compare-card.new { border: 1.5px solid var(--coral); background: linear-gradient(180deg, #fff, var(--coral-tint)); }
-    .compare-card h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; letter-spacing: -0.01em; }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      max-width: 900px;
+      margin: 2.5rem auto 0;
+      text-align: left;
+    }
+    .compare-card {
+      padding: 1.6rem 1.5rem;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+    .compare-card.new { border-color: var(--coral-tint2); }
+    .compare-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0 0 1rem;
+      letter-spacing: -0.01em;
+    }
     .compare-card.old h3 { color: var(--muted); }
     .compare-card.new h3 { color: var(--coral-deep); }
     .compare-card ul { list-style: none; padding: 0; margin: 0; }
-    .compare-card li { font-size: 1rem; line-height: 1.5; padding-left: 1.9rem; position: relative; margin-bottom: .7rem; color: var(--ink); }
-    .compare-card.old li::before { content: '✕'; position: absolute; left: 0; color: var(--muted-2); font-weight: 700; }
-    .compare-card.new li::before { content: '✓'; position: absolute; left: 0; color: var(--coral-deep); font-weight: 700; }
+    .compare-card li {
+      font-size: .98rem;
+      line-height: 1.5;
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: .65rem;
+      color: var(--ink);
+    }
+    .compare-card.old li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .55em;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--line-strong);
+    }
+    .compare-card.new li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .55em;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
 
-    .product-statement { max-width: 760px; margin: 1.5rem auto 0; font-size: clamp(1.1rem,2vw,1.35rem); line-height: 1.6; color: var(--muted); }
+    .product-statement {
+      max-width: 42rem;
+      margin: 1rem 0 0;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
     .product-statement strong { color: var(--ink); font-weight: 600; }
+    .ep-cta-wrap { margin-top: 1.2rem; }
+    .ep-product-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: 44rem;
+    }
 
-    @media (max-width: 768px) { .compare-grid { grid-template-columns: 1fr; max-width: 520px; } }
+    @media (prefers-reduced-motion: reduce) {
+      .carousel-track { transition: none; }
+    }
+    @media (max-width: 768px) {
+      .compare-grid { grid-template-columns: 1fr; max-width: 34rem; }
+      .carousel-btn { width: 2.5rem; height: 2.5rem; }
+      .carousel-prev { left: .45rem; }
+      .carousel-next { right: .45rem; }
+      .ep-hero-heading .demo-showcase-logo { width: 44px; height: 44px; border-radius: 10px; }
+    }
   </style>
 </head>
 <body>
 
   <a href="#main" class="skip-link">Skip to main content</a>
 
-  <!-- NAV -->
   <nav id="siteNav" aria-label="Main navigation">
-    <a href="/" class="nav-logo" aria-label="Axol Assist, back to home">
+    <a href="/" class="nav-logo" aria-label="Axol Assist home">
       <span class="axol-mark" role="img" aria-label="Axol the axolotl"></span>
       <span><span class="nav-axolo">Axol</span> <span class="nav-assist">Assist</span></span>
     </a>
@@ -216,43 +259,42 @@
     </button>
     <ul class="nav-links" id="siteNavMenu">
       <li><a href="/#demo">Products</a></li>
-      <li><a href="#for-whom">Who it's for</a></li>
-      <li><a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="nav-cta" data-chrome-install rel="noopener noreferrer">Add to Chrome</a></li>
+      <li><a href="/#stories">Stories</a></li>
+      <li><a href="#contact" class="nav-cta">Get in touch</a></li>
     </ul>
   </nav>
 
   <main id="main" tabindex="-1">
 
-    <!-- HERO -->
     <header class="hero ep-hero">
       <div class="wrap">
-        <span class="page-label">Free Chrome extension · v0.5.0</span>
-        <h1 class="product-hero-title">
-          <img src="assistsurfer.png" alt="" class="product-hero-logo" aria-hidden="true" />
-          <span class="product-hero-wordmark">Accessibility <span class="accent">Surfer.</span></span>
-        </h1>
-        <p class="hero-tagline">Hover instead of click when press hurts. Grow type, spacing, and contrast on any page. Open reading mode when an article is a wall of text. Built for mouse, trackpad, head tracker, and eye gaze on the sites you already use.</p>
-        <div class="hero-links">
-          <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="hero-cta-link" data-chrome-install rel="noopener noreferrer">
-            Add to Chrome
-            <svg viewBox="0 0 24 24" fill="none" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a href="#how" class="hero-link">See how it works</a>
+        <div class="hero-copy">
+          <span class="eyebrow">Free Chrome extension</span>
+          <div class="ep-hero-heading">
+            <img src="assistsurfer.png" alt="" class="demo-showcase-logo" width="56" height="56" />
+            <h1>Accessibility <span class="accent">Surfer.</span></h1>
+          </div>
+          <p class="hero-deck">Dwell-click when pressing hurts. Grow type and contrast on any page. Open reading mode when the layout is the problem.</p>
+          <p class="hero-tagline">Built for mouse, trackpad, head tracker, and eye gaze on the sites you already use. Preferences stay in Chrome on your device — not on our servers.</p>
+          <div class="hero-links">
+            <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="hero-cta-primary" data-chrome-install rel="noopener noreferrer">Add to Chrome</a>
+            <a href="#how" class="hero-cta-secondary">See how dwell works</a>
+          </div>
         </div>
       </div>
     </header>
 
-    <!-- DEMO CAROUSEL -->
     <section class="demo-section" aria-labelledby="demo-carousel-heading">
       <div class="wrap">
         <div class="demo-carousel reveal">
           <div class="demo-carousel-head">
-            <h2 id="demo-carousel-heading">Accessibility Surfer <span class="accent">in real use.</span></h2>
+            <span class="eyebrow">In the browser</span>
+            <h2 id="demo-carousel-heading">Surfer on real pages — <span class="accent">popup, dwell ring, reading mode.</span></h2>
           </div>
 
-          <div class="carousel" data-carousel tabindex="0">
+          <div class="carousel" data-carousel tabindex="0" aria-roledescription="carousel" aria-label="Accessibility Surfer screenshots">
             <div class="carousel-viewport">
-              <div class="carousel-track" role="group" aria-roledescription="carousel" aria-label="Accessibility Surfer screenshots">
+              <div class="carousel-track">
                 <figure class="carousel-slide" aria-roledescription="slide" aria-label="1 of 5">
                   <img src="images/demo/01-dwell-popup.png" width="1024" height="848" loading="eager" decoding="async" alt="Accessibility Surfer popup on a Medium article showing dwell clicking settings for YouTube and other sites." />
                 </figure>
@@ -271,19 +313,19 @@
               </div>
             </div>
 
-            <button type="button" class="carousel-btn carousel-prev" aria-label="Previous slide">
+            <button type="button" class="carousel-btn carousel-prev" aria-label="Previous screenshot">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <button type="button" class="carousel-btn carousel-next" aria-label="Next slide">
+            <button type="button" class="carousel-btn carousel-next" aria-label="Next screenshot">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
 
             <div class="carousel-dots" role="tablist" aria-label="Choose screenshot">
-              <button type="button" class="carousel-dot" role="tab" aria-label="Slide 1 of 5" aria-selected="true" aria-current="true" data-slide="0"></button>
-              <button type="button" class="carousel-dot" role="tab" aria-label="Slide 2 of 5" aria-selected="false" data-slide="1"></button>
-              <button type="button" class="carousel-dot" role="tab" aria-label="Slide 3 of 5" aria-selected="false" data-slide="2"></button>
-              <button type="button" class="carousel-dot" role="tab" aria-label="Slide 4 of 5" aria-selected="false" data-slide="3"></button>
-              <button type="button" class="carousel-dot" role="tab" aria-label="Slide 5 of 5" aria-selected="false" data-slide="4"></button>
+              <button type="button" class="carousel-dot" role="tab" aria-label="Screenshot 1 of 5" aria-selected="true" aria-current="true" data-slide="0"></button>
+              <button type="button" class="carousel-dot" role="tab" aria-label="Screenshot 2 of 5" aria-selected="false" data-slide="1"></button>
+              <button type="button" class="carousel-dot" role="tab" aria-label="Screenshot 3 of 5" aria-selected="false" data-slide="2"></button>
+              <button type="button" class="carousel-dot" role="tab" aria-label="Screenshot 4 of 5" aria-selected="false" data-slide="3"></button>
+              <button type="button" class="carousel-dot" role="tab" aria-label="Screenshot 5 of 5" aria-selected="false" data-slide="4"></button>
             </div>
 
             <p class="carousel-live" aria-live="polite" aria-atomic="true"></p>
@@ -292,98 +334,139 @@
       </div>
     </section>
 
-    <!-- MISSION -->
     <section class="mission">
       <div class="wrap reveal">
-        <h2>Less mechanical clicking. <span class="accent">More of the page you meant to use.</span></h2>
-        <p>Moving a cursor and activating a control are different costs. Accessibility Surfer dwell-clicks interactive targets when you hold still, retunes fonts and contrast in-page, and can strip a dense article to reading mode. Preferences stay in Chrome storage on your device.</p>
+        <h2>Moving the cursor and activating a control <span class="accent">are different costs.</span></h2>
+        <p>Accessibility Surfer dwell-clicks interactive targets when you hold still, retunes fonts and contrast in the page, and can strip a dense article down to reading mode. Point, hold, activate — without an extra mouse press.</p>
       </div>
     </section>
 
-    <!-- AUDIENCES -->
-    <section class="audiences" id="for-whom">
+    <section class="audiences" id="for-whom" aria-labelledby="for-whom-h">
       <div class="wrap">
-        <div class="sec-head reveal">
-          <span class="eyebrow">Who it's for</span>
-          <h2>Built for people who browse <span class="accent">differently.</span></h2>
-          <p>You don't need a diagnosis. If the default web costs you extra effort, physically, visually, or mentally, this is for you.</p>
-        </div>
-        <div class="audience-grid">
-          <article class="audience-card reveal">
-            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
-            <h3>Mobility, tremors &amp; pain</h3>
-            <p>ALS, MS, cerebral palsy, spinal cord injury, essential tremor, RSI, chronic fatigue, a temporary injury. When clicking is painful, unreliable, or exhausting, hover-to-click on every site, with settings that remember how you work.</p>
-          </article>
-          <article class="audience-card reveal">
-            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg></span>
-            <h3>Low vision, dyslexia &amp; ADHD</h3>
-            <p>Change fonts, size, spacing, and contrast on any page. Open reading mode to cut the clutter. Screen reader users get cleaner structure. Less squinting, less losing your place, less giving up on the article.</p>
-          </article>
-          <article class="audience-card reveal">
-            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
-            <h3>Eye gaze, head tracking &amp; fatigue</h3>
-            <p>Head trackers, eye gaze devices, mouth sticks, joysticks, and anyone who's just tired of fighting tiny targets after a long day online. If your pointer moves but clicks don't always land, Surfer closes that gap on every website.</p>
-          </article>
+        <div class="audience-layout reveal">
+          <div class="audience-lead">
+            <span class="eyebrow">Who it's for</span>
+            <h2 id="for-whom-h">Built for people who browse <span class="accent">differently.</span></h2>
+            <p class="audience-lead-text">You don't need a diagnosis. If the default web costs you extra effort — physically, visually, or mentally — Surfer is for you.</p>
+          </div>
+          <div class="audience-stack">
+            <div class="audience-row">
+              <h3>Mobility, tremors &amp; pain</h3>
+              <p>ALS, MS, cerebral palsy, spinal cord injury, essential tremor, RSI, chronic fatigue, or a temporary injury. When clicking is painful or unreliable, hover-to-click on every site — with dwell times that remember how you work.</p>
+            </div>
+            <div class="audience-row">
+              <h3>Low vision, dyslexia &amp; ADHD</h3>
+              <p>Change fonts, size, spacing, and contrast on any page. Open reading mode to cut ads and sidebars. Less squinting, less losing your place, less giving up mid-article.</p>
+            </div>
+            <div class="audience-row">
+              <h3>Eye gaze, head tracking &amp; fatigue</h3>
+              <p>Head trackers, eye gaze, mouth sticks, joysticks — or anyone tired of fighting tiny targets after a long day. If your pointer moves but clicks don't always land, Surfer closes that gap.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- HOW IT WORKS -->
-    <section class="principles" id="how">
+    <section class="principles" id="how" aria-labelledby="how-h">
       <div class="wrap">
         <div class="sec-head reveal">
-          <span class="eyebrow">How it works</span>
-          <h2>Four steps. <span class="accent">Zero extra clicks.</span></h2>
-          <p>Point where you want to go. Surfer handles the rest.</p>
+          <span class="eyebrow">How dwell works</span>
+          <h2 id="how-h">A 3-second ring. <span class="accent">Then the click fires.</span></h2>
+          <p>You always see what Surfer is about to activate before it happens.</p>
         </div>
         <div class="principles-grid">
-          <div class="principle reveal"><span class="principle-num">1</span><h3>Point at what you want</h3><p>Links, buttons, search fields, video thumbnails. Anything clickable on the page. A ring shows you exactly what Surfer is tracking.</p></div>
-          <div class="principle reveal"><span class="principle-num">2</span><h3>Watch the countdown</h3><p>A ring fills around whatever you're hovering on and counts down from 3. You always know what's about to happen before it does.</p></div>
-          <div class="principle reveal"><span class="principle-num">3</span><h3>It activates for you</h3><p>At zero, the ring completes and the click fires. Link opened, button pressed, field focused. One less motion your hand has to make.</p></div>
-          <div class="principle reveal"><span class="principle-num">4</span><h3>Stop anytime</h3><p>Changed your mind? Hit Space, tap the on-screen button, or open the popup. It stops immediately.</p></div>
+          <div class="principle reveal">
+            <span class="principle-num">1</span>
+            <h3>Hover a real target</h3>
+            <p>Links, buttons, search fields, thumbnails — anything clickable. A ring appears on the control Surfer is tracking.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">2</span>
+            <h3>Hold through the countdown</h3>
+            <p>The ring fills while you stay still. Default is about three seconds; YouTube thumbnails and player controls can use separate times.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">3</span>
+            <h3>Surfer activates it</h3>
+            <p>At zero, the click fires: link opened, button pressed, or field focused — without you pressing the mouse.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">4</span>
+            <h3>Cancel anytime</h3>
+            <p>Move away, press Space, or open the popup. Dwell stops immediately.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- FEATURES -->
-    <section class="principles features-section" id="features">
+    <section class="principles features-section" id="features" aria-labelledby="features-h">
       <div class="wrap">
         <div class="sec-head reveal">
-          <span class="eyebrow">What you get</span>
-          <h2>Outcomes, <span class="accent">not feature lists.</span></h2>
+          <span class="eyebrow">What Surfer does</span>
+          <h2 id="features-h">Three jobs in Chrome: <span class="accent">dwell, text, reading mode.</span></h2>
         </div>
         <div class="principles-grid">
-          <div class="principle reveal"><span class="principle-num">01</span><h3>Less effort navigating</h3><p>Fewer clicks per session. Fewer missed targets. Fewer times you give up on a form because the button is too small or your hand won't cooperate today.</p></div>
-          <div class="principle reveal"><span class="principle-num">02</span><h3>Easier reading</h3><p>Bump up type size, widen line spacing, swap to a font that stays put on the page. Reading mode strips ads and sidebars so you can finish the article.</p></div>
-          <div class="principle reveal"><span class="principle-num">03</span><h3>Less visual strain</h3><p>Stronger contrast, calmer backgrounds, text that doesn't blur together. Adjust once. Surfer remembers your preferences site to site.</p></div>
-          <div class="principle reveal"><span class="principle-num">04</span><h3>More independence online</h3><p>Banking, shopping, email, video, news. The sites you actually use, without asking someone else to click for you.</p></div>
+          <div class="principle reveal">
+            <span class="principle-num">01</span>
+            <h3>Fewer forced clicks</h3>
+            <p>Hold still over a link or button and Surfer completes the activation. Fewer missed targets when your hand won't cooperate that hour.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">02</span>
+            <h3>Type you can actually read</h3>
+            <p>Increase size, widen line spacing, pick a clearer font, and boost contrast on the live page — not in a separate reader you have to leave for.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">03</span>
+            <h3>Reading mode when the layout fights you</h3>
+            <p>Strip chrome and sidebars to one column. Focus mode can step paragraph by paragraph — including with dwell if your hands are off the mouse.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">04</span>
+            <h3>Settings that stay local</h3>
+            <p>Preferences live in Chrome storage on your device. Banking, shopping, email, news — same tools, your choices, no Axol account required.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- READING MODE -->
-    <section class="principles" id="reading-mode">
+    <section class="principles" id="reading-mode" aria-labelledby="reading-mode-h">
       <div class="wrap">
         <div class="sec-head reveal">
           <span class="eyebrow">Reading mode</span>
-          <h2>When the page is <span class="accent">too much.</span></h2>
+          <h2 id="reading-mode-h">When the page is <span class="accent">too much.</span></h2>
         </div>
         <div class="principles-grid">
-          <div class="principle reveal"><span class="principle-num">01</span><h3>Just the article</h3><p>Cut the pop-ups, nav bars, and sidebar noise. One column, your typography, your background color.</p></div>
-          <div class="principle reveal"><span class="principle-num">02</span><h3>One paragraph at a time</h3><p>Focus mode highlights a single block and advances when you're ready, or on dwell if your hands are off the mouse.</p></div>
-          <div class="principle reveal"><span class="principle-num">03</span><h3>Compensation for fatigue</h3><p>Long article, tired eyes? Font size and spacing can grow gradually as you read deeper, without you stopping to adjust.</p></div>
-          <div class="principle reveal"><span class="principle-num">04</span><h3>Plain language on demand</h3><p>Hover a word you don't recognize and get a simpler alternative. Works offline, on your device.</p></div>
+          <div class="principle reveal">
+            <span class="principle-num">01</span>
+            <h3>Just the article</h3>
+            <p>Cut pop-ups, nav bars, and sidebar noise. One column, your typography, your background.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">02</span>
+            <h3>One paragraph at a time</h3>
+            <p>Focus mode highlights a single block and advances when you're ready — or on dwell.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">03</span>
+            <h3>Fatigue compensation</h3>
+            <p>On long articles, size and spacing can grow as you read deeper without stopping to reopen settings.</p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle-num">04</span>
+            <h3>Plain language on demand</h3>
+            <p>Hover a hard word for a simpler alternative. Runs on your device, offline.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- COMPARISON -->
-    <section class="audiences" id="compare">
+    <section class="audiences" id="compare" aria-labelledby="compare-h">
       <div class="wrap">
         <div class="sec-head reveal">
           <span class="eyebrow">How it compares</span>
-          <h2>Tuned for the browser, <span class="accent">not the OS.</span></h2>
-          <p>Your operating system has a dwell tool somewhere in its accessibility settings. Accessibility Surfer lives in your browser where you actually spend your time, and it knows the difference between a video thumbnail, a tiny player button, and a text link.</p>
+          <h2 id="compare-h">Tuned for the browser, <span class="accent">not the OS.</span></h2>
+          <p>OS dwell tools sit in system settings with one timing for the whole computer. Surfer runs in Chrome — where you browse — and can treat a YouTube thumbnail differently from a player button or a text link.</p>
         </div>
         <div class="compare-grid reveal">
           <div class="compare-card old">
@@ -391,60 +474,55 @@
             <ul>
               <li>Buried in system accessibility settings</li>
               <li>One dwell time for the whole computer</li>
-              <li>No awareness of video players, comments, or in-page UI</li>
+              <li>No awareness of video players or in-page UI</li>
               <li>No font, size, or spacing controls for the page itself</li>
             </ul>
           </div>
           <div class="compare-card new">
             <h3>Accessibility Surfer</h3>
             <ul>
-              <li>Drop-in Chrome extension, on every site instantly</li>
-              <li>Separate dwell times for YouTube videos, YouTube buttons, and every other site</li>
-              <li>Smart YouTube mode with a top status pill and a per-thumbnail ring</li>
-              <li>Built-in text accessibility: font, size, line height, letter and word spacing</li>
+              <li>Chrome extension — available on every site you open</li>
+              <li>Separate dwell times for YouTube videos, YouTube buttons, and other sites</li>
+              <li>Per-thumbnail countdown ring and a clear on-page status</li>
+              <li>Built-in text controls: font, size, line height, letter and word spacing</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- WHERE IT WORKS -->
-    <section class="products">
+    <section class="products" aria-labelledby="where-h">
       <div class="wrap">
         <div class="sec-head reveal">
           <span class="eyebrow">Where it works</span>
-          <h2>Works <span class="accent">on every site.</span></h2>
-          <p class="product-statement">Install once. Every site you open gets the same set of tools: hover-to-click on links and buttons, text controls when reading gets hard, and reading mode when the layout is the problem. <strong>YouTube</strong> gets extra attention where tiny player controls usually break generic dwell tools.</p>
+          <h2 id="where-h">Same tools on <span class="accent">every site.</span></h2>
+          <p class="product-statement"><strong>YouTube</strong> gets extra attention where tiny player controls break generic dwell. Everywhere else — news, banking, email, shopping, forms — you get the same hover-to-click, text levers, and reading mode.</p>
         </div>
-        <div class="product-grid">
+        <div class="product-grid ep-product-grid">
           <article class="product-card websites reveal">
-            <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><rect x="6" y="12" width="36" height="26" rx="6" stroke="currentColor" stroke-width="2.4"/><path class="icon-accent" d="M21 21v8l7-4-7-4z"/></svg></span>
             <span class="card-badge">Video sites</span>
             <h3>YouTube &amp; players</h3>
-            <p>Tiny play buttons and thumbnail grids are where generic dwell tools fail. Surfer knows the difference: longer dwell on thumbnails, faster response on player controls.</p>
+            <p>Longer dwell on thumbnails, faster response on player controls — so a hover meant for play doesn't accidentally open a random video.</p>
           </article>
           <article class="product-card hardware reveal">
-            <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="17" stroke="currentColor" stroke-width="2.4"/><circle cx="24" cy="24" r="5" fill="currentColor" class="icon-accent"/></svg></span>
             <span class="card-badge">Everywhere else</span>
             <h3>The rest of the web</h3>
-            <p>News, banking, email, shopping, government forms. Anywhere you browse. One extension, consistent controls, your settings saved per site.</p>
+            <p>Install once. Every tab gets dwell, text controls, and reading mode, with preferences remembered per site when you want that.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- CONTACT -->
-    <section class="notify" id="contact">
+    <section class="notify" id="contact" aria-labelledby="contact-h">
       <div class="wrap">
         <div class="contact-layout">
           <div class="contact-copy reveal">
             <span class="eyebrow">Install</span>
-            <h2>Get <span class="accent">Accessibility Surfer.</span></h2>
-            <p class="contact-lede">Free Chrome extension. Install from the Chrome Web Store in one click.</p>
-            <p class="aw-cta-wrap" style="margin-top:1.2rem;">
-              <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="btn btn-primary" data-chrome-install rel="noopener noreferrer">Add to Chrome</a>
+            <h2 id="contact-h">Get <span class="accent">Accessibility Surfer.</span></h2>
+            <p class="contact-lede">Free on the Chrome Web Store. Install in one click and keep using the sites you already open.</p>
+            <p class="ep-cta-wrap">
+              <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="hero-cta-primary" data-chrome-install rel="noopener noreferrer">Add to Chrome</a>
             </p>
-            <p class="contact-note" style="margin-top:.65rem;">Free on the Chrome Web Store. Works on the sites you already visit.</p>
             <div class="contact-direct">
               <span class="contact-direct-label">Direct</span>
               <a class="contact-direct-email" href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a>
@@ -474,7 +552,7 @@
             </div>
             <div class="form-row">
               <label for="cf-message">Message</label>
-              <textarea id="cf-message" name="message" rows="3" required maxlength="2000" placeholder="Tell us about your interest in Accessibility Surfer."></textarea>
+              <textarea id="cf-message" name="message" rows="3" required maxlength="2000" placeholder="What page broke, which control you need, or how you browse today."></textarea>
             </div>
             <div class="contact-honeypot" aria-hidden="true">
               <label for="cf-website">Website (leave blank)</label>
@@ -489,16 +567,41 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer role="contentinfo">
-    <div class="wrap">
-      <div class="footer-top">
-        <a href="/" class="footer-brand"><span class="axol-mark" aria-hidden="true"></span>Axol Assist</a>
+    <div class="wrap footer-grid">
+      <div class="footer-brand-col">
+        <a href="/" class="footer-brand">
+          <span class="axol-mark" aria-hidden="true"></span>
+          Axol Assist
+        </a>
+        <p class="footer-tagline">Redefining digital accessibility.</p>
       </div>
-      <div class="footer-bottom">
-        <p>Copyright &copy; 2026 <strong class="accent">Axol Assist</strong>. All rights reserved.</p>
-        <p><a href="/">Home</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></p>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Products</h3>
+        <ul class="footer-links">
+          <li><a href="easepass.html" aria-current="page">Accessibility Surfer</a></li>
+          <li><a href="toolbar.html">AccessFlow</a></li>
+          <li><a href="axol-work.html">Axol Work</a></li>
+        </ul>
       </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Company</h3>
+        <ul class="footer-links">
+          <li><a href="/#why">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Resources</h3>
+        <ul class="footer-links">
+          <li><a href="toolbar.html">Documentation</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap footer-bottom">
+      <p>Copyright &copy; 2026 <strong class="accent">Axol Assist</strong>. All rights reserved.</p>
+      <p><a href="privacy.html">Privacy Policy</a></p>
     </div>
   </footer>
 
@@ -511,61 +614,70 @@
   (function () {
     var nav = document.getElementById('siteNav');
     var onScroll = function () { if (nav) nav.classList.toggle('is-scrolled', window.scrollY > 8); };
-    onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reducedMotion) document.documentElement.classList.add('reveal-static');
+
     var reveals = document.querySelectorAll('.reveal');
     if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('reveal-in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('reveal-in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
       reveals.forEach(function (el) { io.observe(el); });
-    } else { reveals.forEach(function (el) { el.classList.add('reveal-in'); }); }
+    } else {
+      reveals.forEach(function (el) { el.classList.add('reveal-in'); });
+    }
 
     var carousel = document.querySelector('[data-carousel]');
-    if (carousel) {
-      var track = carousel.querySelector('.carousel-track');
-      var slides = Array.prototype.slice.call(carousel.querySelectorAll('.carousel-slide'));
-      var dots = Array.prototype.slice.call(carousel.querySelectorAll('.carousel-dot'));
-      var prevBtn = carousel.querySelector('.carousel-prev');
-      var nextBtn = carousel.querySelector('.carousel-next');
-      var live = carousel.querySelector('.carousel-live');
-      var index = 0;
-      var total = slides.length;
+    if (!carousel) return;
 
-      function goTo(i) {
-        index = (i + total) % total;
-        track.style.transform = 'translateX(-' + (index * 100) + '%)';
-        slides.forEach(function (slide, n) {
-          var active = n === index;
-          slide.setAttribute('aria-hidden', active ? 'false' : 'true');
-          slide.setAttribute('aria-label', (n + 1) + ' of ' + total);
-        });
-        dots.forEach(function (dot, n) {
-          var active = n === index;
-          dot.setAttribute('aria-selected', active ? 'true' : 'false');
-          if (active) dot.setAttribute('aria-current', 'true');
-          else dot.removeAttribute('aria-current');
-        });
-        if (live) {
-          var img = slides[index].querySelector('img');
-          live.textContent = img
-            ? 'Slide ' + (index + 1) + ' of ' + total
-            : '';
-        }
-      }
+    var track = carousel.querySelector('.carousel-track');
+    var slides = Array.prototype.slice.call(carousel.querySelectorAll('.carousel-slide'));
+    var dots = Array.prototype.slice.call(carousel.querySelectorAll('.carousel-dot'));
+    var prevBtn = carousel.querySelector('.carousel-prev');
+    var nextBtn = carousel.querySelector('.carousel-next');
+    var live = carousel.querySelector('.carousel-live');
+    var index = 0;
+    var total = slides.length;
 
-      if (prevBtn) prevBtn.addEventListener('click', function () { goTo(index - 1); });
-      if (nextBtn) nextBtn.addEventListener('click', function () { goTo(index + 1); });
-      dots.forEach(function (dot) {
-        dot.addEventListener('click', function () { goTo(parseInt(dot.getAttribute('data-slide'), 10)); });
+    function goTo(i) {
+      index = (i + total) % total;
+      track.style.transform = 'translateX(-' + (index * 100) + '%)';
+      slides.forEach(function (slide, n) {
+        var active = n === index;
+        slide.setAttribute('aria-hidden', active ? 'false' : 'true');
+        slide.setAttribute('aria-label', (n + 1) + ' of ' + total);
       });
-      carousel.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(index - 1); }
-        if (e.key === 'ArrowRight') { e.preventDefault(); goTo(index + 1); }
-        if (e.key === 'Home') { e.preventDefault(); goTo(0); }
-        if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+      dots.forEach(function (dot, n) {
+        var active = n === index;
+        dot.setAttribute('aria-selected', active ? 'true' : 'false');
+        if (active) dot.setAttribute('aria-current', 'true');
+        else dot.removeAttribute('aria-current');
       });
-      goTo(0);
+      if (live) live.textContent = 'Slide ' + (index + 1) + ' of ' + total;
     }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(index - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(index + 1); });
+    dots.forEach(function (dot) {
+      dot.addEventListener('click', function () {
+        goTo(parseInt(dot.getAttribute('data-slide'), 10));
+      });
+    });
+    carousel.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(index - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); goTo(index + 1); }
+      if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+      if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+    });
+    goTo(0);
   })();
   </script>
 
