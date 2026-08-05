@@ -785,10 +785,20 @@ footer a:focus-visible,
   align-items: center;
   gap: .85rem;
   margin-bottom: 0;
+  min-width: 0;
 }
 .demo-showcase-heading h2 {
   margin: 0;
-  white-space: nowrap;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+@media (min-width: 900px) {
+  .demo-showcase-heading h2 {
+    white-space: nowrap;
+    overflow-wrap: normal;
+    hyphens: manual;
+  }
 }
 .demo-showcase-logo {
   width: 56px;
@@ -1121,12 +1131,14 @@ footer a:focus-visible,
   grid-template-columns: 1fr 1fr;
   gap: 1.2rem;
 }
+.demo-shell > * { min-width: 0; }
 .demo-pane {
   border-radius: .85rem;
   border: 1px solid #e7e5e4;
   background: #f5f5f4;
   padding: 1.6rem;
   min-height: 260px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   box-shadow: 0 1px 2px rgba(28, 25, 23, .04);
@@ -2566,10 +2578,82 @@ html.js.reveal-static .reveal { opacity: 1; transform: none; transition: none; }
   .compare-grid,
   .product-split,
   .work-preview { grid-template-columns: 1fr; }
+  .work-preview-copy { max-width: none; }
 }
 @media (max-width: 720px) {
   .demo-shell { grid-template-columns: 1fr; }
   .principles-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+
+  .demo-showcase-heading {
+    align-items: flex-start;
+    gap: .65rem;
+  }
+  .demo-showcase-heading h2 {
+    font-size: clamp(1.7rem, 7.2vw, 2.45rem);
+    line-height: 1.08;
+    white-space: normal;
+  }
+  .demo-showcase-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+  }
+  .demo-pane {
+    padding: 1.15rem;
+    min-height: 0;
+  }
+  .demo-controls {
+    margin-top: 1.75rem;
+    justify-content: flex-start;
+  }
+  .demo-showcase-actions {
+    margin-top: 1.5rem;
+  }
+  .demo-showcase-cta {
+    width: 100%;
+  }
+
+  .stories-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .85rem;
+  }
+  .stories-head .sec-head {
+    max-width: none;
+  }
+  .stories-head .sec-head h2,
+  .why-copy h2,
+  .sec-head h2 {
+    font-size: clamp(1.6rem, 7vw, 2.35rem);
+    overflow-wrap: anywhere;
+  }
+  .hero-headline {
+    font-size: clamp(2.35rem, 11vw, 3.1rem);
+  }
+  .hero-cta-primary,
+  .hero-cta-secondary {
+    white-space: normal;
+    text-align: center;
+    width: 100%;
+  }
+  .hero-links { width: 100%; }
+
+  .contact-form { padding: 1.25rem; }
+  .story-form .form-row input,
+  .story-form .form-row textarea,
+  .story-tag-custom input {
+    max-width: 100%;
+  }
+
+  /* Keep page content clear of fixed corner launchers */
+  main {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+  .demo-body-text,
+  .demo-showcase-copy p,
+  .demo-showcase-note {
+    overflow-wrap: anywhere;
+  }
 }
 @media (max-width: 600px) {
   nav { height: 60px; flex-wrap: wrap; align-content: flex-start; }
