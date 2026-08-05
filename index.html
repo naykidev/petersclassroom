@@ -88,61 +88,52 @@
     <!-- PRODUCT SHOWCASE -->
     <section class="demo demo-showcase" id="demo" aria-labelledby="demo-surfer-h">
       <div class="wrap">
-        <div class="demo-showcase-intro reveal">
-          <div class="sec-head">
-            <span class="eyebrow">Product showcase</span>
-            <div class="demo-showcase-heading">
-              <img src="assistsurfer.png" alt="" class="demo-showcase-logo" width="56" height="56" />
-              <h2 id="demo-surfer-h">Try <span class="accent">Accessibility Surfer.</span></h2>
-            </div>
-            <p>Same article, two ways to read it. Toggle text controls below. Turn on Dwell clicking to hover real targets with Surfer’s 3s countdown ring, or Reading mode for the focus overlay.</p>
-          </div>
-          <p class="demo-showcase-note">Surfer adapts any page in Chrome: dwell click, reading mode, and text levers. AccessFlow ships the text, spacing, and contrast controls to every visitor on your site with one script.</p>
-        </div>
+        <header class="showcase-intro reveal">
+          <p class="showcase-tag">Product showcase</p>
+          <h2 id="demo-surfer-h">See how Accessibility Surfer transforms the web.</h2>
+          <p class="showcase-sub">Toggle controls below to see how text, spacing, and dwell-clicking adapt in real time.</p>
+        </header>
 
-        <div class="demo-shell reveal">
-          <div class="demo-pane is-before">
-            <span class="demo-tag"><span class="pip"></span>Before</span>
-            <p class="demo-body-text">11px gray text on a white-gray background. Lines stacked tight. A link the size of a breadcrumb crumb. Your eyes work overtime just to stay on the sentence, and your hand misses <span class="demo-sample-link" role="text">the target</span> half the time.</p>
-          </div>
-          <div class="demo-pane is-after" id="demoAfterSurfer">
-            <span class="demo-tag"><span class="pip"></span>After</span>
-            <div class="demo-reading-bar">
-              <span>Reading mode · focus on the article</span>
-              <button type="button" class="demo-reading-close" id="demoReadingClose" aria-label="Turn off reading mode">×</button>
+        <div class="showcase-canvas reveal">
+          <div class="showcase-col">
+            <h3 class="showcase-col-label is-muted">Default web (unmodified)</h3>
+            <div class="showcase-card is-before">
+              <p class="demo-body-text">11px gray text on a pale background. Lines stacked tight. A link the size of a breadcrumb crumb. Your eyes work overtime just to stay on the sentence, and your hand misses <span class="demo-sample-link" role="text">the target</span> half the time. Contrast is weak. Spacing is worse. Nothing here wants to be read.</p>
             </div>
-            <article class="demo-article">
-              <h4 class="demo-article-title">How to rest your eyes online</h4>
-              <p class="demo-body-text">Larger type. Breathing room between lines. Contrast that doesn't fight you. The same article, adjusted to how you actually read, with links you can hit without squinting or overshooting.</p>
-            </article>
+          </div>
+          <div class="showcase-col">
+            <h3 class="showcase-col-label is-active"><span class="showcase-col-pip" aria-hidden="true"></span> Axol Assist active</h3>
+            <div class="showcase-card is-after" id="demoAfterSurfer">
+              <article class="demo-article">
+                <p class="demo-body-text">Larger type. Breathing room between lines. Contrast that doesn't fight you. The same article, adjusted to how you actually read, with <a class="demo-sample-link" href="#demo">links you can hit</a> without squinting or overshooting.</p>
+              </article>
 
-            <div class="dwell-playground" id="dwellPlayground" hidden>
-              <p class="dwell-playground-hint">Hover a target below. The real Surfer ring counts down from 3, then clicks. No press needed.</p>
-              <div class="dwell-playground-targets">
-                <button type="button" class="dwell-target-btn" id="dwellDemoBtn">Open listing</button>
-                <a href="#dwell-feedback" class="dwell-target-link" id="dwellDemoLink">Read more</a>
-                <a href="#dwell-feedback" class="dwell-target-card" id="dwellDemoCard">
-                  <strong>Weekend barista shift</strong>
-                  <span>Harbor Cafe · tomorrow 9am</span>
-                </a>
+              <div class="dwell-playground" id="dwellPlayground" hidden>
+                <p class="dwell-playground-hint">Hover a target below. The real Surfer ring counts down from 3, then clicks. No press needed.</p>
+                <div class="dwell-playground-targets">
+                  <button type="button" class="dwell-target-btn" id="dwellDemoBtn">Open listing</button>
+                  <a href="#dwell-feedback" class="dwell-target-link" id="dwellDemoLink">Read more</a>
+                  <a href="#dwell-feedback" class="dwell-target-card" id="dwellDemoCard">
+                    <strong>Weekend barista shift</strong>
+                    <span>Harbor Cafe · tomorrow 9am</span>
+                  </a>
+                </div>
+                <p class="dwell-playground-result" id="dwellDemoResult" aria-live="polite"></p>
               </div>
-              <p class="dwell-playground-result" id="dwellDemoResult" aria-live="polite"></p>
             </div>
           </div>
         </div>
 
-        <div class="demo-controls reveal" role="group" aria-label="Accessibility Surfer and AccessFlow adjustments" data-demo-target="demoAfterSurfer">
-          <button class="demo-chip" type="button" data-opt="size" aria-pressed="false">Larger text</button>
-          <button class="demo-chip" type="button" data-opt="space" aria-pressed="false">More spacing</button>
-          <button class="demo-chip" type="button" data-opt="font" aria-pressed="false">Readable font</button>
-          <button class="demo-chip" type="button" data-opt="contrast" aria-pressed="false">Boost contrast</button>
-          <button class="demo-chip" type="button" data-opt="dwell" aria-pressed="false">Dwell clicking</button>
-          <button class="demo-chip" type="button" data-opt="reading" aria-pressed="false">Reading mode</button>
+        <div class="showcase-toolbar demo-controls reveal" role="group" aria-label="Accessibility Surfer preview controls" data-demo-target="demoAfterSurfer">
+          <button class="showcase-toggle demo-chip" type="button" data-opt="size" aria-pressed="false">Larger Text</button>
+          <button class="showcase-toggle demo-chip" type="button" data-opt="font" aria-pressed="false">Dyslexia Font</button>
+          <button class="showcase-toggle demo-chip" type="button" data-opt="contrast" aria-pressed="false">High Contrast</button>
+          <button class="showcase-toggle demo-chip" type="button" data-opt="dwell" aria-pressed="false">Dwell Click</button>
         </div>
 
-        <div class="demo-showcase-actions reveal">
-          <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="demo-showcase-cta" data-chrome-install rel="noopener noreferrer">Get Accessibility Surfer</a>
-          <a href="toolbar.html#install" class="demo-showcase-cta">Get AccessFlow</a>
+        <div class="showcase-cta-row reveal">
+          <a href="https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn" class="showcase-cta showcase-cta--primary" data-chrome-install rel="noopener noreferrer">Add Surfer to Chrome</a>
+          <a href="toolbar.html#install" class="showcase-cta showcase-cta--secondary">Install AccessFlow</a>
         </div>
       </div>
     </section>
@@ -506,9 +497,8 @@
       reveals.forEach(function (el) { el.classList.add('reveal-in'); });
     }
 
-    document.querySelectorAll('.demo-controls').forEach(function (group) {
+    document.querySelectorAll('.demo-controls[data-demo-target]').forEach(function (group) {
       var targetId = group.getAttribute('data-demo-target');
-      if (!targetId) return;
       var after = document.getElementById(targetId);
       var playground = document.getElementById('dwellPlayground');
       var result = document.getElementById('dwellDemoResult');
@@ -535,47 +525,15 @@
         }
       }
 
-      function setReadingDemo(on) {
-        var readingChip = group.querySelector('.demo-chip[data-opt="reading"]');
-        if (readingChip) readingChip.setAttribute('aria-pressed', on ? 'true' : 'false');
-        if (after) after.classList.remove('opt-reading');
-        if (!window.SurferDemo) return;
-        if (on) window.SurferDemo.launchReadingMode();
-        else window.SurferDemo.closeReadingMode();
-      }
-
-      function syncReadingChip(on) {
-        var readingChip = group.querySelector('.demo-chip[data-opt="reading"]');
-        if (readingChip) readingChip.setAttribute('aria-pressed', on ? 'true' : 'false');
-        if (after) after.classList.remove('opt-reading');
-      }
-
-      window.addEventListener('easepass-rm-opened', function () { syncReadingChip(true); });
-      window.addEventListener('easepass-rm-closed', function () { syncReadingChip(false); });
-
-      var readingClose = document.getElementById('demoReadingClose');
-      if (readingClose) {
-        readingClose.addEventListener('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          setReadingDemo(false);
-        });
-      }
-
       group.querySelectorAll('.demo-chip[data-opt]').forEach(function (chip) {
         chip.addEventListener('click', function () {
           var on = chip.getAttribute('aria-pressed') !== 'true';
           var opt = chip.dataset.opt;
+          chip.setAttribute('aria-pressed', on ? 'true' : 'false');
           if (opt === 'dwell') {
-            chip.setAttribute('aria-pressed', on ? 'true' : 'false');
             setDwellDemo(on);
             return;
           }
-          if (opt === 'reading') {
-            setReadingDemo(on);
-            return;
-          }
-          chip.setAttribute('aria-pressed', on ? 'true' : 'false');
           if (after) after.classList.toggle('opt-' + opt, on);
         });
       });
