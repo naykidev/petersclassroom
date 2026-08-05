@@ -2783,26 +2783,32 @@ nav { padding-left: max(clamp(1.2rem,4vw,2.5rem), env(safe-area-inset-left)); pa
 .a11y-reset:hover { background: #2a241e; }
 .a11y-reading-guide { position: fixed; left: 0; right: 0; height: 44px; background: rgba(176,48,96,.14); border-top: 2px solid rgba(176,48,96,.55); border-bottom: 2px solid rgba(176,48,96,.55); pointer-events: none; z-index: 210; top: -100px; }
 
-@media (max-width: 600px) {
-  .a11y-panel { width: 100vw; }
+@media (max-width: 720px) {
+  /* Promo copy collides between the two corner launchers — icons only on small screens. */
+  .epd-bubble,
+  .af-bubble {
+    display: none;
+  }
   .af-launcher {
     bottom: calc(1rem + env(safe-area-inset-bottom));
     right: calc(1rem + env(safe-area-inset-right));
-    gap: .5rem;
+    gap: 0;
+    max-width: none;
   }
-  .a11y-toggle { width: 52px; height: 52px; }
-  .af-bubble { padding: .5rem .75rem; max-width: none; }
-  .af-bubble-text { font-size: .72rem; }
-  .af-bubble-kicker { font-size: .58rem; }
   .epd-launcher {
     bottom: calc(1rem + env(safe-area-inset-bottom));
     left: calc(1rem + env(safe-area-inset-left));
-    gap: .5rem;
+    gap: 0;
   }
-  #epd-toggle { width: 52px; height: 52px; }
-  .epd-bubble { font-size: .74rem; padding: .5rem .75rem; max-width: 168px; }
-  .epd-bubble-text { font-size: .8rem; }
-  .epd-bubble-kicker { font-size: .58rem; }
+  .a11y-toggle,
+  #epd-toggle {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 600px) {
+  .a11y-panel { width: 100vw; }
   #epd-panel { width: 100vw; max-width: 100vw; }
 }
 
