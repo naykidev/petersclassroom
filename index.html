@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400&display=swap&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=story-caption-4">
+  <link rel="stylesheet" href="styles.css?v=contact-layout-1">
   <script>document.documentElement.classList.add('js');</script>
   <script type="application/ld+json">
   {
@@ -333,25 +333,24 @@
     <!-- CONTACT -->
     <section class="notify" id="contact">
       <div class="wrap">
-        <div class="sec-head reveal">
-          <span class="eyebrow">Get in touch</span>
-          <h2>Email the people who <span class="accent">ship these tools.</span></h2>
-          <p>Bug reports, AccessFlow installs, Axol Work hiring questions, partnerships, or press. We usually reply within two business days.</p>
-        </div>
-
-        <div class="contact-grid">
-          <div class="contact-info reveal">
-            <h3>Direct</h3>
-            <p><a href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a></p>
-            <p class="contact-note">Typically within 2 business days.</p>
+        <div class="contact-layout">
+          <div class="contact-copy reveal">
+            <span class="eyebrow">Get in touch</span>
+            <h2>Email the people who <span class="accent">ship these tools.</span></h2>
+            <p class="contact-lede">Bug reports, AccessFlow installs, Axol Work hiring questions, partnerships, or press. We usually reply within two business days.</p>
+            <div class="contact-direct">
+              <span class="contact-direct-label">Direct</span>
+              <a class="contact-direct-email" href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a>
+              <p class="contact-note">Typically within 2 business days.</p>
+            </div>
           </div>
 
           <form class="contact-form reveal" id="contactForm" onsubmit="handleContactSubmit(event)" novalidate>
-            <div class="form-row">
+            <div class="form-row form-row--half">
               <label for="cf-name">Name</label>
               <input type="text" id="cf-name" name="name" required autocomplete="name" maxlength="80" />
             </div>
-            <div class="form-row">
+            <div class="form-row form-row--half">
               <label for="cf-email">Email</label>
               <input type="email" id="cf-email" name="email" required autocomplete="email" maxlength="120" />
             </div>
@@ -368,7 +367,7 @@
             </div>
             <div class="form-row">
               <label for="cf-message">Message</label>
-              <textarea id="cf-message" name="message" rows="4" required maxlength="2000" placeholder="Which product, what broke, or what you want to try."></textarea>
+              <textarea id="cf-message" name="message" rows="3" required maxlength="2000" placeholder="Which product, what broke, or what you want to try."></textarea>
             </div>
             <div class="contact-honeypot" aria-hidden="true">
               <label for="cf-website">Website (leave blank)</label>
