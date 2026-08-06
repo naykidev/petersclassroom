@@ -23,10 +23,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=axol-work-page-1">
+  <link rel="stylesheet" href="styles.css?v=axol-work-page-2">
   <script>document.documentElement.classList.add('js');</script>
   <style>
-    /* Axol Work: minimal page overrides; tokens from styles.css */
+    /* Axol Work: product-page overrides only; tokens + focus from styles.css */
     .aw-hero .hero-copy { max-width: 40rem; }
     .aw-hero-heading {
       display: flex;
@@ -41,6 +41,7 @@
       border-radius: 12px;
       flex: 0 0 auto;
     }
+    /* Match AccessFlow / section display hierarchy on homepage */
     .aw-hero-heading h1 {
       font-family: var(--font-display);
       font-size: clamp(2.35rem, 6vw, 3.75rem);
@@ -90,6 +91,8 @@
 
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+      .aw-hero-heading .demo-showcase-logo,
+      .work-preview-frame { transition: none !important; }
     }
     @media (max-width: 768px) {
       .aw-product-grid { grid-template-columns: 1fr; max-width: none; }
@@ -102,7 +105,7 @@
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <nav id="siteNav" aria-label="Main navigation">
-    <a href="/" class="nav-logo" aria-label="Axol Assist home">
+    <a href="index.html" class="nav-logo" aria-label="Axol Assist home">
       <span class="axol-mark" role="img" aria-label="Axol the axolotl"></span>
       <span><span class="nav-axolo">Axol</span> <span class="nav-assist">Assist</span></span>
     </a>
@@ -110,8 +113,8 @@
       <span class="nav-toggle-icon" aria-hidden="true"></span>
     </button>
     <ul class="nav-links" id="siteNavMenu">
-      <li><a href="/#demo">Products</a></li>
-      <li><a href="/#stories">Stories</a></li>
+      <li><a href="index.html#demo">Products</a></li>
+      <li><a href="index.html#stories">Stories</a></li>
       <li><a href="#contact" class="nav-cta">Get in touch</a></li>
     </ul>
   </nav>
@@ -126,11 +129,11 @@
             <img src="axol-work.png" alt="" class="demo-showcase-logo" width="56" height="56" />
             <h1>Axol <span class="accent">Work.</span></h1>
           </div>
-          <p class="hero-deck">Shifts ranked by accommodation fit. Inclusive hiring badges for employers who mean it. Scout, Express interest, and verify work history in one place.</p>
-          <p class="hero-tagline">Prospects set needs once (quiet space, seated breaks, written instructions, flexible starts, and more), then browse listings with badges like <span class="aw-fit">3 of 4 needs met</span>. Recruiters tag what each shift can support. Not another job board with accommodations buried in “other.”</p>
+          <p class="hero-deck">Shifts ranked by how many of your accommodations they meet—not by keyword luck or a buried “other” box.</p>
+          <p class="hero-tagline">Prospects set needs once (quiet space, seated breaks, written instructions, flexible starts, and more), then browse listings with badges like <span class="aw-fit">3 of 4 needs met</span>. Recruiters tag what each shift can support. Inclusive hiring badges mark employers who mean it. Scout, Express interest, and verify work history in one place.</p>
           <div class="hero-links">
-            <a href="/demo" class="hero-cta-primary">Open live preview</a>
-            <a href="/work/" class="hero-cta-secondary">Join / Log in</a>
+            <a href="/demo" class="hero-cta-primary">Open fit-ranked preview</a>
+            <a href="/work/" class="hero-cta-secondary">Join as Prospect or Recruiter</a>
           </div>
         </div>
       </div>
@@ -143,11 +146,11 @@
             <span class="eyebrow">Product showcase</span>
             <div class="demo-showcase-heading">
               <img src="axol-work.png" alt="" class="demo-showcase-logo" width="56" height="56" />
-              <h2 id="demo-work-h">See <span class="accent">Axol Work</span> in the browser.</h2>
+              <h2 id="demo-work-h">Try <span class="accent">Axol Work.</span></h2>
             </div>
           </div>
           <div class="demo-showcase-copy">
-            <p>Four surfaces from the live app. Pick a pillar below: description on the left, website preview on the right.</p>
+            <p>Four surfaces from the live app. Pick a pillar below: accommodation-fit ranking, mentorship by shared experience, private needs by default, and Recruiters Axol Assist has verified.</p>
             <p class="demo-showcase-note">Prospects browse fit-ranked shifts, find mentorship by shared experience, keep accommodation needs private by default, and trust Recruiters Axol Assist has verified.</p>
           </div>
         </div>
@@ -198,8 +201,8 @@
         </div>
 
         <div class="demo-showcase-actions reveal">
-          <a href="/demo" class="demo-showcase-cta">Open live preview</a>
-          <a href="/work/" class="demo-showcase-cta">Join / Log in</a>
+          <a href="/demo" class="demo-showcase-cta">Open fit-ranked preview</a>
+          <a href="/work/" class="demo-showcase-cta">Join as Prospect or Recruiter</a>
         </div>
       </div>
     </section>
@@ -209,8 +212,8 @@
         <div class="audience-layout reveal">
           <div class="audience-lead">
             <span class="eyebrow">Who it's for</span>
-            <h2 id="for-whom-h">Two lanes. <span class="accent">One app.</span></h2>
-            <p class="audience-lead-text">Choose Prospect or Recruiter after signup. Same Axol Work, different tools and vocabulary.</p>
+            <h2 id="for-whom-h">Prospects browse by fit. Recruiters <span class="accent">tag supports.</span></h2>
+            <p class="audience-lead-text">Choose Prospect or Recruiter after signup. Same Axol Work account model—different tools and vocabulary for each lane.</p>
           </div>
           <div class="audience-stack">
             <div class="audience-row">
@@ -239,24 +242,24 @@
         </div>
         <div class="principles-grid">
           <div class="principle reveal">
-            <span class="principle-num">1</span>
+            <span class="principle-num">01</span>
             <h3>Name how you work</h3>
             <p>Experience, city, availability, and needs: quiet space, seated breaks, written instructions, flexible starts, predictable routines, lifting limits. Needs are private or profile-visible; you choose.</p>
           </div>
           <div class="principle reveal">
-            <span class="principle-num">2</span>
+            <span class="principle-num">02</span>
             <h3>Browse by fit, not keyword luck</h3>
             <p>Open shifts rise when they cover more of your needs. Badges like <span class="aw-fit">3 of 4 needs met</span> show before you open the card. Inclusive employers above the feed are Recruiters who offer supports and want to hire you, even if they don’t have an open listing today.</p>
           </div>
           <div class="principle reveal">
-            <span class="principle-num">3</span>
+            <span class="principle-num">03</span>
             <h3>Apply with a visible trail</h3>
             <p>Read the shift, apply, then watch status move. Message the Recruiter anytime. Withdraw while status is still submitted.</p>
           </div>
           <div class="principle reveal">
-            <span class="principle-num">4</span>
+            <span class="principle-num">04</span>
             <h3>Get verified, leave a review</h3>
-            <p>Add a past job and ask that Recruiter to confirm it. Confirmation unlocks a Verified badge and a short, tag-based review of the workplace (for example, accommodations honored, pay on time).</p>
+            <p>Add a past job and ask that Recruiter to confirm it. Confirmation gives you a Verified badge and a short, tag-based review of the workplace (for example, accommodations honored, pay on time).</p>
           </div>
         </div>
       </div>
@@ -267,7 +270,7 @@
         <div class="sec-head reveal">
           <span class="eyebrow">For Recruiters</span>
           <h2 id="recruiters-h">Post supports on the shift, <span class="accent">not in a sidebar PDF.</span></h2>
-          <p>Company page, listings, applicants, and verification in the browser.</p>
+          <p>Company page, tagged listings, applicants, and work-history confirmation—without burying accommodations in a PDF.</p>
         </div>
         <div class="principles-grid">
           <div class="principle reveal">
@@ -320,8 +323,8 @@
       <div class="wrap">
         <div class="sec-head reveal">
           <span class="eyebrow">Built for this audience</span>
-          <h2 id="a11y-h">An app you’d trust for <span class="accent">accessible work.</span></h2>
-          <p>We build toward WCAG 2.1 AA because Prospects and Recruiters here depend on the interface, not a separate “accessible mode.”</p>
+          <h2 id="a11y-h">WCAG-minded UI for people <span class="accent">who need the job to fit.</span></h2>
+          <p>We build toward WCAG 2.1 AA because Prospects and Recruiters here depend on the interface itself—not a separate “accessible mode.”</p>
         </div>
         <div class="principles-grid">
           <div class="principle reveal">
@@ -352,31 +355,51 @@
       <div class="wrap">
         <div class="contact-layout">
           <div class="contact-copy reveal">
-            <span class="eyebrow">Get started</span>
-            <h2 id="contact-h">Open the preview or <span class="accent">create an account.</span></h2>
-            <p class="contact-lede">Free email signup. Choose Prospect or Recruiter once, finish short onboarding, then browse by fit or post tagged shifts.</p>
+            <span class="eyebrow">Start with fit</span>
+            <h2 id="contact-h">Browse shifts ranked by <span class="accent">needs met.</span></h2>
+            <p class="contact-lede">Open the fit-ranked preview to try “needs met” badges without signing up, or create a free Prospect / Recruiter account and finish short onboarding. Questions about Inclusive hiring, Scout, or work-history verification? Email us.</p>
             <p class="aw-cta-wrap">
-              <a href="/demo" class="hero-cta-primary">Open live preview</a>
+              <a href="/demo" class="hero-cta-primary">Open fit-ranked preview</a>
             </p>
-            <p class="aw-cta-secondary"><a href="/work/" class="hero-link">Join / Log in</a></p>
+            <p class="aw-cta-secondary"><a href="/work/" class="hero-link">Join as Prospect or Recruiter</a></p>
             <div class="contact-direct">
-              <span class="contact-direct-label">Questions or partnerships</span>
+              <span class="contact-direct-label">Direct</span>
               <a class="contact-direct-email" href="mailto:axolassist.business@gmail.com">axolassist.business@gmail.com</a>
               <p class="contact-note">Typically within 2 business days.</p>
             </div>
           </div>
 
-          <div class="contact-panel reveal">
-            <h3>What you can do today</h3>
-            <ul class="contact-list">
-              <li><strong>Prospects:</strong> browse by fit, apply, track status, withdraw</li>
-              <li><strong>Prospects:</strong> Express interest, request verification, leave reviews</li>
-              <li><strong>Recruiters:</strong> post tagged shifts, review applicants, Scout</li>
-              <li><strong>Recruiters:</strong> confirm work history and receive reviews</li>
-              <li><strong>Everyone:</strong> message, post, join groups, Reach out to peers</li>
-            </ul>
-            <a href="/demo" class="hero-cta-primary">Explore Axol Work</a>
-          </div>
+          <form class="contact-form reveal" id="contactForm" onsubmit="handleContactSubmit(event)" novalidate>
+            <div class="form-row form-row--half">
+              <label for="cf-name">Name</label>
+              <input type="text" id="cf-name" name="name" required autocomplete="name" maxlength="80" />
+            </div>
+            <div class="form-row form-row--half">
+              <label for="cf-email">Email</label>
+              <input type="email" id="cf-email" name="email" required autocomplete="email" maxlength="120" />
+            </div>
+            <div class="form-row">
+              <label for="cf-role">I am a...</label>
+              <select id="cf-role" name="role" required>
+                <option value="">Select an option</option>
+                <option value="Prospect looking for inclusive shifts">Prospect looking for inclusive shifts</option>
+                <option value="Recruiter / hiring manager">Recruiter / hiring manager</option>
+                <option value="Disability employment org">Disability employment org</option>
+                <option value="Partner / press">Partner / press</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="cf-message">Message</label>
+              <textarea id="cf-message" name="message" rows="3" required maxlength="2000" placeholder="Fit ranking question, Inclusive hiring setup, Scout / verification issue, or what you want to try in Axol Work."></textarea>
+            </div>
+            <div class="contact-honeypot" aria-hidden="true">
+              <label for="cf-website">Website (leave blank)</label>
+              <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+            <button type="submit">Send message</button>
+            <p class="form-status" id="formStatus" aria-live="polite" role="status"></p>
+          </form>
         </div>
       </div>
     </section>
@@ -386,7 +409,7 @@
   <footer role="contentinfo">
     <div class="wrap footer-grid">
       <div class="footer-brand-col">
-        <a href="/" class="footer-brand">
+        <a href="index.html" class="footer-brand">
           <span class="axol-mark" aria-hidden="true"></span>
           Axol Assist
         </a>
@@ -403,7 +426,7 @@
       <div class="footer-col">
         <h3 class="footer-col-title">Company</h3>
         <ul class="footer-links">
-          <li><a href="/#why">About</a></li>
+          <li><a href="index.html#why">About</a></li>
           <li><a href="#contact">Contact</a></li>
           <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
@@ -411,8 +434,8 @@
       <div class="footer-col">
         <h3 class="footer-col-title">Axol Work</h3>
         <ul class="footer-links">
-          <li><a href="/demo">Live preview</a></li>
-          <li><a href="/work/">Join / Log in</a></li>
+          <li><a href="/demo">Fit-ranked preview</a></li>
+          <li><a href="/work/">Join as Prospect or Recruiter</a></li>
         </ul>
       </div>
     </div>
