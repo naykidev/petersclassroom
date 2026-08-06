@@ -60,7 +60,7 @@ export function AppShell() {
           className="h-9 w-9 rounded-full"
           aria-hidden="true"
         />
-        <span className="text-headline text-fg">Axol Work</span>
+        <span className="font-display text-headline text-fg">Axol Work</span>
       </div>
 
       <div className="flex flex-col gap-1">
@@ -123,7 +123,7 @@ export function AppShell() {
           <div className="pointer-events-none absolute inset-0 bg-brand-tint" aria-hidden />
           <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
             <p className="text-sm font-medium text-fg">
-              You’re previewing Axol Work. Look around freely. Signing up unlocks applying, posting, and messaging.
+              Fit-ranked preview of Axol Work. Browse shifts, employers, and mentorship. An account is required to apply, post, message, or Scout.
             </p>
             <div className="flex flex-wrap items-center gap-2">
               <div
@@ -162,7 +162,7 @@ export function AppShell() {
                   window.location.assign(import.meta.env.BASE_URL)
                 }}
               >
-                Sign up / Log in
+                Join as Prospect or Recruiter
               </Button>
             </div>
           </div>
@@ -191,7 +191,7 @@ export function AppShell() {
           className="h-7 w-7 rounded-full"
           aria-hidden="true"
         />
-        <span className="text-headline flex-1">Axol Work</span>
+        <span className="font-display text-headline flex-1">Axol Work</span>
         {a11yButton}
       </header>
 

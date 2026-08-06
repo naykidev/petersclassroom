@@ -93,7 +93,7 @@ export const usePreviewStore = create<PreviewState>((set, get) => ({
     })),
   exit: () => set({ active: false, signupOpen: false, signupReason: '' }),
   setRole: (role) => set({ role }),
-  requireAccount: (reason = 'Create a free account to continue.') => {
+  requireAccount: (reason = 'Join free as a Prospect or Recruiter to continue.') => {
     if (!get().active) return false
     set({ signupOpen: true, signupReason: reason })
     return true

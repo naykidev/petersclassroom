@@ -14,11 +14,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants: Record<Variant, string> = {
   primary:
-    'bg-brand text-brand-fg shadow-brand-glow hover:brightness-110 active:brightness-95 active:scale-[0.98]',
+    'bg-brand text-brand-fg hover:bg-brand-deep active:brightness-95',
   secondary:
-    'bg-muted text-fg border border-border hover:bg-border/60 active:scale-[0.98]',
-  ghost: 'bg-transparent text-fg hover:bg-muted active:scale-[0.98]',
-  danger: 'bg-danger text-white hover:brightness-110 active:brightness-95 active:scale-[0.98]',
+    'bg-muted text-fg border border-border hover:bg-border/60',
+  ghost: 'bg-transparent text-fg hover:bg-muted',
+  danger: 'bg-danger text-white hover:brightness-110 active:brightness-95',
 }
 
 const sizes: Record<Size, string> = {
@@ -47,7 +47,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className={cn(
         'inline-flex items-center justify-center rounded-btn font-semibold transition',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-page',
-        'disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
         variants[variant],
         sizes[size],
         fullWidth && 'w-full',

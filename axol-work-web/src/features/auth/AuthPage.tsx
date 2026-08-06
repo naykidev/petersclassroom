@@ -142,9 +142,9 @@ export function AuthPage() {
             className="mx-auto mb-3 h-14 w-14 rounded-full"
             aria-hidden="true"
           />
-          <h1 className="text-title-2 text-fg">Axol Work</h1>
+          <h1 className="font-display text-title-2 text-fg">Axol Work</h1>
           <p className="mt-1 text-sm text-fg-muted">
-            Accessibility-first work and community
+            Shifts ranked by accommodation fit
           </p>
         </div>
 
@@ -170,14 +170,14 @@ export function AuthPage() {
             {mode === 'login'
               ? 'Log in'
               : mode === 'signup'
-                ? 'Create your account'
+                ? 'Create your Prospect or Recruiter account'
                 : 'Reset your password'}
           </h2>
           <p className="mb-5 text-sm text-fg-muted">
             {mode === 'login'
-              ? 'Welcome back. Use your email or continue with a provider.'
+              ? 'Use email or a provider. You’ll return to fit-ranked shifts or your Recruiter dashboard.'
               : mode === 'signup'
-                ? 'Takes a minute. You will pick Prospect or Recruiter next.'
+                ? 'Takes a minute. Next you’ll choose Prospect (find work by fit) or Recruiter (post tagged shifts).'
                 : 'We will email you a link to choose a new password.'}
           </p>
 

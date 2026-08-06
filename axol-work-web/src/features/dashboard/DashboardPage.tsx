@@ -46,8 +46,8 @@ export function DashboardPage() {
   return (
     <div>
       <PageHeader
-        title={`Welcome${me.employerProfile?.companyName ? `, ${me.employerProfile.companyName}` : ''}`}
-        subtitle="Here’s an overview of your hiring activity"
+        title={me.employerProfile?.companyName ? me.employerProfile.companyName : 'Your company'}
+        subtitle="Open shifts, applicants waiting on you, and Inclusive hiring setup"
       />
 
       <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -56,17 +56,17 @@ export function DashboardPage() {
             <div className="flex h-10 w-10 items-center justify-center rounded-btn bg-brand-tint text-brand">
               <s.icon className="h-5 w-5" aria-hidden />
             </div>
-            <p className="text-title-2 text-fg">{s.value}</p>
+            <p className="font-display text-title-2 text-fg">{s.value}</p>
             <p className="text-sm text-fg-muted">{s.label}</p>
           </Card>
         ))}
       </div>
 
-      <h2 className="mb-3 text-headline text-fg">Quick actions</h2>
+      <h2 className="mb-3 text-headline text-fg">Recruiter tools</h2>
       <div className="grid gap-4 sm:grid-cols-3">
-        <ActionCard icon={PlusSquare} title="Post a shift" desc="Create a new shift listing" onClick={() => navigate('/shifts')} />
+        <ActionCard icon={PlusSquare} title="Post a tagged shift" desc="Pay, hours, city, and accommodation tags" onClick={() => navigate('/shifts')} />
         <ActionCard icon={Inbox} title="Review applicants" desc={`${pendingApps} waiting`} onClick={() => navigate('/applicants')} />
-        <ActionCard icon={Building2} title="Company profile" desc="Edit details & verifications" onClick={() => navigate('/company')} />
+        <ActionCard icon={Building2} title="Company & Inclusive hiring" desc="Supports, verification requests" onClick={() => navigate('/company')} />
       </div>
     </div>
   )
@@ -93,7 +93,7 @@ function ActionCard({
         <p className="text-sm text-fg-muted">{desc}</p>
       </div>
       <Button variant="secondary" size="sm" onClick={onClick} className="mt-auto">
-        Open
+        Go
       </Button>
     </Card>
   )

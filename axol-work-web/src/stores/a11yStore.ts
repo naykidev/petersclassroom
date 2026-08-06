@@ -28,9 +28,9 @@ const DEFAULTS: A11yPrefs = {
 }
 
 const FONT_STACK: Record<A11yFont, string> = {
-  system: `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`,
-  atkinson: `'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, sans-serif`,
-  lexend: `'Lexend', -apple-system, BlinkMacSystemFont, sans-serif`,
+  system: `Verdana, Tahoma, Arial, Helvetica, sans-serif`,
+  atkinson: `'Atkinson Hyperlegible', Verdana, Tahoma, sans-serif`,
+  lexend: `'Lexend', Verdana, Tahoma, sans-serif`,
   opendyslexic: `'OpenDyslexic', Comic Sans MS, Arial, sans-serif`,
 }
 
@@ -137,7 +137,7 @@ export const useA11yStore = create<A11yState>((set, get) => ({
 }))
 
 export const A11Y_FONT_OPTIONS: { value: A11yFont; label: string; hint: string }[] = [
-  { value: 'system', label: 'System', hint: 'Default system font' },
+  { value: 'system', label: 'Default', hint: 'Verdana — matches Axol Assist site' },
   { value: 'atkinson', label: 'Atkinson', hint: 'Hyperlegible, clear letterforms' },
   { value: 'lexend', label: 'Lexend', hint: 'Designed for reading fluency' },
   { value: 'opendyslexic', label: 'OpenDyslexic', hint: 'Weighted bottoms for dyslexia' },

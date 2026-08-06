@@ -5,12 +5,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Brand pink accent. `brand` is the filled color that carries white text
-        // and hits WCAG AA >= 4.5:1 on its surface (light 184,36,98 / dark 199,51,115).
+        // Brand coral. `brand` fills with white text and hits WCAG AA >= 4.5:1.
         brand: {
           DEFAULT: 'rgb(var(--brand) / <alpha-value>)',
           fg: 'rgb(var(--brand-fg) / <alpha-value>)',
-          tint: 'rgb(var(--brand) / 0.15)', // soft ~15% tint for chips/badges/cards
+          deep: 'rgb(var(--brand-deep) / <alpha-value>)',
+          tint: 'rgb(var(--brand) / 0.12)',
         },
         // Neutral surface tokens (CSS-variable backed for light/dark).
         page: 'rgb(var(--page) / <alpha-value>)',
@@ -25,6 +25,10 @@ export default {
         danger: 'rgb(var(--danger) / <alpha-value>)',
         info: 'rgb(var(--info) / <alpha-value>)',
       },
+      fontFamily: {
+        display: ['var(--font-display)'],
+        ui: ['var(--a11y-font)'],
+      },
       spacing: {
         // Explicit scale: 4 / 8 / 12 / 16 / 24 / 32
         1: '4px',
@@ -34,19 +38,21 @@ export default {
         6: '24px',
         8: '32px',
       },
+      // Radii aligned with homepage (--r / --r-lg / --r-xl ≈ 4–8px)
       borderRadius: {
-        chip: '10px',
-        btn: '14px',
-        card: '16px',
+        chip: '6px',
+        btn: '8px',
+        card: '8px',
       },
       boxShadow: {
-        card: '0 2px 8px rgba(0,0,0,0.06)',
-        elevated: '0 4px 10px rgba(0,0,0,0.10)',
-        'brand-glow': '0 4px 8px rgb(var(--brand) / 0.35)',
+        // Homepage design system is intentionally flat (no glow).
+        card: 'none',
+        elevated: 'none',
+        'brand-glow': 'none',
       },
       fontSize: {
-        // title-2 for hero/stat numbers, bold by default
-        'title-2': ['28px', { lineHeight: '34px', fontWeight: '700' }],
+        // title-2 for page h1 — Arvo via font-display where applied
+        'title-2': ['28px', { lineHeight: '34px', fontWeight: '700', letterSpacing: '-0.02em' }],
         headline: ['17px', { lineHeight: '22px', fontWeight: '600' }],
         caption: ['12px', { lineHeight: '16px' }],
       },

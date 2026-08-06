@@ -17,19 +17,19 @@ export function SignupPromptModal() {
     <Modal
       open={signupOpen}
       onClose={closeSignup}
-      title="Create a free account"
+      title="Join to apply, post, or Scout"
       footer={
         <>
           <Button variant="ghost" onClick={closeSignup}>
-            Keep browsing
+            Keep browsing fit rankings
           </Button>
-          <Button onClick={goAuth}>Sign up / Log in</Button>
+          <Button onClick={goAuth}>Join as Prospect or Recruiter</Button>
         </>
       }
     >
       <p className="text-sm text-fg">{signupReason}</p>
       <p className="mt-2 text-sm text-fg-muted">
-        Preview lets you look around. Applying, posting, messaging, and scouting need an account.
+        This preview shows fit badges, Inclusive hiring, and mentorship. Applying for shifts, posting tagged listings, messaging, and Scout / Express interest need a free account.
       </p>
       <p className="mt-3 text-sm text-fg-muted">
         <a

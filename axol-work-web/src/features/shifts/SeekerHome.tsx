@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { MapPin, DollarSign, Clock, Search, Sparkles, Check } from 'lucide-react'
+import { MapPin, DollarSign, Clock, Search, Check, CheckCircle2 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { usePreviewStore } from '@/stores/previewStore'
 import type { Shift, ShiftApplication } from '@/models'
@@ -130,7 +130,7 @@ export function SeekerHome() {
 
 function FitBadge({ fit }: { fit: { matched: number; total: number } }) {
   return (
-    <Badge tone={fit.matched > 0 ? 'success' : 'neutral'} icon={Sparkles}>
+    <Badge tone={fit.matched > 0 ? 'success' : 'neutral'} icon={fit.matched > 0 ? CheckCircle2 : Check}>
       {fit.matched} of {fit.total} needs met
     </Badge>
   )

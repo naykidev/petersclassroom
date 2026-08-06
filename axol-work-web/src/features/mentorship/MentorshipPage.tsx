@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, MessageSquare, BadgeCheck } from 'lucide-react'
+import { Handshake, MessageSquare, BadgeCheck } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { usePreviewStore } from '@/stores/previewStore'
 import type { AppUser } from '@/models'
@@ -63,7 +63,7 @@ export function MentorshipPage() {
 
       {me.workHistoryTags.length === 0 ? (
         <EmptyState
-          icon={Sparkles}
+          icon={Handshake}
           title="Add your experience first"
           message="Add work-history tags to your profile to find mentors and peers."
           action={<Button onClick={() => navigate('/profile')}>Edit profile</Button>}
@@ -71,7 +71,7 @@ export function MentorshipPage() {
       ) : !candidates ? (
         <Spinner label="Finding matches" />
       ) : matches.length === 0 ? (
-        <EmptyState icon={Sparkles} title="No matches yet" message="Check back as more people join." />
+        <EmptyState icon={Handshake} title="No matches yet" message="Check back as more people join." />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {matches.map(({ user: u, shared }) => {

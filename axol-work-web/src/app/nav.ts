@@ -12,7 +12,7 @@ import {
   UsersRound,
   User,
   Settings,
-  Sparkles,
+  Handshake,
   type LucideIcon,
 } from 'lucide-react'
 import type { UserRole } from '@/models'
@@ -46,7 +46,7 @@ const shared: NavItem[] = [
   { to: '/messages', label: 'Messages', icon: Mail, badge: 'messages' },
   { to: '/notifications', label: 'Notifications', icon: Bell, badge: 'notifications' },
   { to: '/groups', label: 'Groups', icon: UsersRound },
-  { to: '/mentorship', label: 'Mentorship', icon: Sparkles },
+  { to: '/mentorship', label: 'Mentorship', icon: Handshake },
   { to: '/settings', label: 'Settings', icon: Settings },
 ]
 

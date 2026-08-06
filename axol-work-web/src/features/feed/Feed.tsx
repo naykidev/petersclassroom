@@ -58,7 +58,7 @@ export function Feed({
           <EmptyState
             icon={MessageSquareText}
             title="No posts yet"
-            message="Be the first to share something."
+            message="No posts yet. Mentorship and Inclusive employers are still available while you browse."
           />
         ) : (
           visible.map((p) => <PostCard key={p.id} post={p} />)
@@ -104,8 +104,8 @@ function Composer({
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={3}
-            placeholder="Share something with the community…"
-            className="w-full resize-y rounded-btn border border-border bg-page px-3 py-2 text-fg focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand"
+            placeholder="Ask about accommodations, share a shift tip, or Reach out to peers…"
+            className="w-full resize-y rounded-btn border border-border bg-page px-3 py-2 text-fg focus:outline-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-brand"
           />
           <div className="mt-3 flex items-center justify-between">
             {!groupID ? (

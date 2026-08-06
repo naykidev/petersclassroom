@@ -66,7 +66,7 @@ export function EmployerShiftsPage() {
           title="No shifts yet"
           message={
             isGuest
-              ? 'Preview mode. Sign up as a Recruiter to post real shifts.'
+              ? 'Preview as a Recruiter. Join to post shifts with accommodation tags.'
               : 'Post your first shift to start receiving applicants.'
           }
           action={<Button onClick={() => openForm('new')}>Post a shift</Button>}
