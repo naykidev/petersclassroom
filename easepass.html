@@ -362,7 +362,7 @@
           <div class="sec-head">
             <span class="eyebrow">Surfer stories</span>
             <h2 id="stories-h">How people use Accessibility Surfer in real <span class="accent">browsing.</span></h2>
-            <p>Real moments with dwell clicking, reading mode, and text controls. Every story is reviewed before it appears here. Share how Surfer helped, or what still broke, so we can keep shipping tools that matter.</p>
+            <p>Real moments with Accessibility Surfer: dwell, reading mode, and text controls. These stories are separate from the homepage feed. Every submission is reviewed before it appears here.</p>
           </div>
           <a href="#share-story" class="stories-share-jump">Share yours</a>
         </div>
@@ -407,12 +407,12 @@
             <fieldset class="story-tags">
               <legend>Context <span class="label-optional">(up to 3, optional)</span></legend>
               <div class="story-tag-options">
-                <label class="story-tag"><input type="checkbox" name="tag" value="visual" /> Visual</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="dwell" /> Dwell clicking</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="reading-mode" /> Reading mode</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="text-controls" /> Text controls</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="youtube" /> YouTube</label>
                 <label class="story-tag"><input type="checkbox" name="tag" value="motor-keyboard" /> Motor &amp; Keyboard</label>
-                <label class="story-tag"><input type="checkbox" name="tag" value="screen-reader" /> Screen Reader</label>
-                <label class="story-tag"><input type="checkbox" name="tag" value="forms-inputs" /> Forms &amp; Inputs</label>
-                <label class="story-tag"><input type="checkbox" name="tag" value="color-contrast" /> Color &amp; Contrast</label>
-                <label class="story-tag"><input type="checkbox" name="tag" value="cognitive-focus" /> Cognitive &amp; Focus</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="visual" /> Visual</label>
               </div>
               <div class="story-tag-custom">
                 <label class="sr-only" for="story-tag-custom">Add a custom tag</label>
@@ -670,7 +670,8 @@
   <script src="site-config.js"></script>
   <script src="surfer-demo.js"></script>
   <script src="script.js"></script>
-  <script src="barrier-stories.js?v=story-arrows-3"></script>
+  <script>window.AXOL_STORIES = { collection: 'surferStories' };</script>
+  <script src="barrier-stories.js?v=surfer-stories-1"></script>
   <script>
   (function () {
     var nav = document.getElementById('siteNav');

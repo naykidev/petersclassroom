@@ -1,9 +1,13 @@
 /**
  * Barrier stories — card carousel + moderated Firestore submissions.
- * Collection: barrierStories (axol-work). Public create; approved-only read.
+ * Collection: barrierStories or surferStories (via window.AXOL_STORIES.collection).
+ * Public create; approved-only read.
  */
 (function () {
   'use strict';
+
+  var COLLECTION =
+    (window.AXOL_STORIES && window.AXOL_STORIES.collection) || 'barrierStories';
 
   var STORY_TAGS = [
     { id: 'visual', label: 'Visual' },
@@ -25,6 +29,11 @@
     motor: 'Motor',
     vision: 'Vision',
     websites: 'Websites',
+    dwell: 'Dwell clicking',
+    'reading-mode': 'Reading mode',
+    'text-controls': 'Text controls',
+    youtube: 'YouTube',
+    fatigue: 'Fatigue',
   });
 
   var MAX_LEN = 240;
@@ -529,7 +538,7 @@
 
   function loadApproved(db) {
     return db
-      .collection('barrierStories')
+      .collection(COLLECTION)
       .where('approved', '==', true)
       .limit(40)
       .get()
@@ -557,7 +566,7 @@
   }
 
   function submitStory(db, payload) {
-    return db.collection('barrierStories').add({
+    return db.collection(COLLECTION).add({
       text: payload.text,
       name: payload.name,
       place: payload.place || '',

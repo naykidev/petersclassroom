@@ -125,6 +125,8 @@ export const COL = {
   userPrivate: 'userPrivate',
   /** Public marketing-site barrier stories (approved-only read). */
   barrierStories: 'barrierStories',
+  /** Accessibility Surfer page stories (separate from homepage barrierStories). */
+  surferStories: 'surferStories',
   /** Public marketing-site contact form (create-only; Console read). */
   contactMessages: 'contactMessages',
 } as const

@@ -336,6 +336,30 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // ── surferStories/{id} ────────────────────────────────────────────────
+    // Accessibility Surfer marketing page only. Same shape as barrierStories,
+    // separate collection so Homepage and Surfer rails never mix.
+    match /surferStories/{id} {
+      allow create: if request.resource.data.keys().hasOnly([
+          'text', 'name', 'place', 'tags', 'createdAt', 'approved'
+        ])
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 20
+        && request.resource.data.text.size() <= 240
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.name.size() <= 40
+        && request.resource.data.place is string
+        && request.resource.data.place.size() <= 60
+        && barrierStoryTagsOk()
+        && request.resource.data.approved == false
+        && request.resource.data.createdAt == request.time;
+
+      allow read: if resource.data.approved == true;
+
+      allow update, delete: if false;
+    }
+
     // ── contactMessages/{id} ──────────────────────────────────────────────
     // Public marketing-site contact form (homepage / product pages).
     // Create-only; read in Firebase Console. No public list/get.
