@@ -281,7 +281,7 @@
     </button>
     <ul class="nav-links" id="siteNavMenu">
       <li><a href="/#demo">Products</a></li>
-      <li><a href="/#stories">Stories</a></li>
+      <li><a href="#stories">Stories</a></li>
       <li><a href="#contact" class="nav-cta">Get in touch</a></li>
     </ul>
   </nav>
@@ -356,28 +356,78 @@
       </div>
     </section>
 
-    <section class="audiences" id="for-whom" aria-labelledby="for-whom-h">
+    <section class="barrier-stories" id="stories" aria-labelledby="stories-h">
       <div class="wrap">
-        <div class="audience-layout reveal">
-          <div class="audience-lead">
-            <span class="eyebrow">Who it's for</span>
-            <h2 id="for-whom-h">Built for people who browse <span class="accent">differently.</span></h2>
-            <p class="audience-lead-text">You don't need a diagnosis. If the default web costs you extra effort (physically, visually, or mentally). Surfer is for you.</p>
+        <div class="stories-head reveal">
+          <div class="sec-head">
+            <span class="eyebrow">Surfer stories</span>
+            <h2 id="stories-h">How people use Accessibility Surfer in real <span class="accent">browsing.</span></h2>
+            <p>Real moments with dwell clicking, reading mode, and text controls. Every story is reviewed before it appears here. Share how Surfer helped, or what still broke, so we can keep shipping tools that matter.</p>
           </div>
-          <div class="audience-stack">
-            <div class="audience-row">
-              <h3>Mobility, tremors &amp; pain</h3>
-              <p>ALS, MS, cerebral palsy, spinal cord injury, essential tremor, RSI, chronic fatigue, or a temporary injury. When clicking is painful or unreliable, hover-to-click on every site, with dwell times that remember how you work.</p>
-            </div>
-            <div class="audience-row">
-              <h3>Low vision, dyslexia &amp; ADHD</h3>
-              <p>Change fonts, size, spacing, and contrast on any page. Open reading mode to cut ads and sidebars. Less squinting, less losing your place, less giving up mid-article.</p>
-            </div>
-            <div class="audience-row">
-              <h3>Eye gaze, head tracking &amp; fatigue</h3>
-              <p>Head trackers, eye gaze, mouth sticks, joysticks, or anyone tired of fighting tiny targets after a long day. If your pointer moves but clicks don't always land, Surfer closes that gap.</p>
-            </div>
+          <a href="#share-story" class="stories-share-jump">Share yours</a>
+        </div>
+      </div>
+
+      <div class="stories-rail" data-stories-rail hidden>
+        <div class="mobile-story-carousel" data-mobile-carousel>
+          <div class="story-carousel-stage">
+            <div class="stories-track is-flip" id="storiesTrackMobile" tabindex="0" aria-roledescription="carousel" aria-label="Accessibility Surfer stories"></div>
           </div>
+          <div class="story-carousel-nav" id="storyCarouselNav" hidden>
+            <button type="button" class="story-carousel-arrow" id="storyCarouselPrev" aria-label="Previous story">
+              <span aria-hidden="true">‹</span>
+            </button>
+            <div class="story-carousel-dots" id="storyCarouselDots" role="tablist" aria-label="Story slides"></div>
+            <button type="button" class="story-carousel-arrow" id="storyCarouselNext" aria-label="Next story">
+              <span aria-hidden="true">›</span>
+            </button>
+          </div>
+        </div>
+        <div class="stories-track" id="storiesTrack" tabindex="0" aria-label="Accessibility Surfer stories"></div>
+        <p class="story-carousel-caption">
+          <span class="story-carousel-caption__motion">Turn on Reduce Motion in the bottom-right accessibility settings to disable animation.</span><span class="story-carousel-caption__hover"> Hover mouse over a story to pause it.</span>
+        </p>
+      </div>
+
+      <div class="wrap">
+        <div class="stories-share reveal" id="share-story">
+          <h3>Share yours</h3>
+          <p class="stories-share-prompt">How did Surfer help, or what still broke on which site? Keep it sharp. 240 characters max.</p>
+
+          <form class="story-form" id="storyForm" novalidate>
+            <div class="form-row">
+              <label for="story-text">The moment</label>
+              <textarea id="story-text" name="text" rows="3" maxlength="240" required placeholder="What site, what hurt, and what Surfer changed (or didn’t)."></textarea>
+              <span class="story-char-count" id="storyCharCount" aria-live="polite">0 / 240</span>
+            </div>
+            <div class="form-row">
+              <label for="story-name">First name <span class="label-optional">(optional)</span></label>
+              <input type="text" id="story-name" name="name" maxlength="40" autocomplete="nickname" placeholder="Anonymous if blank" />
+            </div>
+            <fieldset class="story-tags">
+              <legend>Context <span class="label-optional">(up to 3, optional)</span></legend>
+              <div class="story-tag-options">
+                <label class="story-tag"><input type="checkbox" name="tag" value="visual" /> Visual</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="motor-keyboard" /> Motor &amp; Keyboard</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="screen-reader" /> Screen Reader</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="forms-inputs" /> Forms &amp; Inputs</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="color-contrast" /> Color &amp; Contrast</label>
+                <label class="story-tag"><input type="checkbox" name="tag" value="cognitive-focus" /> Cognitive &amp; Focus</label>
+              </div>
+              <div class="story-tag-custom">
+                <label class="sr-only" for="story-tag-custom">Add a custom tag</label>
+                <input type="text" id="story-tag-custom" maxlength="28" autocomplete="off" placeholder="Add a tag" />
+                <button type="button" class="story-tag-add" id="storyTagAdd">Add</button>
+              </div>
+            </fieldset>
+            <div class="contact-honeypot" aria-hidden="true">
+              <label for="story-website">Website (leave blank)</label>
+              <input type="text" id="story-website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+            <button type="submit">Submit story</button>
+            <p class="form-status" id="storyFormStatus" aria-live="polite" role="status"></p>
+            <p class="stories-mod-note">Every story is approved by Axol Assist team before publication.</p>
+          </form>
         </div>
       </div>
     </section>
@@ -620,6 +670,7 @@
   <script src="site-config.js"></script>
   <script src="surfer-demo.js"></script>
   <script src="script.js"></script>
+  <script src="barrier-stories.js?v=story-arrows-3"></script>
   <script>
   (function () {
     var nav = document.getElementById('siteNav');
