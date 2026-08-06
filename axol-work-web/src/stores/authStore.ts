@@ -244,7 +244,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   setRole: async (role) => {
     const uid = get().firebaseUser?.uid
     if (!uid) return
-    await updateDoc(userDoc(uid), { role })
+    if (role === 'employer') {
+      await updateDoc(userDoc(uid), {
+        role,
+        employerVerificationStatus: 'unverified',
+      })
+    } else {
+      await updateDoc(userDoc(uid), { role })
+    }
   },
 
   updateUser: async (patch) => {

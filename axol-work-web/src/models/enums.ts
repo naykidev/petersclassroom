@@ -21,6 +21,17 @@ export type PostVisibility = 'connections' | 'everyone'
 
 export type WorkHistoryStatus = 'pending' | 'verified' | 'declined'
 
+/**
+ * Recruiter (employer) trust status. Only Axol staff can set `verified` or
+ * `suspended` (Firestore rules). Self-service may move `unverified` → `pending`
+ * when onboarding finishes. Only `verified` Recruiters may post shifts.
+ */
+export type EmployerVerificationStatus =
+  | 'unverified'
+  | 'pending'
+  | 'verified'
+  | 'suspended'
+
 export type NotificationKind =
   | 'connectionRequest'
   | 'connectionAccepted'
@@ -52,4 +63,10 @@ export const WORK_HISTORY_STATUSES: WorkHistoryStatus[] = [
   'pending',
   'verified',
   'declined',
+]
+export const EMPLOYER_VERIFICATION_STATUSES: EmployerVerificationStatus[] = [
+  'unverified',
+  'pending',
+  'verified',
+  'suspended',
 ]

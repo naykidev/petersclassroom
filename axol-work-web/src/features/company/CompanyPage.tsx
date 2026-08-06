@@ -7,6 +7,7 @@ import { Avatar, Badge, Button, Card, Chip, Input, Modal, SectionHeader, Spinner
 import { InclusiveHiringBadge } from '@/components/InclusiveHiringBadge'
 import { fullDate } from '@/utils/format'
 import { isInclusiveHiringEmployer } from '@/utils/inclusiveHiring'
+import { canPostShifts, employerVerificationLabel } from '@/utils/employerVerification'
 import { EmployerReviewsList } from '@/features/reviews/EmployerReviewsList'
 import { respondToWorkHistory, subscribeEmployerVerificationRequests } from '@/features/workHistory/api'
 import { DEMO_VERIFICATION_REQUESTS } from '@/data/demoFixtures'
@@ -54,6 +55,11 @@ export function CompanyPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-title-2 text-fg">{profile?.companyName ?? me.displayName}</h1>
                 <Badge tone="brand" icon={Building2}>Recruiter</Badge>
+                {canPostShifts(me) ? (
+                  <Badge tone="success" icon={BadgeCheck}>Verified Recruiter</Badge>
+                ) : (
+                  <Badge tone="neutral">{employerVerificationLabel(me.employerVerificationStatus)}</Badge>
+                )}
                 {isInclusiveHiringEmployer(me) && <InclusiveHiringBadge />}
               </div>
               {profile?.workplaceAddress && (

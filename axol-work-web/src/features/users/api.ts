@@ -89,7 +89,7 @@ export async function getUsers(uids: string[]): Promise<AppUser[]> {
     const chunk = remote.slice(i, i + 30)
     if (!chunk.length) continue
     const snap = await getDocs(
-      query(usersCollection(), where(documentId(), 'in', chunk)),
+      query(usersCollection(), where(documentId(), 'in', chunk), limit(30)),
     )
     out.push(...snap.docs.map((d) => redactAccommodationsForViewer(d.data(), viewerUID)))
   }

@@ -23,7 +23,7 @@ const CHOICES: {
     role: 'employer',
     title: 'Recruiter',
     label: 'Hire people',
-    desc: 'Post shifts, Scout Prospects, review applicants, and build an inclusive, accessible workplace.',
+    desc: 'Set up your company and Inclusive hiring. Axol Assist verifies Recruiters before they can post shifts.',
     icon: Briefcase,
   },
 ]

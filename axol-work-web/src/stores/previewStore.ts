@@ -21,6 +21,7 @@ export function makeDemoUser(role: Exclude<UserRole, 'unassigned'>): AppUser {
       accommodationNeeds: [],
       blockedUIDs: [],
       hasCompletedEmployerProfile: true,
+      employerVerificationStatus: 'verified',
       employerProfile: {
         companyName: 'Axol Work Company',
         workplaceAddress: '123 Market St, San Francisco',

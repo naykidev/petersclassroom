@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react'
 import { Plus, MapPin, DollarSign, Clock, PlusSquare, Pencil } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { usePreviewStore } from '@/stores/previewStore'
+import { useToastStore } from '@/stores/toastStore'
 import type { Shift, ShiftStatus } from '@/models'
 import { Badge, Button, Card, Chip, EmptyState, Spinner } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
 import { shiftRange } from '@/utils/format'
+import { canPostShifts, employerVerificationLabel } from '@/utils/employerVerification'
 import { setShiftStatus, subscribeEmployerShifts } from './api'
 import { ShiftFormModal } from './ShiftFormModal'
 import { DEMO_EMPLOYER_SHIFTS } from '@/data/demoFixtures'
@@ -19,8 +21,10 @@ const STATUS_META: Record<ShiftStatus, { label: string; tone: 'success' | 'info'
 export function EmployerShiftsPage() {
   const { user, isGuest } = useAuthStore()
   const me = user!
+  const pushToast = useToastStore((s) => s.push)
   const [shifts, setShifts] = useState<Shift[] | null>(isGuest ? DEMO_EMPLOYER_SHIFTS : null)
   const [formShift, setFormShift] = useState<Shift | 'new' | null>(null)
+  const verified = canPostShifts(me) || isGuest
 
   useEffect(() => {
     if (isGuest) {
@@ -38,25 +42,52 @@ export function EmployerShiftsPage() {
     if (usePreviewStore.getState().requireAccount('Create a free account to post and manage shifts.')) {
       return
     }
+    if (shift === 'new' && !canPostShifts(me) && !isGuest) {
+      pushToast(
+        'Axol Assist must verify your Recruiter account before you can post shifts.',
+        'error',
+      )
+      setFormShift('new') // still open modal so they see the pending banner
+      return
+    }
     setFormShift(shift)
   }
 
   function changeStatus(id: string, status: ShiftStatus) {
     if (usePreviewStore.getState().requireAccount('Create a free account to manage shifts.')) return
-    void setShiftStatus(id, status)
+    void setShiftStatus(id, status).catch(() => {
+      pushToast(
+        navigator.onLine === false
+          ? 'You’re offline. Check your connection and try again.'
+          : 'Couldn’t update that shift. Try again.',
+        'error',
+      )
+    })
   }
 
   return (
     <div>
       <PageHeader
         title="Your shifts"
-        subtitle="Post and manage shifts"
+        subtitle={
+          verified
+            ? 'Post and manage shifts'
+            : `${employerVerificationLabel(me.employerVerificationStatus)} — Axol Assist reviews before you can post`
+        }
         action={
           <Button onClick={() => openForm('new')}>
             <Plus className="h-4 w-4" aria-hidden /> Post shift
           </Button>
         }
       />
+
+      {!verified && !isGuest && (
+        <p className="mb-4 rounded-card border border-warning/40 bg-warning/10 px-4 py-3 text-sm text-fg" role="status">
+          Your Recruiter account is {employerVerificationLabel(me.employerVerificationStatus).toLowerCase()}.
+          You can finish company setup and review applicants, but new shift listings stay locked until
+          Axol Assist marks you verified.
+        </p>
+      )}
 
       {!shifts ? (
         <Spinner label="Loading shifts" />
@@ -67,7 +98,9 @@ export function EmployerShiftsPage() {
           message={
             isGuest
               ? 'Preview as a Recruiter. Join to post shifts with accommodation tags.'
-              : 'Post your first shift to start receiving applicants.'
+              : verified
+                ? 'Post your first shift to start receiving applicants.'
+                : 'Once Axol Assist verifies your Recruiter account, you can post tagged shifts here.'
           }
           action={<Button onClick={() => openForm('new')}>Post a shift</Button>}
         />

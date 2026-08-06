@@ -7,6 +7,7 @@ import type { AppUser } from '@/models'
 import { Avatar, Badge, Button, Card, Chip, EmptyState, Spinner } from '@/components/ui'
 import { InclusiveHiringBadge } from '@/components/InclusiveHiringBadge'
 import { isInclusiveHiringEmployer } from '@/utils/inclusiveHiring'
+import { canPostShifts } from '@/utils/employerVerification'
 import { ReportModal } from '@/components/ReportModal'
 import { getUser, blockUser, unblockUser } from '@/features/users/api'
 import { getOrCreateConversation } from '@/features/messaging/api'
@@ -71,14 +72,19 @@ export function PublicProfilePage() {
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-title-2 text-fg">{displayName}</h1>
-                {profile.isVerifiedEmployed && (
+                {isEmployer && canPostShifts(profile) && (
                   <Badge tone="success" icon={BadgeCheck}>
-                    Verified
+                    Verified Recruiter
                   </Badge>
                 )}
                 {isEmployer && (
                   <Badge tone="brand" icon={Building2}>
                     Recruiter
+                  </Badge>
+                )}
+                {profile.isVerifiedEmployed && !isEmployer && (
+                  <Badge tone="success" icon={BadgeCheck}>
+                    Verified
                   </Badge>
                 )}
                 {isInclusiveHiringEmployer(profile) && <InclusiveHiringBadge />}

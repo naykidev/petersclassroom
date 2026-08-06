@@ -49,32 +49,22 @@ export function redactAccommodationsForViewer(
   viewerUID: string | undefined | null,
 ): AppUser {
   if (profile.uid === viewerUID) return profile
-  if (profile.role !== 'seeker') return profile
-  const visibility = profile.accommodationVisibility ?? 'private'
+  // Never expose another user's block list or onboarding draft to Network / profiles.
+  const base: AppUser = {
+    ...profile,
+    blockedUIDs: [],
+    seekerOnboarding: undefined,
+    email: undefined,
+  }
+  if (base.role !== 'seeker') return base
+  const visibility = base.accommodationVisibility ?? 'private'
   if (visibility === 'shared') {
-    // Never leak onboarding draft notes even when needs are shared.
-    return {
-      ...profile,
-      seekerOnboarding: profile.seekerOnboarding
-        ? {
-            ...profile.seekerOnboarding,
-            otherNotes: '',
-            selectedConstraints: profile.accommodationNeeds ?? [],
-          }
-        : undefined,
-    }
+    return base
   }
   return {
-    ...profile,
+    ...base,
     accommodationNeeds: [],
     accommodationTags: [],
-    seekerOnboarding: profile.seekerOnboarding
-      ? {
-          ...profile.seekerOnboarding,
-          otherNotes: '',
-          selectedConstraints: [],
-        }
-      : undefined,
   }
 }
 

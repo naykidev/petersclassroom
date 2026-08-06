@@ -1,4 +1,4 @@
-import type { UserRole } from './enums'
+import type { UserRole, EmployerVerificationStatus } from './enums'
 
 /**
  * users/{uid} — user doc: role + public profile + onboarding drafts.
@@ -70,6 +70,11 @@ export interface AppUser {
   /** Draft progress only — free-text notes / constraints are not kept here. */
   seekerOnboarding?: SeekerOnboardingDraft
   employerProfile?: EmployerProfile
+  /**
+   * Recruiter trust status. Absent/`unverified` until onboarding requests review
+   * (`pending`). Only Axol staff may set `verified` / `suspended`.
+   */
+  employerVerificationStatus?: EmployerVerificationStatus
 
   // Completion flags used by the route resolver
   hasCompletedSeekerProfile?: boolean
@@ -90,4 +95,6 @@ export type PublicProfile = Pick<
   | 'accommodationTags'
   | 'accommodationNeeds'
   | 'accommodationVisibility'
+  | 'employerVerificationStatus'
+  | 'employerProfile'
 >

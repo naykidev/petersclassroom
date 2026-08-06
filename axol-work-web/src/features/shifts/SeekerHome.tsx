@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { MapPin, DollarSign, Clock, Search, Check, CheckCircle2 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { useToastStore } from '@/stores/toastStore'
 import { usePreviewStore } from '@/stores/previewStore'
 import type { Shift, ShiftApplication } from '@/models'
 import { CITIES } from '@/models'
@@ -217,6 +218,13 @@ function ShiftDetailModal({
     try {
       await applyToShift(shift, { uid: me.uid, name: me.displayName })
       setJustApplied(true)
+      useToastStore.getState().push('Application submitted.', 'success')
+    } catch (e) {
+      const msg =
+        navigator.onLine === false
+          ? 'You’re offline. Check your connection and try again.'
+          : (e as Error)?.message || 'Couldn’t apply. Try again.'
+      useToastStore.getState().push(msg, 'error')
     } finally {
       setApplying(false)
     }

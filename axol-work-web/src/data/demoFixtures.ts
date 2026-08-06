@@ -49,6 +49,7 @@ export const DEMO_EMPLOYERS: AppUser[] = [
     accommodationNeeds: [],
     blockedUIDs: [],
     hasCompletedEmployerProfile: true,
+    employerVerificationStatus: 'verified',
     employerProfile: {
       companyName: 'Axol Work Factory',
       workplaceAddress: '88 Pier St, San Francisco',
@@ -72,6 +73,7 @@ export const DEMO_EMPLOYERS: AppUser[] = [
     accommodationNeeds: [],
     blockedUIDs: [],
     hasCompletedEmployerProfile: true,
+    employerVerificationStatus: 'verified',
     employerProfile: {
       companyName: 'Axol Work Kitchen',
       workplaceAddress: '210 Grove Ave, Oakland',

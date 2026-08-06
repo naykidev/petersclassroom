@@ -68,6 +68,8 @@ export function EmployerOnboarding() {
       headline: v.companyName,
       employerProfile: v,
       hasCompletedEmployerProfile: true,
+      // Request Axol Assist review — staff must set verified before posting.
+      employerVerificationStatus: 'pending',
     })
   })
 
@@ -78,6 +80,7 @@ export function EmployerOnboarding() {
           <h1 className="text-title-2 text-fg">Set up your company</h1>
           <p className="mt-1 text-fg-muted">
             Tell Prospects what you offer and whether you’re hiring with disability inclusion in mind.
+            After setup, Axol Assist reviews your Recruiter account before you can post shifts.
           </p>
         </div>
 
