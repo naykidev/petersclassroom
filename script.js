@@ -435,11 +435,11 @@ revealTargets.forEach(el => {
       `<div>` +
         `<img src="assistsurfer.png" alt="" class="epd-logo" aria-hidden="true" />` +
         `<div class="epd-title">Accessibility <span class="accent">Surfer</span></div>` +
-        `<div class="epd-tagline">Hover to click. No button needed.</div>` +
+        `<div class="epd-tagline">Hover to click. No button needed. Works best on desktop.</div>` +
       `</div>` +
       `<button class="epd-close" type="button" aria-label="Close popup preview">✕</button>` +
     `</div>` +
-    `<p class="epd-note">Preview of the extension's toolbar popup. <a href="${(window.AXOL_SITE && window.AXOL_SITE.chromeWebStoreUrl) || 'https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn'}" data-chrome-install rel="noopener noreferrer">Add to Chrome</a> to use these controls for real.</p>` +
+    `<p class="epd-note">Preview of the extension's toolbar popup. Dwell clicking works best on desktop. <a href="${(window.AXOL_SITE && window.AXOL_SITE.chromeWebStoreUrl) || 'https://chromewebstore.google.com/detail/accessibility-surfer/pccmbliammnfaklpblehkonmhcdnedhn'}" data-chrome-install rel="noopener noreferrer">Add to Chrome</a> to use these controls for real.</p>` +
 
     `<h3 class="epd-section-heading">YouTube</h3>` +
     `<div class="epd-toggle-row">` +
