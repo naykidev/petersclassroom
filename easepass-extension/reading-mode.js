@@ -304,6 +304,11 @@
   }
 
   function findRoot() {
+    try {
+      // Marketing demos (and embeds) can pin extraction to a specific node.
+      var custom = document.querySelector('[data-reading-mode-root]');
+      if (custom && wordCount(custom) > 10) return custom;
+    } catch (_) {}
     for (let i = 0; i < ROOT_SELECTORS.length; i++) {
       let node = null;
       try { node = document.querySelector(ROOT_SELECTORS[i]); } catch (_) {}

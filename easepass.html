@@ -255,6 +255,119 @@
       color: var(--muted);
     }
 
+    .ep-rm-shell { max-width: 42rem; }
+    .ep-rm-mock {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--paper);
+      margin-bottom: 1.1rem;
+    }
+    .ep-rm-mock-chrome {
+      display: flex;
+      gap: .35rem;
+      align-items: center;
+      padding: .55rem .75rem;
+      background: var(--paper-2);
+      border-bottom: 1px solid var(--line);
+      font-family: var(--mono, ui-monospace, monospace);
+      font-size: .72rem;
+      color: var(--muted);
+    }
+    .ep-rm-mock-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--line-strong);
+      flex: 0 0 auto;
+    }
+    .ep-rm-mock-dot:nth-child(1) { background: #e8a0a0; }
+    .ep-rm-mock-dot:nth-child(2) { background: #e8d4a0; }
+    .ep-rm-mock-dot:nth-child(3) { background: #a8d4a8; }
+    .ep-rm-mock-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 7.5rem;
+      gap: 0;
+    }
+    .ep-rm-article {
+      padding: 1rem 1.1rem 1.15rem;
+      min-width: 0;
+    }
+    .ep-rm-article h3 {
+      margin: 0 0 .65rem;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--ink);
+    }
+    .ep-rm-article .ep-rm-byline {
+      margin: 0 0 .85rem;
+      font-size: .78rem;
+      color: var(--muted);
+    }
+    .ep-rm-article p {
+      margin: 0 0 .7rem;
+      font-size: .9rem;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+    .ep-rm-article p:last-child { margin-bottom: 0; }
+    .ep-rm-aside {
+      padding: .75rem .55rem;
+      background: var(--paper-2);
+      border-left: 1px solid var(--line);
+      font-size: .68rem;
+      line-height: 1.35;
+      color: var(--muted);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .ep-rm-aside span {
+      display: block;
+      padding: .45rem .35rem;
+      margin-bottom: .4rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: .72rem;
+      color: var(--ink-soft);
+    }
+    .ep-rm-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+      align-items: center;
+    }
+    .ep-rm-actions .hero-cta-primary,
+    .ep-rm-actions .hero-cta-secondary {
+      cursor: pointer;
+      font: inherit;
+    }
+    .ep-rm-status {
+      margin: .85rem 0 0;
+      min-height: 1.3em;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .ep-rm-status.is-active { color: #0f6b4c; }
+
+    @media (max-width: 640px) {
+      .ep-rm-mock-body { grid-template-columns: 1fr; }
+      .ep-rm-aside {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        display: flex;
+        flex-wrap: wrap;
+        gap: .35rem;
+      }
+      .ep-rm-aside span { margin: 0; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .carousel-track { transition: none; }
     }
@@ -490,34 +603,47 @@
       </div>
     </section>
 
-    <section class="principles" id="reading-mode" aria-labelledby="reading-mode-h">
+    <section class="ep-dwell" id="reading-mode" aria-labelledby="reading-mode-h">
       <div class="wrap">
         <div class="sec-head reveal">
           <span class="eyebrow">Reading mode</span>
           <h2 id="reading-mode-h">When the page is <span class="accent">too much.</span></h2>
+          <p>Open Surfer’s reading mode on the sample page below. Sidebars and clutter drop away so you can focus on the article. Same overlay as the Chrome extension.</p>
         </div>
-        <div class="principles-grid">
-          <div class="principle reveal">
-            <span class="principle-num">01</span>
-            <h3>Just the article</h3>
-            <p>Cut pop-ups, nav bars, and sidebar noise. One column, your typography, your background.</p>
+
+        <div class="ep-dwell-shell ep-rm-shell reveal">
+          <div class="ep-rm-mock">
+            <div class="ep-rm-mock-chrome" aria-hidden="true">
+              <span class="ep-rm-mock-dot"></span>
+              <span class="ep-rm-mock-dot"></span>
+              <span class="ep-rm-mock-dot"></span>
+              <span>noisy-news.example / how-to-rest-your-eyes</span>
+            </div>
+            <div class="ep-rm-mock-body">
+              <article class="ep-rm-article" data-reading-mode-root>
+                <h3>How to rest your eyes online</h3>
+                <p class="ep-rm-byline">By a tired reader · 4 min read</p>
+                <p>Long pages stack ads, autoplay video, and newsletter prompts on every edge. Your eyes leave the sentence, find a blinking promo, and lose the place they were holding.</p>
+                <p>Reading mode pulls the article into one calm column. Type size, line height, and background follow controls you choose. Sidebars and site chrome stay behind the overlay.</p>
+                <p>Focus mode can highlight a single paragraph and advance when you are ready, or on dwell if pressing is hard. Fatigue compensation can grow size and spacing as you read farther down a long piece.</p>
+                <p>Hard words can show a simpler alternative on hover. Everything runs on your device. The page content never leaves the browser for this feature.</p>
+              </article>
+              <aside class="ep-rm-aside" aria-hidden="true">
+                Sponsored
+                <span>Buy larger monitors</span>
+                <span>Sign up for alerts</span>
+                Related
+                <span>10 browser hacks</span>
+              </aside>
+            </div>
           </div>
-          <div class="principle reveal">
-            <span class="principle-num">02</span>
-            <h3>One paragraph at a time</h3>
-            <p>Focus mode highlights a single block and advances when you're ready, or on dwell.</p>
+
+          <div class="ep-rm-actions">
+            <button type="button" class="hero-cta-primary" id="epRmToggle" aria-pressed="false">Try reading mode</button>
           </div>
-          <div class="principle reveal">
-            <span class="principle-num">03</span>
-            <h3>Fatigue compensation</h3>
-            <p>On long articles, size and spacing can grow as you read deeper without stopping to reopen settings.</p>
-          </div>
-          <div class="principle reveal">
-            <span class="principle-num">04</span>
-            <h3>Plain language on demand</h3>
-            <p>Hover a hard word for a simpler alternative. Runs on your device, offline.</p>
-          </div>
+          <p class="ep-rm-status" id="epRmStatus" aria-live="polite">Ready. Opens Surfer’s real reading mode overlay.</p>
         </div>
+        <p class="ep-dwell-tip reveal">Shortcut on this page: Alt+R. Close with Escape or the overlay’s close control. Focus mode, fatigue compensation, and plain-language tips live in the toolbar once reading mode is open.</p>
       </div>
     </section>
 
@@ -776,6 +902,33 @@
         window.SurferDemo.setDwellTime(3000);
       }
     });
+
+    var rmToggle = document.getElementById('epRmToggle');
+    var rmStatus = document.getElementById('epRmStatus');
+    function setRmUi(on) {
+      if (rmToggle) {
+        rmToggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+        rmToggle.textContent = on ? 'Close reading mode' : 'Try reading mode';
+      }
+      if (rmStatus) {
+        rmStatus.textContent = on
+          ? 'Reading mode is open. Use the overlay controls or press Escape to close.'
+          : 'Ready. Opens Surfer’s real reading mode overlay.';
+        rmStatus.classList.toggle('is-active', !!on);
+      }
+    }
+    if (rmToggle) {
+      rmToggle.addEventListener('click', function () {
+        if (!window.SurferDemo) return;
+        if (window.SurferDemo.readingModeActive && window.SurferDemo.readingModeActive()) {
+          window.SurferDemo.closeReadingMode();
+        } else {
+          window.SurferDemo.launchReadingMode();
+        }
+      });
+    }
+    window.addEventListener('easepass-rm-opened', function () { setRmUi(true); });
+    window.addEventListener('easepass-rm-closed', function () { setRmUi(false); });
   })();
   </script>
 
