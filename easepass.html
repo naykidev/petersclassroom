@@ -233,6 +233,28 @@
       max-width: 44rem;
     }
 
+    .ep-dwell {
+      padding: clamp(4.5rem, 9vw, 8rem) 0;
+      background: var(--paper-2);
+      border-bottom: 1px solid var(--line);
+    }
+    .ep-dwell .sec-head { max-width: 40rem; margin-bottom: 2rem; }
+    .ep-dwell-shell {
+      max-width: 36rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: clamp(1.25rem, 3vw, 1.75rem);
+    }
+    .ep-dwell-shell .dwell-playground { margin-top: 0; }
+    .ep-dwell-tip {
+      margin: 1rem 0 0;
+      max-width: 36rem;
+      font-size: .95rem;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .carousel-track { transition: none; }
     }
@@ -360,35 +382,30 @@
       </div>
     </section>
 
-    <section class="principles" id="how" aria-labelledby="how-h">
+    <section class="ep-dwell" id="how" aria-labelledby="how-h">
       <div class="wrap">
         <div class="sec-head reveal">
           <span class="eyebrow">How dwell works</span>
           <h2 id="how-h">A 3-second ring. <span class="accent">Then the click fires.</span></h2>
-          <p>You always see what Surfer is about to activate before it happens.</p>
+          <p>Hover a target below. Surfer’s countdown ring fills while you hold still — then the click fires. No mouse press needed.</p>
         </div>
-        <div class="principles-grid">
-          <div class="principle reveal">
-            <span class="principle-num">1</span>
-            <h3>Hover a real target</h3>
-            <p>Links, buttons, search fields, thumbnails — anything clickable. A ring appears on the control Surfer is tracking.</p>
-          </div>
-          <div class="principle reveal">
-            <span class="principle-num">2</span>
-            <h3>Hold through the countdown</h3>
-            <p>The ring fills while you stay still. Default is about three seconds; YouTube thumbnails and player controls can use separate times.</p>
-          </div>
-          <div class="principle reveal">
-            <span class="principle-num">3</span>
-            <h3>Surfer activates it</h3>
-            <p>At zero, the click fires: link opened, button pressed, or field focused — without you pressing the mouse.</p>
-          </div>
-          <div class="principle reveal">
-            <span class="principle-num">4</span>
-            <h3>Cancel anytime</h3>
-            <p>Move away, press Space, or open the popup. Dwell stops immediately.</p>
+
+        <div class="ep-dwell-shell reveal">
+          <div class="dwell-playground" id="dwellPlayground">
+            <p class="dwell-playground-hint">Dwell is on for this demo. Hold still on a control; move away or press Space to cancel.</p>
+            <div class="dwell-playground-targets">
+              <button type="button" class="dwell-target-btn" id="dwellDemoBtn">Open listing</button>
+              <a href="#dwell-feedback" class="dwell-target-link" id="dwellDemoLink">Read more</a>
+              <a href="#dwell-feedback" class="dwell-target-card" id="dwellDemoCard">
+                <strong>Weekend barista shift</strong>
+                <span>Harbor Cafe · tomorrow 9am</span>
+              </a>
+            </div>
+            <p class="dwell-playground-result is-empty" id="dwellDemoResult" aria-live="polite">Ready. Hold still on a target.</p>
+            <span id="dwell-feedback" class="sr-only" tabindex="-1">Dwell demo result updates above.</span>
           </div>
         </div>
+        <p class="ep-dwell-tip reveal">Same ring you get in the Chrome extension. YouTube can use separate times for thumbnails vs player controls; everywhere else uses the dwell time you set in the popup.</p>
       </div>
     </section>
 
@@ -629,48 +646,84 @@
     }
 
     var carousel = document.querySelector('[data-carousel]');
-    if (!carousel) return;
+    if (carousel) {
+      var track = carousel.querySelector('.carousel-track');
+      var slides = Array.prototype.slice.call(carousel.querySelectorAll('.carousel-slide'));
+      var dots = Array.prototype.slice.call(carousel.querySelectorAll('.carousel-dot'));
+      var prevBtn = carousel.querySelector('.carousel-prev');
+      var nextBtn = carousel.querySelector('.carousel-next');
+      var live = carousel.querySelector('.carousel-live');
+      var index = 0;
+      var total = slides.length;
 
-    var track = carousel.querySelector('.carousel-track');
-    var slides = Array.prototype.slice.call(carousel.querySelectorAll('.carousel-slide'));
-    var dots = Array.prototype.slice.call(carousel.querySelectorAll('.carousel-dot'));
-    var prevBtn = carousel.querySelector('.carousel-prev');
-    var nextBtn = carousel.querySelector('.carousel-next');
-    var live = carousel.querySelector('.carousel-live');
-    var index = 0;
-    var total = slides.length;
+      function goTo(i) {
+        index = (i + total) % total;
+        track.style.transform = 'translateX(-' + (index * 100) + '%)';
+        slides.forEach(function (slide, n) {
+          var active = n === index;
+          slide.setAttribute('aria-hidden', active ? 'false' : 'true');
+          slide.setAttribute('aria-label', (n + 1) + ' of ' + total);
+        });
+        dots.forEach(function (dot, n) {
+          var active = n === index;
+          dot.setAttribute('aria-selected', active ? 'true' : 'false');
+          if (active) dot.setAttribute('aria-current', 'true');
+          else dot.removeAttribute('aria-current');
+        });
+        if (live) live.textContent = 'Slide ' + (index + 1) + ' of ' + total;
+      }
 
-    function goTo(i) {
-      index = (i + total) % total;
-      track.style.transform = 'translateX(-' + (index * 100) + '%)';
-      slides.forEach(function (slide, n) {
-        var active = n === index;
-        slide.setAttribute('aria-hidden', active ? 'false' : 'true');
-        slide.setAttribute('aria-label', (n + 1) + ' of ' + total);
+      if (prevBtn) prevBtn.addEventListener('click', function () { goTo(index - 1); });
+      if (nextBtn) nextBtn.addEventListener('click', function () { goTo(index + 1); });
+      dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
+          goTo(parseInt(dot.getAttribute('data-slide'), 10));
+        });
       });
-      dots.forEach(function (dot, n) {
-        var active = n === index;
-        dot.setAttribute('aria-selected', active ? 'true' : 'false');
-        if (active) dot.setAttribute('aria-current', 'true');
-        else dot.removeAttribute('aria-current');
+      carousel.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(index - 1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); goTo(index + 1); }
+        if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+        if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
       });
-      if (live) live.textContent = 'Slide ' + (index + 1) + ' of ' + total;
+      goTo(0);
     }
 
-    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(index - 1); });
-    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(index + 1); });
-    dots.forEach(function (dot) {
-      dot.addEventListener('click', function () {
-        goTo(parseInt(dot.getAttribute('data-slide'), 10));
-      });
+    var playground = document.getElementById('dwellPlayground');
+    var result = document.getElementById('dwellDemoResult');
+    function markClicked(label) {
+      if (!result) return;
+      result.textContent = 'Clicked: ' + label;
+      result.classList.remove('is-empty');
+    }
+    var btn = document.getElementById('dwellDemoBtn');
+    var link = document.getElementById('dwellDemoLink');
+    var card = document.getElementById('dwellDemoCard');
+    if (btn) btn.addEventListener('click', function () { markClicked('Open listing'); });
+    if (link) link.addEventListener('click', function (e) {
+      e.preventDefault();
+      markClicked('Read more');
     });
-    carousel.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(index - 1); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); goTo(index + 1); }
-      if (e.key === 'Home') { e.preventDefault(); goTo(0); }
-      if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+    if (card) card.addEventListener('click', function (e) {
+      e.preventDefault();
+      markClicked('Weekend barista shift');
     });
-    goTo(0);
+
+    function enableDwellDemo() {
+      if (!window.SurferDemo || !playground) return;
+      window.SurferDemo.setDwellRoot(playground);
+      window.SurferDemo.setDwellTime(3000);
+      window.SurferDemo.setDwellEnabled(true);
+    }
+    enableDwellDemo();
+    window.addEventListener('surfer-demo-dwell-changed', function (e) {
+      if (!window.SurferDemo || !playground) return;
+      // Keep demo scoped even if the corner preview toggle flips dwell on.
+      if (e.detail && e.detail.enabled) {
+        window.SurferDemo.setDwellRoot(playground);
+        window.SurferDemo.setDwellTime(3000);
+      }
+    });
   })();
   </script>
 
