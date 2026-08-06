@@ -51,9 +51,17 @@
       margin: 0;
     }
     .ep-hero-heading h1 .accent {
-      color: var(--coral-deep);
-      font-style: italic;
-      font-weight: 400;
+      color: var(--coral);
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    /* Surfer page nav: more section links than the homepage */
+    body.ep-page .nav-links {
+      gap: clamp(.85rem, 1.6vw, 1.35rem);
+    }
+    body.ep-page .nav-links a:not(.nav-cta) {
+      font-size: .84rem;
     }
 
     .demo-section { padding: 0 0 clamp(3rem, 6vw, 5rem); background: var(--paper); border-bottom: 1px solid var(--line); }
@@ -368,7 +376,7 @@
     }
   </style>
 </head>
-<body>
+<body class="ep-page">
 
   <a href="#main" class="skip-link">Skip to main content</a>
 
@@ -381,15 +389,20 @@
       <span class="nav-toggle-icon" aria-hidden="true"></span>
     </button>
     <ul class="nav-links" id="siteNavMenu">
-      <li><a href="/#demo">Products</a></li>
+      <li><a href="#install">Install</a></li>
+      <li><a href="#in-browser">In browser</a></li>
       <li><a href="#stories">Stories</a></li>
+      <li><a href="#how">Dwell clicking</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#reading-mode">Reading mode</a></li>
+      <li><a href="#compare">Our difference</a></li>
       <li><a href="#contact" class="nav-cta">Get in touch</a></li>
     </ul>
   </nav>
 
   <main id="main" tabindex="-1">
 
-    <header class="hero ep-hero">
+    <header class="hero ep-hero" id="install">
       <div class="wrap">
         <div class="hero-copy">
           <span class="eyebrow">Free Chrome extension</span>
@@ -407,7 +420,7 @@
       </div>
     </header>
 
-    <section class="demo-section" aria-labelledby="demo-carousel-heading">
+    <section class="demo-section" id="in-browser" aria-labelledby="demo-carousel-heading">
       <div class="wrap">
         <div class="demo-carousel reveal">
           <div class="demo-carousel-head">
