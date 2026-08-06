@@ -66,7 +66,7 @@
       '<p class="story-card-text">' +
       escapeHtml(story.text) +
       '</p>' +
-      '<p class="story-card-by">— ' +
+      '<p class="story-card-by">' +
       escapeHtml(story.name || 'Anonymous') +
       place +
       '</p>' +
@@ -580,7 +580,7 @@
 
       var honey = form.querySelector('[name="website"]');
       if (honey && honey.value.trim()) {
-        setStatus('Thanks — every story is reviewed before publication.');
+        setStatus('Thanks. Every story is reviewed before publication.');
         form.reset();
         clearCustomTagPills(form);
         initCharCount($('story-text'));
@@ -592,7 +592,7 @@
       var tags = selectedTags(form);
 
       if (text.length < MIN_LEN) {
-        setStatus('Give a concrete moment — at least ' + MIN_LEN + ' characters.', true);
+        setStatus('Give a concrete moment, at least ' + MIN_LEN + ' characters.', true);
         return;
       }
       if (text.length > MAX_LEN) {

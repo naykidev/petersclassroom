@@ -20,7 +20,7 @@ function handleContactSubmit(e) {
 
   if (data.website && data.website.trim()) {
     if (status) {
-      status.textContent = 'Thanks — we got your message.';
+      status.textContent = 'Thanks. We got your message.';
       status.classList.add('success');
     }
     form.reset();
@@ -101,7 +101,7 @@ function handleContactSubmit(e) {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     })
     .then(function () {
-      setOk('Thanks — we got your message and will reply within two business days.');
+      setOk('Thanks. We got your message and will reply within two business days.');
     })
     .catch(function () {
       setErr('Couldn’t send just now. Email axolassist.business@gmail.com, or try again.');
@@ -169,7 +169,7 @@ revealTargets.forEach(el => {
     const onToolbarPage = /toolbar\.html$/i.test(location.pathname || '');
     const afBubbleHref = onToolbarPage ? '#install' : 'toolbar.html#install';
     const afBubbleText = onToolbarPage
-      ? 'Copy the snippet below — this is how <em class="af-bubble-accent">AccessFlow</em> looks for your visitors.'
+      ? 'Copy the snippet below. This is how <em class="af-bubble-accent">AccessFlow</em> looks for your visitors.'
       : 'How <em class="af-bubble-accent">AccessFlow</em> will look on your website.';
 
     const html =
