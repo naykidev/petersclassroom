@@ -7,6 +7,7 @@ export type AppPhase =
   | 'accountType'
   | 'seekerOnboarding'
   | 'employerOnboarding'
+  | 'employerVerificationPending'
   | 'main'
 
 /**
@@ -16,7 +17,8 @@ export type AppPhase =
  * 3. role unassigned -> account type selection
  * 4. seeker without completed profile -> seeker onboarding
  * 5. employer without completed profile -> employer onboarding
- * 6. otherwise -> main app
+ * 6. employer awaiting Axol verification -> wait screen
+ * 7. otherwise -> main app
  */
 export function resolvePhase(loading: boolean, user: AppUser | null): AppPhase {
   if (loading) return 'splash'
@@ -26,5 +28,7 @@ export function resolvePhase(loading: boolean, user: AppUser | null): AppPhase {
     return 'seekerOnboarding'
   if (user.role === 'employer' && !user.hasCompletedEmployerProfile)
     return 'employerOnboarding'
+  if (user.role === 'employer' && user.employerVerificationStatus !== 'verified')
+    return 'employerVerificationPending'
   return 'main'
 }

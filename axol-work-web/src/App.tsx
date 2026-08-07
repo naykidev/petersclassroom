@@ -7,6 +7,7 @@ import { AuthPage } from '@/features/auth/AuthPage'
 import { AccountTypePage } from '@/features/auth/AccountTypePage'
 import { SeekerOnboarding } from '@/features/onboarding/SeekerOnboarding'
 import { EmployerOnboarding } from '@/features/onboarding/EmployerOnboarding'
+import { EmployerVerificationPending } from '@/features/onboarding/EmployerVerificationPending'
 import { MainApp } from '@/app/MainApp'
 import { makeDemoUser, pathIsDemo, pathIsExplore, usePreviewStore } from '@/stores/previewStore'
 
@@ -81,6 +82,8 @@ export default function App() {
       return <SeekerOnboarding />
     case 'employerOnboarding':
       return <EmployerOnboarding />
+    case 'employerVerificationPending':
+      return <EmployerVerificationPending />
     case 'main':
       return (
         <BrowserRouter basename={APP_BASENAME}>

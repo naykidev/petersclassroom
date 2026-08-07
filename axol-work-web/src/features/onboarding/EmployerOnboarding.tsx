@@ -150,7 +150,7 @@ export function EmployerOnboarding() {
               Log out
             </Button>
             <Button type="submit" loading={isSubmitting}>
-              Finish setup
+              Submit for verification
             </Button>
           </div>
         </form>

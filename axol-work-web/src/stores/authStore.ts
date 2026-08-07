@@ -118,6 +118,12 @@ async function signInWithPopupProvider(provider: GoogleAuthProvider): Promise<vo
 
 // Live unsubscribe for the current user doc snapshot.
 let userDocUnsub: (() => void) | null = null
+/**
+ * Bumped on every auth change and every user-doc snapshot so in-flight async
+ * handlers (loadUserPrivate / migrate) cannot overwrite a newer role/profile
+ * — that race flashed Recruiter onboarding then snapped back to account type.
+ */
+let userDocSnapEpoch = 0
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   firebaseUser: null,
@@ -130,6 +136,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     onAuthStateChanged(auth, async (fbUser) => {
       userDocUnsub?.()
       userDocUnsub = null
+      userDocSnapEpoch += 1
 
       if (!fbUser) {
         // Keep an in-memory guest preview session if one is active.
@@ -152,23 +159,28 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       userDocUnsub = onSnapshot(
         ref,
         (docSnap) => {
+          const snapEpoch = (userDocSnapEpoch += 1)
           void (async () => {
             const data = docSnap.data()
             if (!data) {
+              if (snapEpoch !== userDocSnapEpoch) return
               set({ user: null, loading: false, isGuest: false })
               return
             }
             let merged: AppUser = { ...data, email: fbUser.email ?? '' }
             try {
               const priv = await loadUserPrivate(fbUser.uid)
+              if (snapEpoch !== userDocSnapEpoch) return
               merged = mergePrivateIntoUser(merged, priv)
               const clearPublic = await migratePrivateNeedsOffPublicProfile(fbUser.uid, data)
+              if (snapEpoch !== userDocSnapEpoch) return
               if (clearPublic) {
                 await updateDoc(userDoc(fbUser.uid), clearPublic)
               }
             } catch {
               // Private doc missing or rules not deployed yet — keep public fields.
             }
+            if (snapEpoch !== userDocSnapEpoch) return
             set({
               user: merged,
               loading: false,
@@ -243,10 +255,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   setRole: async (role) => {
     const uid = get().firebaseUser?.uid
-    if (!uid) return
+    const current = get().user
+    if (!uid || !current) return
+    // Optimistic so routing advances immediately; snapshot stays source of truth.
     // Do not write employerVerificationStatus here. Rules only allow self to
     // request review (→ pending); missing field already means unverified.
-    await updateDoc(userDoc(uid), { role })
+    const previousRole = current.role
+    set({ user: { ...current, role }, error: null })
+    try {
+      await updateDoc(userDoc(uid), { role })
+    } catch (e) {
+      const now = get().user
+      if (now?.uid === uid && now.role === role) {
+        set({ user: { ...now, role: previousRole } })
+      }
+      throw e
+    }
   },
 
   updateUser: async (patch) => {
