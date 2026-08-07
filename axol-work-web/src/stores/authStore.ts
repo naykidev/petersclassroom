@@ -42,7 +42,7 @@ interface AuthState {
   /** Local-only preview user (not written to Firestore). */
   isGuest: boolean
 
-  init: () => void
+  init: () => () => void
   setGuestSession: (guest: AppUser) => void
   clearGuestSession: () => void
   signUp: (email: string, password: string, displayName: string) => Promise<void>
@@ -116,16 +116,32 @@ async function signInWithPopupProvider(provider: GoogleAuthProvider): Promise<vo
   await ensureUserDoc(cred.user)
 }
 
-// Live unsubscribe for the current user doc snapshot.
+// Auth + user-doc listener teardown (module-scoped so StrictMode remounts
+// cannot stack duplicate onAuthStateChanged / onSnapshot subscriptions).
+let authUnsub: (() => void) | null = null
 let userDocUnsub: (() => void) | null = null
+let liveUserDocListeners = 0
 /**
  * Bumped on auth change, every snapshot, and local writes (setRole) so in-flight
  * async handlers (loadUserPrivate / migrate) cannot overwrite newer state —
  * that race flashed Recruiter onboarding then snapped back to account type.
+ *
+ * Compare captured `snapEpoch` against this live binding (not a closed-over copy).
  */
 let userDocSnapEpoch = 0
 /** Role we're optimistically writing; drop remote snaps that still show the old role. */
 let roleWriteInFlight: UserRole | null = null
+
+function authDebug(label: string, extra?: Record<string, unknown>) {
+  if (!import.meta.env.DEV) return
+  console.log(`[authStore] ${label}`, {
+    t: Math.round(performance.now()),
+    epoch: userDocSnapEpoch,
+    roleWriteInFlight,
+    liveUserDocListeners,
+    ...extra,
+  })
+}
 
 /**
  * Apply snapshot only if it isn't a stale read during an optimistic role write.
@@ -142,12 +158,23 @@ function shouldApplyRoleSnapshot(
   return hasPendingWrites
 }
 
-function clearRoleWriteIfSettled(data: AppUser, _hasPendingWrites: boolean) {
-  void _hasPendingWrites
-  // Once we apply a snap with the optimistic role, the transition is done.
-  if (roleWriteInFlight && data.role === roleWriteInFlight) {
+/** Clear in-flight only after server-confirmed (!pending) snap with the new role. */
+function clearRoleWriteIfSettled(data: AppUser, hasPendingWrites: boolean) {
+  if (
+    roleWriteInFlight &&
+    data.role === roleWriteInFlight &&
+    !hasPendingWrites
+  ) {
     roleWriteInFlight = null
   }
+}
+
+function tearDownAuthListeners() {
+  userDocUnsub?.()
+  userDocUnsub = null
+  authUnsub?.()
+  authUnsub = null
+  userDocSnapEpoch += 1
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -158,13 +185,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isGuest: false,
 
   init: () => {
-    onAuthStateChanged(auth, async (fbUser) => {
+    // Idempotent: StrictMode / HMR remount must not stack auth listeners.
+    tearDownAuthListeners()
+    roleWriteInFlight = null
+    authDebug('init:subscribe')
+
+    authUnsub = onAuthStateChanged(auth, async (fbUser) => {
       userDocUnsub?.()
       userDocUnsub = null
       userDocSnapEpoch += 1
-      roleWriteInFlight = null
+      // Do not clear roleWriteInFlight here — a duplicate auth callback during
+      // setRole would open a window for stale snaps. Clear only on sign-out.
 
       if (!fbUser) {
+        roleWriteInFlight = null
         // Keep an in-memory guest preview session if one is active.
         if (get().isGuest) {
           set({ firebaseUser: null, loading: false })
@@ -179,12 +213,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       await ensureUserDoc(fbUser)
 
+      // If auth tore down / replaced while we awaited, skip stale setup.
+      if (get().firebaseUser?.uid !== fbUser.uid) return
+
       // Subscribe to live user-doc updates so role/onboarding stay in sync.
       // Email isn't stored on the doc. Merge it in from the auth session.
       // Private accommodation needs live in userPrivate/{uid} and are merged here.
+      userDocUnsub?.()
+      liveUserDocListeners += 1
+      authDebug('userDoc:subscribe', { uid: fbUser.uid })
       userDocUnsub = onSnapshot(
         ref,
         (docSnap) => {
+          // Capture generation id; re-check against LIVE userDocSnapEpoch after awaits.
           const snapEpoch = (userDocSnapEpoch += 1)
           const hasPendingWrites = docSnap.metadata.hasPendingWrites
           void (async () => {
@@ -195,7 +236,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
               return
             }
             // Cheap reject before await — same check again after merge.
-            if (!shouldApplyRoleSnapshot(data, hasPendingWrites)) return
+            if (!shouldApplyRoleSnapshot(data, hasPendingWrites)) {
+              authDebug('userDoc:drop-early', {
+                snapEpoch,
+                role: data.role,
+                hasPendingWrites,
+              })
+              return
+            }
 
             let merged: AppUser = { ...data, email: fbUser.email ?? '' }
             try {
@@ -210,8 +258,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             } catch {
               // Private doc missing or rules not deployed yet — keep public fields.
             }
-            if (snapEpoch !== userDocSnapEpoch) return
-            if (!shouldApplyRoleSnapshot(merged, hasPendingWrites)) return
+            if (snapEpoch !== userDocSnapEpoch) {
+              authDebug('userDoc:drop-stale-epoch', {
+                snapEpoch,
+                liveEpoch: userDocSnapEpoch,
+                role: merged.role,
+              })
+              return
+            }
+            if (!shouldApplyRoleSnapshot(merged, hasPendingWrites)) {
+              authDebug('userDoc:drop-role-guard', {
+                snapEpoch,
+                role: merged.role,
+                hasPendingWrites,
+              })
+              return
+            }
             // Final sync gate: setRole can bump epoch / set roleWriteInFlight
             // between the awaits above and here — never clobber that optimistic role.
             if (snapEpoch !== userDocSnapEpoch) return
@@ -221,9 +283,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
               live?.role === roleWriteInFlight &&
               merged.role !== roleWriteInFlight
             ) {
+              authDebug('userDoc:drop-optimistic', {
+                snapEpoch,
+                mergedRole: merged.role,
+                liveRole: live?.role,
+              })
               return
             }
             clearRoleWriteIfSettled(merged, hasPendingWrites)
+            authDebug('userDoc:set', {
+              snapEpoch,
+              role: merged.role,
+              hasPendingWrites,
+            })
             set({
               user: merged,
               loading: false,
@@ -233,7 +305,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         },
         () => set({ loading: false, error: 'Could not load your profile.' }),
       )
+
+      const prevUnsub = userDocUnsub
+      userDocUnsub = () => {
+        liveUserDocListeners = Math.max(0, liveUserDocListeners - 1)
+        authDebug('userDoc:unsubscribe')
+        prevUnsub?.()
+      }
     })
+
+    return () => {
+      authDebug('init:cleanup')
+      tearDownAuthListeners()
+      roleWriteInFlight = null
+    }
   },
 
   setGuestSession: (guest) => {
@@ -308,11 +393,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // and reject remote snaps still showing the old role until settled (#2).
     userDocSnapEpoch += 1
     roleWriteInFlight = role
+    authDebug('setRole:optimistic', { role, previousRole })
     set({ user: { ...current, role }, error: null })
     try {
       await updateDoc(userDoc(uid), { role })
+      authDebug('setRole:write-ok', { role })
     } catch (e) {
       roleWriteInFlight = null
+      authDebug('setRole:write-fail', { role })
       const now = get().user
       if (now?.uid === uid && now.role === role) {
         set({ user: { ...now, role: previousRole } })

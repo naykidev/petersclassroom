@@ -23,7 +23,7 @@ export default function App() {
   const { active, enter, exit, role } = usePreviewStore()
 
   useEffect(() => {
-    init()
+    return init()
   }, [init])
 
   const onDemoPath =
