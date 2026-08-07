@@ -212,6 +212,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             }
             if (snapEpoch !== userDocSnapEpoch) return
             if (!shouldApplyRoleSnapshot(merged, hasPendingWrites)) return
+            // Final sync gate: setRole can bump epoch / set roleWriteInFlight
+            // between the awaits above and here — never clobber that optimistic role.
+            if (snapEpoch !== userDocSnapEpoch) return
+            const live = get().user
+            if (
+              roleWriteInFlight &&
+              live?.role === roleWriteInFlight &&
+              merged.role !== roleWriteInFlight
+            ) {
+              return
+            }
             clearRoleWriteIfSettled(merged, hasPendingWrites)
             set({
               user: merged,
