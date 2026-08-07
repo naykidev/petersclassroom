@@ -119,11 +119,36 @@ async function signInWithPopupProvider(provider: GoogleAuthProvider): Promise<vo
 // Live unsubscribe for the current user doc snapshot.
 let userDocUnsub: (() => void) | null = null
 /**
- * Bumped on every auth change and every user-doc snapshot so in-flight async
- * handlers (loadUserPrivate / migrate) cannot overwrite a newer role/profile
- * — that race flashed Recruiter onboarding then snapped back to account type.
+ * Bumped on auth change, every snapshot, and local writes (setRole) so in-flight
+ * async handlers (loadUserPrivate / migrate) cannot overwrite newer state —
+ * that race flashed Recruiter onboarding then snapped back to account type.
  */
 let userDocSnapEpoch = 0
+/** Role we're optimistically writing; drop remote snaps that still show the old role. */
+let roleWriteInFlight: UserRole | null = null
+
+/**
+ * Apply snapshot only if it isn't a stale read during an optimistic role write.
+ * Trust matching roles and our own pending-write echoes; reject older roles.
+ */
+function shouldApplyRoleSnapshot(
+  data: AppUser,
+  hasPendingWrites: boolean,
+): boolean {
+  if (!roleWriteInFlight) return true
+  if (data.role === roleWriteInFlight) return true
+  // Different role while a write is in flight: only allow if this is still a
+  // local pending write (shouldn't disagree often); drop remote stale reads.
+  return hasPendingWrites
+}
+
+function clearRoleWriteIfSettled(data: AppUser, _hasPendingWrites: boolean) {
+  void _hasPendingWrites
+  // Once we apply a snap with the optimistic role, the transition is done.
+  if (roleWriteInFlight && data.role === roleWriteInFlight) {
+    roleWriteInFlight = null
+  }
+}
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   firebaseUser: null,
@@ -137,6 +162,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       userDocUnsub?.()
       userDocUnsub = null
       userDocSnapEpoch += 1
+      roleWriteInFlight = null
 
       if (!fbUser) {
         // Keep an in-memory guest preview session if one is active.
@@ -160,6 +186,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         ref,
         (docSnap) => {
           const snapEpoch = (userDocSnapEpoch += 1)
+          const hasPendingWrites = docSnap.metadata.hasPendingWrites
           void (async () => {
             const data = docSnap.data()
             if (!data) {
@@ -167,6 +194,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
               set({ user: null, loading: false, isGuest: false })
               return
             }
+            // Cheap reject before await — same check again after merge.
+            if (!shouldApplyRoleSnapshot(data, hasPendingWrites)) return
+
             let merged: AppUser = { ...data, email: fbUser.email ?? '' }
             try {
               const priv = await loadUserPrivate(fbUser.uid)
@@ -181,6 +211,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
               // Private doc missing or rules not deployed yet — keep public fields.
             }
             if (snapEpoch !== userDocSnapEpoch) return
+            if (!shouldApplyRoleSnapshot(merged, hasPendingWrites)) return
+            clearRoleWriteIfSettled(merged, hasPendingWrites)
             set({
               user: merged,
               loading: false,
@@ -261,10 +293,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Do not write employerVerificationStatus here. Rules only allow self to
     // request review (→ pending); missing field already means unverified.
     const previousRole = current.role
+    // Invalidate in-flight snapshot merges that started before this write (#1/#4),
+    // and reject remote snaps still showing the old role until settled (#2).
+    userDocSnapEpoch += 1
+    roleWriteInFlight = role
     set({ user: { ...current, role }, error: null })
     try {
       await updateDoc(userDoc(uid), { role })
     } catch (e) {
+      roleWriteInFlight = null
       const now = get().user
       if (now?.uid === uid && now.role === role) {
         set({ user: { ...now, role: previousRole } })
