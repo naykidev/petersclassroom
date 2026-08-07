@@ -16,7 +16,15 @@ import {
   updateProfile,
   type User as FirebaseUser,
 } from 'firebase/auth'
-import { deleteDoc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore'
+import {
+  deleteDoc,
+  getDoc,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+  type DocumentReference,
+  type DocumentSnapshot,
+} from 'firebase/firestore'
 import { auth } from '@/lib/firebase'
 import { userDoc } from '@/lib/firestore'
 import type { AppUser, UserRole } from '@/models'
@@ -119,8 +127,13 @@ async function signInWithPopupProvider(provider: GoogleAuthProvider): Promise<vo
 // Auth + user-doc listener teardown (module-scoped so StrictMode remounts
 // cannot stack duplicate onAuthStateChanged / onSnapshot subscriptions).
 let authUnsub: (() => void) | null = null
-let userDocUnsub: (() => void) | null = null
-let liveUserDocListeners = 0
+/** Active user-doc unsubs — size is the live listener count (no manual counter). */
+const activeUserDocUnsubs = new Set<() => void>()
+/**
+ * Bumped in tearDownAuthListeners so in-flight auth callbacks that were already
+ * past the sync unsub (awaiting ensureUserDoc) skip setting up a new onSnapshot.
+ */
+let authListenGeneration = 0
 /**
  * Bumped on auth change, every snapshot, and local writes (setRole) so in-flight
  * async handlers (loadUserPrivate / migrate) cannot overwrite newer state —
@@ -137,10 +150,32 @@ function authDebug(label: string, extra?: Record<string, unknown>) {
   console.log(`[authStore] ${label}`, {
     t: Math.round(performance.now()),
     epoch: userDocSnapEpoch,
+    authGen: authListenGeneration,
     roleWriteInFlight,
-    liveUserDocListeners,
+    liveUserDocListeners: activeUserDocUnsubs.size,
     ...extra,
   })
+}
+
+function unsubscribeAllUserDocs() {
+  for (const unsub of [...activeUserDocUnsubs]) unsub()
+}
+
+/** Subscribe and track in `activeUserDocUnsubs` so count can't drift from reality. */
+function subscribeUserDoc(
+  ref: DocumentReference<AppUser>,
+  onNext: (snap: DocumentSnapshot<AppUser>) => void,
+  onError?: (error: Error) => void,
+) {
+  const firestoreUnsub = onSnapshot(ref, onNext, onError)
+  const tracked = () => {
+    if (!activeUserDocUnsubs.delete(tracked)) return
+    firestoreUnsub()
+    authDebug('userDoc:unsubscribe')
+  }
+  activeUserDocUnsubs.add(tracked)
+  authDebug('userDoc:subscribe')
+  return tracked
 }
 
 /**
@@ -170,10 +205,12 @@ function clearRoleWriteIfSettled(data: AppUser, hasPendingWrites: boolean) {
 }
 
 function tearDownAuthListeners() {
-  userDocUnsub?.()
-  userDocUnsub = null
+  // Sync: Firestore unsubscribe stops further callbacks; bump generations so any
+  // already-queued async work from those callbacks no-ops when it resumes.
+  unsubscribeAllUserDocs()
   authUnsub?.()
   authUnsub = null
+  authListenGeneration += 1
   userDocSnapEpoch += 1
 }
 
@@ -185,14 +222,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isGuest: false,
 
   init: () => {
-    // Idempotent: StrictMode / HMR remount must not stack auth listeners.
+    // StrictMode: effect → cleanup → effect. Cleanup and this path both run
+    // tearDown (sync unsub) before the next subscribe; no await between them.
     tearDownAuthListeners()
     roleWriteInFlight = null
+    const listenerGen = authListenGeneration
     authDebug('init:subscribe')
 
     authUnsub = onAuthStateChanged(auth, async (fbUser) => {
-      userDocUnsub?.()
-      userDocUnsub = null
+      unsubscribeAllUserDocs()
       userDocSnapEpoch += 1
       // Do not clear roleWriteInFlight here — a duplicate auth callback during
       // setRole would open a window for stale snaps. Clear only on sign-out.
@@ -213,16 +251,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       await ensureUserDoc(fbUser)
 
-      // If auth tore down / replaced while we awaited, skip stale setup.
+      // TearDown / a newer init may have run while we awaited — do not resubscribe.
+      if (listenerGen !== authListenGeneration) {
+        authDebug('userDoc:skip-stale-auth-callback', { listenerGen })
+        return
+      }
       if (get().firebaseUser?.uid !== fbUser.uid) return
 
       // Subscribe to live user-doc updates so role/onboarding stay in sync.
       // Email isn't stored on the doc. Merge it in from the auth session.
       // Private accommodation needs live in userPrivate/{uid} and are merged here.
-      userDocUnsub?.()
-      liveUserDocListeners += 1
-      authDebug('userDoc:subscribe', { uid: fbUser.uid })
-      userDocUnsub = onSnapshot(
+      unsubscribeAllUserDocs()
+      subscribeUserDoc(
         ref,
         (docSnap) => {
           // Capture generation id; re-check against LIVE userDocSnapEpoch after awaits.
@@ -305,13 +345,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         },
         () => set({ loading: false, error: 'Could not load your profile.' }),
       )
-
-      const prevUnsub = userDocUnsub
-      userDocUnsub = () => {
-        liveUserDocListeners = Math.max(0, liveUserDocListeners - 1)
-        authDebug('userDoc:unsubscribe')
-        prevUnsub?.()
-      }
     })
 
     return () => {
