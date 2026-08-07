@@ -31,11 +31,15 @@ const CHOICES: {
 export function AccountTypePage() {
   const { setRole, logOut } = useAuthStore()
   const [pending, setPending] = useState<UserRole | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function choose(role: Exclude<UserRole, 'unassigned'>) {
     setPending(role)
+    setError(null)
     try {
       await setRole(role)
+    } catch (e) {
+      setError((e as Error)?.message || 'Could not save your choice. Try again.')
     } finally {
       setPending(null)
     }
@@ -71,6 +75,12 @@ export function AccountTypePage() {
             </button>
           ))}
         </div>
+
+        {error ? (
+          <p className="mt-4 text-center text-sm text-danger" role="alert">
+            {error}
+          </p>
+        ) : null}
 
         <div className="mt-6 flex flex-col items-center gap-2 text-center">
           <Button variant="ghost" size="sm" onClick={() => logOut()}>

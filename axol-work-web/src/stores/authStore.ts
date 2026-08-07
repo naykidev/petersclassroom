@@ -244,14 +244,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   setRole: async (role) => {
     const uid = get().firebaseUser?.uid
     if (!uid) return
-    if (role === 'employer') {
-      await updateDoc(userDoc(uid), {
-        role,
-        employerVerificationStatus: 'unverified',
-      })
-    } else {
-      await updateDoc(userDoc(uid), { role })
-    }
+    // Do not write employerVerificationStatus here. Rules only allow self to
+    // request review (→ pending); missing field already means unverified.
+    await updateDoc(userDoc(uid), { role })
   },
 
   updateUser: async (patch) => {
